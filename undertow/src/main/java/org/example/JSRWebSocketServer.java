@@ -34,7 +34,6 @@ import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 /**
  * @author Stuart Douglas
  */
-@UndertowExample("JSR Web Sockets")
 public class JSRWebSocketServer {
 
     public static void main(final String[] args)  {
@@ -52,7 +51,7 @@ public class JSRWebSocketServer {
         DeploymentInfo builder = new DeploymentInfo()
                 .setClassLoader(JSRWebSocketServer.class.getClassLoader())
                 .setContextPath("/")
-                .addWelcomePage("index.html")
+                .addWelcomePage("templates/index.html")
                 .setResourceManager(new ClassPathResourceManager(JSRWebSocketServer.class.getClassLoader(), JSRWebSocketServer.class.getPackage()))
                 .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME,
                         new WebSocketDeploymentInfo()
@@ -70,7 +69,7 @@ public class JSRWebSocketServer {
             throw new RuntimeException(e);
         }
 
-
+        new RenewTask();
     }
 
 

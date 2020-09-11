@@ -1,6 +1,9 @@
 package org.example;
 
-import io.undertow.websockets.core.UTF8Output;
+import org.example.coder.JsonDecode;
+import org.example.coder.JsonEncode;
+import org.example.coder.MsgpackDecode;
+import org.example.coder.MsgpackEncode;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -12,17 +15,21 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Stuart Douglas
  */
-@ServerEndpoint("/myapp")
+@ServerEndpoint(value = "/web-socket", encoders = {JsonEncode.class, MsgpackEncode.class}, decoders = {JsonDecode.class, MsgpackDecode.class})
 public class JsrChatWebSocketEndpoint {
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
 
     //concurrent包的线程安全Set，用来存放每个客户端对应的JsrChatWebSocketEndpoint对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
-    private static CopyOnWriteArraySet<JsrChatWebSocketEndpoint> webSocketSet = new CopyOnWriteArraySet<JsrChatWebSocketEndpoint>();
+    private static final CopyOnWriteArraySet<JsrChatWebSocketEndpoint> webSocketSet = new CopyOnWriteArraySet<JsrChatWebSocketEndpoint>();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
+
+    public JsrChatWebSocketEndpoint() {
+        System.out.println("init");
+    }
 
     /**
      * 连接建立成功调用的方法
@@ -62,25 +69,31 @@ public class JsrChatWebSocketEndpoint {
         session.getAsyncRemote().sendPong(allocate);
     }
 
+    @OnMessage
+    public void message(Message message, Session session) throws IOException, EncodeException {
+        System.out.println("来自客户端的消息:" + message);
+        this.session.getBasicRemote().sendObject(message);
+    }
+
     /**
      * 收到客户端消息后调用的方法
      *
      * @param message 客户端发送过来的消息
      * @param session 可选的参数
      */
-    @OnMessage
-    public void onMessage(String message, Session session) {
-        System.out.println("来自客户端的消息:" + message);
-        //群发消息
-        for (JsrChatWebSocketEndpoint item : webSocketSet) {
-            try {
-                item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-                continue;
-            }
-        }
-    }
+//    @OnMessage
+//    public void onMessage(String message, Session session) {
+//        System.out.println("来自客户端的消息:" + message);
+//        //群发消息
+//        for (JsrChatWebSocketEndpoint item : webSocketSet) {
+//            try {
+//                item.sendMessage(message);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                continue;
+//            }
+//        }
+//    }
 
     /**
      * 发生错误时调用
