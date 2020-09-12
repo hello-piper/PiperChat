@@ -1,5 +1,8 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,14 +14,16 @@ import java.util.TimerTask;
  */
 public class RenewTask extends TimerTask {
 
+    private final Logger logger = LogManager.getLogger(RenewTask.class);
+
     private static final Timer timer = new Timer();
 
     public RenewTask() {
-        timer.scheduleAtFixedRate(this, 3000, 10000);
+        timer.scheduleAtFixedRate(this, 1000, 5000);
     }
 
     @Override
     public void run() {
-        System.out.println("定时汇报状态给网关机");
+        logger.info("定时汇报状态给网关机");
     }
 }
