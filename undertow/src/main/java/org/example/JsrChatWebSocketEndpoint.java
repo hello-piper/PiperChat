@@ -14,11 +14,10 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-
-@ServerEndpoint(value = "/web-socket", encoders = {JsonEncode.class, MsgpackEncode.class}, decoders = {JsonDecode.class, MsgpackDecode.class})
+@ServerEndpoint(value = "/websocket", encoders = {JsonEncode.class, MsgpackEncode.class}, decoders = {JsonDecode.class, MsgpackDecode.class})
 public class JsrChatWebSocketEndpoint {
 
-    private final Logger logger = LogManager.getLogger(JsrChatWebSocketEndpoint.class);
+    private final Logger log = LogManager.getLogger(JsrChatWebSocketEndpoint.class);
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
@@ -37,9 +36,10 @@ public class JsrChatWebSocketEndpoint {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
+        session.setMaxIdleTimeout(10000);
         webSocketSet.add(this);    //加入set中
         addOnlineCount();          //在线数加1
-        logger.debug("有新连接加入！当前在线人数为 {}", getOnlineCount());
+        log.debug("有新连接加入！当前在线人数为 {}", getOnlineCount());
     }
 
     /**
@@ -49,7 +49,7 @@ public class JsrChatWebSocketEndpoint {
     public void onClose() {
         webSocketSet.remove(this); //从set中删除
         subOnlineCount();          //在线数减1
-        logger.debug("有一连接关闭！当前在线人数为 {}", getOnlineCount());
+        log.debug("有一连接关闭！当前在线人数为 {}", getOnlineCount());
     }
 
     @OnMessage
@@ -62,7 +62,7 @@ public class JsrChatWebSocketEndpoint {
 
     @OnMessage
     public void message(Message message, Session session) throws IOException, EncodeException {
-        logger.debug("来自客户端的消息 {}", message);
+        log.debug("来自客户端的消息 {}", message);
         this.session.getBasicRemote().sendObject(message);
     }
 
@@ -93,7 +93,7 @@ public class JsrChatWebSocketEndpoint {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        logger.error("发生错误,sessionId:{}, errorMessage:{}", session.getId(), error.getMessage());
+        log.error("发生错误,sessionId:{}, errorMessage:{}", session.getId(), error.getMessage());
         error.printStackTrace();
     }
 

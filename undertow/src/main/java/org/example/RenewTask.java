@@ -14,7 +14,7 @@ import java.util.TimerTask;
  */
 public class RenewTask extends TimerTask {
 
-    private final Logger logger = LogManager.getLogger(RenewTask.class);
+    private final Logger log = LogManager.getLogger(RenewTask.class);
 
     private static final Timer timer = new Timer();
 
@@ -24,6 +24,6 @@ public class RenewTask extends TimerTask {
 
     @Override
     public void run() {
-        logger.info("定时汇报状态给网关机");
+        log.info("定时汇报状态给网关机");
     }
 }

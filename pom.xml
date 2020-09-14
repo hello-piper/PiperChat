@@ -25,6 +25,7 @@
         <fastjson.version>1.2.73</fastjson.version>
         <log4j.version>2.13.3</log4j.version>
         <junit.version>4.13</junit.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +64,11 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

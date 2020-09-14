@@ -5,6 +5,7 @@ import io.undertow.Undertow;
 import io.undertow.server.DefaultByteBufferPool;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
+import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
@@ -32,19 +33,20 @@ public class JSRWebSocketServer {
         DeploymentInfo builder = new DeploymentInfo()
                 .setClassLoader(JSRWebSocketServer.class.getClassLoader())
                 .setContextPath("/")
+                .setDeploymentName("chat.war")
                 .addWelcomePage("templates/index.html")
                 .setResourceManager(new ClassPathResourceManager(JSRWebSocketServer.class.getClassLoader(), JSRWebSocketServer.class.getPackage()))
                 .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME,
                         new WebSocketDeploymentInfo().addEndpoint(JsrChatWebSocketEndpoint.class)
                                 .setBuffers(new DefaultByteBufferPool(true, 100))
                 )
-                .setDeploymentName("chat.war")
                 .addDeploymentCompleteListener(new ServletContextListener() {
                     @Override
                     public void contextInitialized(ServletContextEvent sce) {
                         new RenewTask();
                     }
-                });
+                })
+                .addServlet(Servlets.servlet(MessageServlet.class).addMapping("/login"));
 
 
         DeploymentManager manager = container.addDeployment(builder);
