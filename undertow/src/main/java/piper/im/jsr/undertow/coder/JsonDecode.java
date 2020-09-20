@@ -1,7 +1,7 @@
-package org.example.coder;
+package piper.im.jsr.undertow.coder;
 
 import com.alibaba.fastjson.JSONObject;
-import org.example.Message;
+import piper.im.jsr.undertow.Message;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;

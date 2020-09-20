@@ -1,4 +1,4 @@
-package org.example.coder;
+package piper.im.jsr.undertow.coder;
 
 import org.msgpack.MessagePack;
 

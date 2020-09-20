@@ -1,6 +1,6 @@
-package org.example.coder;
+package piper.im.jsr.undertow.coder;
 
-import org.example.Message;
+import piper.im.jsr.undertow.Message;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;

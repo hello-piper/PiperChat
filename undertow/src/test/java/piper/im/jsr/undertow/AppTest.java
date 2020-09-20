@@ -1,24 +1,13 @@
-package org.example;
+package piper.im.jsr.undertow;
 
-import org.example.coder.MessagePackConfig;
 import org.junit.Test;
+import piper.im.jsr.undertow.coder.MessagePackConfig;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-/**
- * Unit test for simple App.
- */
 public class AppTest {
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue() {
-        assertTrue(true);
-    }
 
     @Test
     public void testMsgpack() throws IOException {

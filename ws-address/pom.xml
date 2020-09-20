@@ -9,9 +9,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>undertow</artifactId>
+    <artifactId>register</artifactId>
     <packaging>jar</packaging>
-    <name>undertow</name>
+    <name>register</name>
     <url>http://www.example.com</url>
 
     <properties>
@@ -21,30 +21,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-websockets-jsr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.msgpack</groupId>
-            <artifactId>msgpack</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -57,7 +33,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>piper.im.jsr.undertow.JSRWebSocketServer</mainClass>
+                            <mainClass>JSRWebSocketServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

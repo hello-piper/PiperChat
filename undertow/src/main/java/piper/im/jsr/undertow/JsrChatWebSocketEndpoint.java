@@ -1,11 +1,11 @@
-package org.example;
+package piper.im.jsr.undertow;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.coder.JsonDecode;
-import org.example.coder.JsonEncode;
-import org.example.coder.MsgpackDecode;
-import org.example.coder.MsgpackEncode;
+import piper.im.jsr.undertow.coder.JsonDecode;
+import piper.im.jsr.undertow.coder.JsonEncode;
+import piper.im.jsr.undertow.coder.MsgpackDecode;
+import piper.im.jsr.undertow.coder.MsgpackEncode;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;

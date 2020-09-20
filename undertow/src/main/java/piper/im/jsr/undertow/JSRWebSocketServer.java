@@ -1,4 +1,4 @@
-package org.example;
+package piper.im.jsr.undertow;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
