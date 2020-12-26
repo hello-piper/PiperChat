@@ -12,6 +12,7 @@
     <url>http://www.example.com</url>
 
     <modules>
+        <module>netty</module>
         <module>undertow</module>
         <module>ws-address</module>
     </modules>
@@ -30,6 +31,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.1.56.Final</version>
+            </dependency>
             <dependency>
                 <groupId>io.undertow</groupId>
                 <artifactId>undertow-core</artifactId>
