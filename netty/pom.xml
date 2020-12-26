@@ -49,7 +49,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>piper.im.netty.RenewTask</mainClass>
+                            <mainClass>piper.im.netty.WebSocketServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
