@@ -1,0 +1,54 @@
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Socket Test</title>
+</head>
+
+<body>
+<form onsubmit="return false;">
+    <textarea id="message" style="width:500px;height:100px;" value='{"type":0,"content":"hello world!"}'></textarea>
+    <input type="button" value="Send Web Socket Data" onclick="send(this.form.message.value)"/>
+    <h3>Output</h3>
+    <textarea id="responseText" style="width:500px;height:300px;"></textarea>
+</form>
+
+<script type="text/javascript">
+var socket;
+
+if (!window.WebSocket) {
+  window.WebSocket = window.MozWebSocket;
+}
+
+if (window.WebSocket) {
+  var ta = document.getElementById('message');
+  ta.value = '{"type":0,"content":"hello world!"}';
+
+  socket = new WebSocket("ws://127.0.0.1:8080/websocket");
+  socket.onmessage = function(event) {
+    var ta = document.getElementById('responseText');
+    ta.value = ta.value + '\n' + event.data
+  };
+  socket.onopen = function(event) {
+    var ta = document.getElementById('responseText');
+    ta.value = "Web Socket opened!";
+  };
+  socket.onclose = function(event) {
+    var ta = document.getElementById('responseText');
+    ta.value = ta.value + "Web Socket closed";
+  };
+} else {
+  alert("Your browser does not support Web Socket.");
+}
+
+function send(message) {
+  if (!window.WebSocket) { return; }
+  if (socket.readyState == WebSocket.OPEN) {
+    socket.send(message);
+  } else {
+    alert("The socket is not open.");
+  }
+}
+</script>
+</body>
+
+</html>

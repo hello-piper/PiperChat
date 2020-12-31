@@ -44,6 +44,8 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  * <li>Firefox 7+ (draft-ietf-hybi-thewebsocketprotocol-10)
  * <li>Firefox 11+ (RFC 6455 aka draft-ietf-hybi-thewebsocketprotocol-17)
  * </ul>
+ *
+ * @author DELL
  */
 public final class WebSocketServer {
 

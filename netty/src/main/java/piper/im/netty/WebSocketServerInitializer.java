@@ -25,7 +25,9 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketSe
 import io.netty.handler.ssl.SslContext;
 
 /**
+ * WebSocket初始化配置
  *
+ * @author piper
  */
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -38,7 +40,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
     }
 
     @Override
-    public void initChannel(SocketChannel ch) throws Exception {
+    public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
         if (sslCtx != null) {
             pipeline.addLast(sslCtx.newHandler(ch.alloc()));
@@ -47,7 +49,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));
-        pipeline.addLast(new WebSocketIndexPageHandler(WEBSOCKET_PATH));
+        pipeline.addLast(new WebSocketIndexPageHandler());
         pipeline.addLast(new WebSocketFrameHandler());
     }
 }
