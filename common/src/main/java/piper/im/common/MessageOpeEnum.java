@@ -1,4 +1,4 @@
-package piper.im.netty;
+package piper.im.common;
 
 /**
  * 消息操作类型枚举

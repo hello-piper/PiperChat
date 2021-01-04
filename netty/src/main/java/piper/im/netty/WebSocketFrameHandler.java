@@ -22,6 +22,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
+import piper.im.common.MessageDTO;
+import piper.im.common.MessageOpeEnum;
+import piper.im.common.MessageTypeEnum;
 
 import java.util.List;
 import java.util.Objects;

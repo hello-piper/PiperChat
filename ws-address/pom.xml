@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <groupId>im.piper</groupId>
         <artifactId>IM</artifactId>
-        <groupId>org.example</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>ws-address</artifactId>
-<!--    <packaging>jar</packaging>-->
+    <!--    <packaging>jar</packaging>-->
     <name>ws-address</name>
     <url>http://www.example.com</url>
 
@@ -21,14 +21,12 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

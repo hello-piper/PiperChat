@@ -1,4 +1,4 @@
-package piper.im.netty;
+package piper.im.common;
 
 import com.alibaba.fastjson.JSON;
 
