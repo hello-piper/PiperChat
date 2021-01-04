@@ -9,9 +9,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ws-address</artifactId>
+    <artifactId>web-server</artifactId>
     <!--    <packaging>jar</packaging>-->
-    <name>ws-address</name>
+    <name>web-server</name>
     <url>http://www.example.com</url>
 
     <properties>

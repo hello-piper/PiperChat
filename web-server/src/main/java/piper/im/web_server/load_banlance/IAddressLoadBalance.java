@@ -1,6 +1,6 @@
-package piper.im.address.load_banlance;
+package piper.im.web_server.load_banlance;
 
-import piper.im.address.AddressInfo;
+import piper.im.web_server.AddressInfo;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;

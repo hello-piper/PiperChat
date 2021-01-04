@@ -1,7 +1,7 @@
-package piper.im.address.load_banlance.handler;
+package piper.im.web_server.load_banlance.handler;
 
-import piper.im.address.AddressInfo;
-import piper.im.address.WeightOnlineConfig;
+import piper.im.web_server.AddressInfo;
+import piper.im.web_server.WeightOnlineConfig;
 
 import java.util.ArrayList;
 import java.util.Objects;

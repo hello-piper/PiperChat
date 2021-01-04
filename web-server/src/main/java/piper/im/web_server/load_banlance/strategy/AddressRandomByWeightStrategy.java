@@ -1,6 +1,6 @@
-package piper.im.address.load_banlance.strategy;
+package piper.im.web_server.load_banlance.strategy;
 
-import piper.im.address.AddressInfo;
+import piper.im.web_server.AddressInfo;
 
 import java.util.concurrent.ThreadLocalRandom;
 

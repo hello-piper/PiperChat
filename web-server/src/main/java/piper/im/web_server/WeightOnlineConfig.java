@@ -1,4 +1,4 @@
-package piper.im.address;
+package piper.im.web_server;
 
 /**
  * 权重和连接数对应关系

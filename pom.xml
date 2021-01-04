@@ -14,7 +14,7 @@
     <modules>
         <module>netty</module>
         <module>undertow</module>
-        <module>ws-address</module>
+        <module>web-server</module>
         <module>common</module>
     </modules>
 

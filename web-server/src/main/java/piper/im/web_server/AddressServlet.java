@@ -1,10 +1,10 @@
-package piper.im.address;
+package piper.im.web_server;
 
 import com.alibaba.fastjson.JSONObject;
-import piper.im.address.load_banlance.handler.AddressLoadBalanceHandler;
-import piper.im.address.load_banlance.handler.IAddressLoadBalanceHandler;
-import piper.im.address.load_banlance.strategy.AddressRandomByWeightStrategy;
-import piper.im.address.load_banlance.strategy.IAddressLoadBalanceStrategy;
+import piper.im.web_server.load_banlance.handler.AddressLoadBalanceHandler;
+import piper.im.web_server.load_banlance.handler.IAddressLoadBalanceHandler;
+import piper.im.web_server.load_banlance.strategy.AddressRandomByWeightStrategy;
+import piper.im.web_server.load_banlance.strategy.IAddressLoadBalanceStrategy;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

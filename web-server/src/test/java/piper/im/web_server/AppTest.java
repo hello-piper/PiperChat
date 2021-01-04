@@ -1,4 +1,4 @@
-package piper.im.address;
+package piper.im.web_server;
 
 import static org.junit.Assert.assertTrue;
 
