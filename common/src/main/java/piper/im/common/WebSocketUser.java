@@ -1,6 +1,4 @@
-package piper.im.netty;
-
-import io.netty.channel.Channel;
+package piper.im.common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +11,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author piper
  */
 public class WebSocketUser {
-    private static final Map<String, Channel> CHANNEL_MAP = new ConcurrentHashMap<>();
-    private static final Map<String, List<Channel>> CHANNEL_BY_GROUP_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, Object> CHANNEL_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, List<Object>> CHANNEL_BY_GROUP_MAP = new ConcurrentHashMap<>();
 
     // peer to peer
 
-    public static void put(String uid, Channel channel) {
+    public static void put(String uid, Object channel) {
         CHANNEL_MAP.put(uid, channel);
     }
 
-    public static Channel get(String uid) {
-        return CHANNEL_MAP.get(uid);
+    public static <T> T get(String uid) {
+        return (T) CHANNEL_MAP.get(uid);
     }
 
     public static void remove(String uid) {
@@ -35,19 +33,19 @@ public class WebSocketUser {
 
     // group
 
-    public static void addGroupChannel(String uid, Channel channel) {
+    public static void addGroupChannel(String uid, Object channel) {
         CHANNEL_BY_GROUP_MAP.computeIfAbsent(uid, v -> new ArrayList<>()).add(channel);
     }
 
-    public static List<Channel> getGroupChannels(String uid) {
-        return CHANNEL_BY_GROUP_MAP.get(uid);
+    public static <T> List<T> getGroupChannels(String uid) {
+        return (List<T>) CHANNEL_BY_GROUP_MAP.get(uid);
     }
 
-    public static void removeGroupChannel(String uid, Channel channel) {
+    public static void removeGroupChannel(String uid, Object channel) {
         if (channel == null || uid == null) {
             return;
         }
-        List<Channel> channels = CHANNEL_BY_GROUP_MAP.get(uid);
+        List<Object> channels = CHANNEL_BY_GROUP_MAP.get(uid);
         if (channels == null || channels.isEmpty()) {
             return;
         }

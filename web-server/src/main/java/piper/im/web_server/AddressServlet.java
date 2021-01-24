@@ -15,12 +15,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 
-@WebServlet(name = "AddressServlet", urlPatterns = {"/AddressServlet"})
+@WebServlet(name = "AddressServlet", urlPatterns = "/address")
 public class AddressServlet extends HttpServlet {
 
     private final IAddressLoadBalanceHandler addressLoadBalanceHandler = new AddressLoadBalanceHandler();
     private final IAddressLoadBalanceStrategy addressRandomByWeightStrategy = new AddressRandomByWeightStrategy();
 
+    /**
+     * 接收IM网关的续约信息
+     *
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String line;
@@ -33,6 +40,13 @@ public class AddressServlet extends HttpServlet {
         addressLoadBalanceHandler.flushAddress(addressInfo);
     }
 
+    /**
+     * 前端获取可用服务地址
+     *
+     * @param req
+     * @param resp
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         AddressInfo address = addressRandomByWeightStrategy.getAddress();
