@@ -15,12 +15,10 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 
-
 public class JSRWebSocketServer {
 
     public static void main(final String[] args) {
         PathHandler path = Handlers.path();
-
 
         Undertow server = Undertow.builder()
                 .addHttpListener(8080, "localhost")
@@ -33,9 +31,9 @@ public class JSRWebSocketServer {
         DeploymentInfo builder = new DeploymentInfo()
                 .setClassLoader(JSRWebSocketServer.class.getClassLoader())
                 .setContextPath("/")
-                .setDeploymentName("chat.war")
+                .setDeploymentName("undertow.war")
                 .addWelcomePage("templates/index.html")
-                .setResourceManager(new ClassPathResourceManager(JSRWebSocketServer.class.getClassLoader(), JSRWebSocketServer.class.getPackage()))
+                .setResourceManager(new ClassPathResourceManager(JSRWebSocketServer.class.getClassLoader(), ""))
                 .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME,
                         new WebSocketDeploymentInfo().addEndpoint(JsrChatWebSocketEndpoint.class)
                                 .setBuffers(new DefaultByteBufferPool(true, 100))
@@ -48,7 +46,6 @@ public class JSRWebSocketServer {
                 })
                 .addServlet(Servlets.servlet(MessageServlet.class).addMapping("/login"));
 
-
         DeploymentManager manager = container.addDeployment(builder);
         manager.deploy();
         try {
@@ -56,8 +53,6 @@ public class JSRWebSocketServer {
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 
 }

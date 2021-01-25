@@ -2,8 +2,8 @@ package piper.im.web_server;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 
@@ -16,28 +16,21 @@ import static io.undertow.servlet.Servlets.*;
  */
 public class ServerStart {
 
-    public static final String MYAPP = "/";
-
     public static void main(final String[] args) {
         try {
             DeploymentInfo servletBuilder = deployment()
                     .setClassLoader(ServerStart.class.getClassLoader())
-                    .setContextPath(MYAPP)
-                    .setDeploymentName("test.war")
-                    .addServlets(
-                            servlet("AddressServlet", AddressServlet.class)
-                                    .addInitParam("message", "Hello World")
-                                    .addMapping("/address"),
-                            servlet("ServerServlet", ServerServlet.class)
-                                    .addInitParam("message", "Hello World")
-                                    .addMapping("/server"));
+                    .setContextPath("/")
+                    .setDeploymentName("web-server.war")
+                    .addWelcomePage("templates/index.html")
+                    .setResourceManager(new ClassPathResourceManager(ServerStart.class.getClassLoader(), ""))
+                    .addServlets(servlet(AddressServlet.class).addMapping("/address"), servlet(ServerServlet.class).addMapping("/server"));
 
             DeploymentManager manager = defaultContainer().addDeployment(servletBuilder);
             manager.deploy();
 
-            HttpHandler servletHandler = manager.start();
-            PathHandler path = Handlers.path(Handlers.redirect(MYAPP))
-                    .addPrefixPath(MYAPP, servletHandler);
+            PathHandler path = Handlers.path(Handlers.redirect("/")).addPrefixPath("/", manager.start());
+
             Undertow server = Undertow.builder()
                     .addHttpListener(8080, "localhost")
                     .setHandler(path)
