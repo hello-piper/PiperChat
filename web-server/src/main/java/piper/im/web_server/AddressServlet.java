@@ -6,7 +6,6 @@ import piper.im.web_server.load_banlance.handler.IAddressLoadBalanceHandler;
 import piper.im.web_server.load_banlance.strategy.AddressRandomByWeightStrategy;
 import piper.im.web_server.load_banlance.strategy.IAddressLoadBalanceStrategy;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 
-@WebServlet(name = "AddressServlet", urlPatterns = "/address")
 public class AddressServlet extends HttpServlet {
 
     private final IAddressLoadBalanceHandler addressLoadBalanceHandler = new AddressLoadBalanceHandler();
