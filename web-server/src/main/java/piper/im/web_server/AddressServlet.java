@@ -1,6 +1,7 @@
 package piper.im.web_server;
 
 import com.alibaba.fastjson.JSONObject;
+import piper.im.common.AddressInfo;
 import piper.im.web_server.load_banlance.handler.AddressLoadBalanceHandler;
 import piper.im.web_server.load_banlance.handler.IAddressLoadBalanceHandler;
 import piper.im.web_server.load_banlance.strategy.AddressRandomByWeightStrategy;
@@ -51,7 +52,7 @@ public class AddressServlet extends HttpServlet {
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
         if (!Objects.isNull(address)) {
-            writer.println(address.getIp() + ":" + address.getPort() + address.getContainPath());
+            writer.println(address.getWsPath());
         }
         writer.flush();
         writer.close();

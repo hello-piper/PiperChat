@@ -28,7 +28,7 @@ public class ServerServlet extends HttpServlet {
         }
 
         IAddressLoadBalance.ADDRESS_LIST_BY_WEIGHT.forEach(address -> {
-            HttpUtil.post(address.getIp() + ":" + address.getPort() + "/" + address.getContainPath(), builder.toString());
+            HttpUtil.post(address.getHttpPath(), builder.toString());
         });
     }
 }

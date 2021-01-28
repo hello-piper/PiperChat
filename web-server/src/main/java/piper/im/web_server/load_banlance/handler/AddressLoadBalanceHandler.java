@@ -1,6 +1,6 @@
 package piper.im.web_server.load_banlance.handler;
 
-import piper.im.web_server.AddressInfo;
+import piper.im.common.AddressInfo;
 import piper.im.web_server.WeightOnlineConfig;
 
 import java.util.ArrayList;
@@ -10,12 +10,8 @@ public class AddressLoadBalanceHandler implements IAddressLoadBalanceHandler {
 
     @Override
     public void flushAddress(AddressInfo addressInfo) {
-        String ip = addressInfo.getIp();
-        String port = addressInfo.getPort();
-        String containPath = addressInfo.getContainPath();
-        String key = ip + port + containPath;
-        AddressInfo info = ADDRESS_MAP.get(key);
-        ADDRESS_MAP.put(key, addressInfo);
+        AddressInfo info = ADDRESS_MAP.get(addressInfo.getIp());
+        ADDRESS_MAP.put(addressInfo.getIp(), addressInfo);
         if (Objects.isNull(info)) {
             int weight = WeightOnlineConfig.getWeightBYOnline(addressInfo.getOnlineNum());
             ArrayList<AddressInfo> list = new ArrayList<>();

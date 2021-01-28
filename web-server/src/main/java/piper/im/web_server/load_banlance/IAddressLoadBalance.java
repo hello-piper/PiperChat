@@ -1,6 +1,6 @@
 package piper.im.web_server.load_banlance;
 
-import piper.im.web_server.AddressInfo;
+import piper.im.common.AddressInfo;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -10,6 +10,7 @@ public interface IAddressLoadBalance {
     /**
      * 地址信息集合
      */
+
     ConcurrentHashMap<String, AddressInfo> ADDRESS_MAP = new ConcurrentHashMap<>();
 
     /**
