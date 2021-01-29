@@ -10,6 +10,9 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.task.RenewTask;
+import piper.im.common.util.YamlUtil;
 
 /**
  * An HTTP server which serves Web Socket requests at:
@@ -34,13 +37,12 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  */
 public final class WebSocketServer {
 
-    static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = Integer.parseInt(System.getProperty("port", SSL ? "8443" : "8080"));
-
     public static void main(String[] args) throws Exception {
+        MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
+
         // Configure SSL.
         final SslContext sslCtx;
-        if (SSL) {
+        if (config.getSsl()) {
             SelfSignedCertificate ssc = new SelfSignedCertificate();
             sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
         } else {
@@ -56,9 +58,12 @@ public final class WebSocketServer {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new WebSocketServerInitializer(sslCtx));
 
-            Channel ch = b.bind(PORT).sync().channel();
+            Channel ch = b.bind(config.getPort()).sync().channel();
 
-            System.out.println("Open your web browser and navigate to " + (SSL ? "https" : "http") + "://127.0.0.1:" + PORT + '/');
+            System.out.println("Open your web browser and navigate to " +
+                    (config.getSsl() ? "https" : "http") + "://127.0.0.1:" + config.getPort() + '/');
+
+            RenewTask.start();
 
             ch.closeFuture().sync();
         } finally {

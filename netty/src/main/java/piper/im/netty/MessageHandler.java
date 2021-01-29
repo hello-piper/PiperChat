@@ -1,8 +1,8 @@
 package piper.im.netty;
 
 import io.netty.channel.Channel;
-import piper.im.common.MessageDTO;
-import piper.im.common.MessageOpeEnum;
+import piper.im.common.pojo.MessageDTO;
+import piper.im.common.enums.MessageOpeEnum;
 import piper.im.common.WebSocketUser;
 
 import java.util.List;

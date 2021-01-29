@@ -6,7 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import piper.im.common.MessageDTO;
+import piper.im.common.pojo.MessageDTO;
 
 /**
  * Echoes uppercase content of text frames.

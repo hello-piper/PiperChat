@@ -7,7 +7,9 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslHandler;
-import piper.im.common.MessageDTO;
+import piper.im.common.pojo.MessageDTO;
+import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.util.YamlUtil;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +25,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.*;
  * @author piper
  */
 public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
@@ -47,7 +50,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
             HttpUtil.setContentLength(res, content.readableBytes());
 
             sendHttpResponse(ctx, req, res);
-        } else if ("/msg".equals(req.uri())) {
+        } else if (config.getHttpPath().equals(req.uri())) {
             int len = req.content().readableBytes();
             if (len > 0) {
                 byte[] content = new byte[len];

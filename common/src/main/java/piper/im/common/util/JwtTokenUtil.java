@@ -1,4 +1,4 @@
-package piper.im.common.tool;
+package piper.im.common.util;
 
 import io.jsonwebtoken.*;
 

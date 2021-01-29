@@ -1,4 +1,4 @@
-package piper.im.common;
+package piper.im.common.enums;
 
 /**
  * 消息内容类型枚举

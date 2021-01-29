@@ -10,6 +10,9 @@ import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
+import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.task.RenewTask;
+import piper.im.common.util.YamlUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -18,10 +21,12 @@ import javax.servlet.ServletException;
 public class JSRWebSocketServer {
 
     public static void main(final String[] args) {
+        MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
+
         PathHandler path = Handlers.path();
 
         Undertow server = Undertow.builder()
-                .addHttpListener(8080, "localhost")
+                .addHttpListener(config.getPort(), "localhost")
                 .setHandler(path)
                 .build();
         server.start();
@@ -38,13 +43,16 @@ public class JSRWebSocketServer {
                         new WebSocketDeploymentInfo().addEndpoint(JsrChatWebSocketEndpoint.class)
                                 .setBuffers(new DefaultByteBufferPool(true, 100))
                 )
+                .addServlet(Servlets.servlet(MessageServlet.class).addMapping(config.getHttpPath()))
                 .addDeploymentCompleteListener(new ServletContextListener() {
                     @Override
                     public void contextInitialized(ServletContextEvent sce) {
-                        new RenewTask();
+                        RenewTask.start();
+                        System.out.println("Open your web browser and navigate to " +
+                                (config.getSsl() ? "https" : "http") + "://127.0.0.1:" + config.getPort() + '/');
                     }
-                })
-                .addServlet(Servlets.servlet(MessageServlet.class).addMapping("/login"));
+                });
+
 
         DeploymentManager manager = container.addDeployment(builder);
         manager.deploy();

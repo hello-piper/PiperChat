@@ -31,6 +31,10 @@ public class WebSocketUser {
         CHANNEL_MAP.remove(uid);
     }
 
+    public static Integer onlineNum() {
+        return CHANNEL_MAP.size();
+    }
+
     // group
 
     public static void addGroupChannel(String uid, Object channel) {

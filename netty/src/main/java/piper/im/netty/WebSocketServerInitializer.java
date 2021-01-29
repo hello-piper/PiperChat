@@ -8,6 +8,8 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.SslContext;
+import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.util.YamlUtil;
 
 /**
  * WebSocket初始化配置
@@ -15,8 +17,6 @@ import io.netty.handler.ssl.SslContext;
  * @author piper
  */
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
-
-    private static final String WEBSOCKET_PATH = "/websocket";
 
     private final SslContext sslCtx;
 
@@ -26,6 +26,8 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 
     @Override
     public void initChannel(SocketChannel ch) {
+        MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
+
         ChannelPipeline pipeline = ch.pipeline();
         if (sslCtx != null) {
             pipeline.addLast(sslCtx.newHandler(ch.alloc()));
@@ -33,7 +35,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());
-        pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));
+        pipeline.addLast(new WebSocketServerProtocolHandler(config.getWsPath(), null, true));
         pipeline.addLast(new HttpRequestHandler());
         pipeline.addLast(new WebSocketFrameHandler());
     }

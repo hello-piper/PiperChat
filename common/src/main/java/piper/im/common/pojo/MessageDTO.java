@@ -1,4 +1,4 @@
-package piper.im.common;
+package piper.im.common.pojo;
 
 import com.alibaba.fastjson.JSON;
 

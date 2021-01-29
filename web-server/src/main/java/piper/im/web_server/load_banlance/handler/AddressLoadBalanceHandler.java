@@ -1,6 +1,6 @@
 package piper.im.web_server.load_banlance.handler;
 
-import piper.im.common.AddressInfo;
+import piper.im.common.pojo.AddressInfo;
 import piper.im.web_server.WeightOnlineConfig;
 
 import java.util.ArrayList;
