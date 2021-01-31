@@ -53,7 +53,6 @@ public class JSRWebSocketServer {
                     }
                 });
 
-
         DeploymentManager manager = container.addDeployment(builder);
         manager.deploy();
         try {

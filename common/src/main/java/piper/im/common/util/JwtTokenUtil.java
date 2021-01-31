@@ -28,9 +28,9 @@ public class JwtTokenUtil {
     private String jwtSecret = "123456";
 
     /**
-     * 默认jwt的过期时间
+     * 默认jwt的过期时间(小时)
      */
-    private Long defaultExpiredDate = 82800L;
+    private Long defaultExpiredDate = 3L;
 
     public JwtTokenUtil() {
     }
@@ -41,9 +41,9 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 获取用户名从token中
+     * 获取uid从token中
      */
-    public String getUserIdFromToken(String token) {
+    public String getUidFromToken(String token) {
         return getClaimFromToken(token).getSubject();
     }
 
@@ -111,31 +111,31 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 生成token,根据userId和默认过期时间
+     * 生成token,根据uid和默认过期时间
      */
-    public String generateToken(String userId, Map<String, Object> claims) {
-        final Date expirationDate = new Date(System.currentTimeMillis() + defaultExpiredDate * 1000);
-        return generateToken(userId, expirationDate, claims);
+    public String generateToken(String uid, Map<String, Object> claims) {
+        final Date expirationDate = new Date(System.currentTimeMillis() + defaultExpiredDate * 60 * 60 * 1000);
+        return generateToken(uid, expirationDate, claims);
     }
 
     /**
-     * 生成token,根据userId和过期时间
+     * 生成token,根据uid和过期时间
      */
-    public String generateToken(String userId, Date exppiredDate, Map<String, Object> claims) {
+    public String generateToken(String uid, Date expireDate, Map<String, Object> claims) {
         final Date createdDate = new Date();
         if (claims == null) {
             return Jwts.builder()
-                    .setSubject(userId)
+                    .setSubject(uid)
                     .setIssuedAt(createdDate)
-                    .setExpiration(exppiredDate)
+                    .setExpiration(expireDate)
                     .signWith(SignatureAlgorithm.HS512, this.jwtSecret)
                     .compact();
         } else {
             return Jwts.builder()
                     .setClaims(claims)
-                    .setSubject(userId)
+                    .setSubject(uid)
                     .setIssuedAt(createdDate)
-                    .setExpiration(exppiredDate)
+                    .setExpiration(expireDate)
                     .signWith(SignatureAlgorithm.HS512, this.jwtSecret)
                     .compact();
         }

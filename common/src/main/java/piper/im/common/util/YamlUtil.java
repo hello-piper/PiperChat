@@ -1,6 +1,5 @@
 package piper.im.common.util;
 
-import cn.hutool.core.io.FileUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.beans.BeanInfo;
@@ -19,14 +18,20 @@ import java.util.Map;
  */
 public class YamlUtil {
 
-    private static final String CONFIG_PATH = "application.yml";
-
     private static final LinkedHashMap<String, Object> LOADED_CONFIG;
 
     static {
-        LOADED_CONFIG = new Yaml().load(FileUtil.getInputStream(CONFIG_PATH));
+        LOADED_CONFIG = new Yaml().load(ClassLoader.getSystemResourceAsStream("application.yml"));
     }
 
+    /**
+     * 获取配置
+     *
+     * @param key
+     * @param config
+     * @param <T>
+     * @return
+     */
     public static <T> T getConfig(String key, Class<T> config) {
         try {
             T instance = config.newInstance();
@@ -48,8 +53,7 @@ public class YamlUtil {
     public static <T> void populate(Map<String, Object> map, T bean) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            for (PropertyDescriptor descriptor : propertyDescriptors) {
+            for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
                 String name = descriptor.getName();
                 if (map.containsKey(name)) {
                     Method writeMethod = descriptor.getWriteMethod();

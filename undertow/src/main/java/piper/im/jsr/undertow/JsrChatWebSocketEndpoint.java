@@ -2,6 +2,7 @@ package piper.im.jsr.undertow;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import piper.im.common.WebSocketUser;
 import piper.im.jsr.undertow.coder.JsonDecode;
 import piper.im.jsr.undertow.coder.JsonEncode;
 import piper.im.jsr.undertow.coder.MsgpackDecode;
@@ -12,18 +13,11 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint(value = "/websocket", encoders = {JsonEncode.class, MsgpackEncode.class}, decoders = {JsonDecode.class, MsgpackDecode.class})
 public class JsrChatWebSocketEndpoint {
 
     private final Logger log = LogManager.getLogger(JsrChatWebSocketEndpoint.class);
-
-    //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
-    private static int onlineCount = 0;
-
-    //concurrent包的线程安全Set，用来存放每个客户端对应的JsrChatWebSocketEndpoint对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
-    private static final CopyOnWriteArraySet<JsrChatWebSocketEndpoint> webSocketSet = new CopyOnWriteArraySet<JsrChatWebSocketEndpoint>();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -37,9 +31,8 @@ public class JsrChatWebSocketEndpoint {
     public void onOpen(Session session) {
         this.session = session;
         session.setMaxIdleTimeout(10000);
-        webSocketSet.add(this);    //加入set中
-        addOnlineCount();          //在线数加1
-        log.debug("有新连接加入！当前在线人数为 {}", getOnlineCount());
+        WebSocketUser.put(session.getId(), this);
+        log.debug("有新连接加入！当前在线人数为 {}", WebSocketUser.onlineNum());
     }
 
     /**
@@ -47,9 +40,8 @@ public class JsrChatWebSocketEndpoint {
      */
     @OnClose
     public void onClose() {
-        webSocketSet.remove(this); //从set中删除
-        subOnlineCount();          //在线数减1
-        log.debug("有一连接关闭！当前在线人数为 {}", getOnlineCount());
+        WebSocketUser.remove(session.getId());
+        log.debug("有一连接关闭！当前在线人数为 {}", WebSocketUser.onlineNum());
     }
 
     @OnMessage
@@ -106,18 +98,6 @@ public class JsrChatWebSocketEndpoint {
     public void sendMessage(String message) throws IOException {
         this.session.getBasicRemote().sendText(message);
         //this.session.getAsyncRemote().sendText(message);
-    }
-
-    public static synchronized int getOnlineCount() {
-        return onlineCount;
-    }
-
-    public static synchronized void addOnlineCount() {
-        JsrChatWebSocketEndpoint.onlineCount++;
-    }
-
-    public static synchronized void subOnlineCount() {
-        JsrChatWebSocketEndpoint.onlineCount--;
     }
 
 }
