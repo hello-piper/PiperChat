@@ -6,7 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import piper.im.common.pojo.MessageDTO;
+import piper.im.common.pojo.message.Message;
 
 /**
  * Echoes uppercase content of text frames.
@@ -31,7 +31,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         // ping and pong frames already handled
         if (frame != null) {
             // Send the uppercase string back.
-            MessageHandler.send(JSON.parseObject(frame.text(), MessageDTO.class));
+            MessageHandler.send(JSON.parseObject(frame.text(), Message.class));
         } else {
             throw new UnsupportedOperationException("frame is null");
         }

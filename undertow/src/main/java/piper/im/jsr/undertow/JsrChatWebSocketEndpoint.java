@@ -3,6 +3,7 @@ package piper.im.jsr.undertow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
+import piper.im.common.pojo.message.Message;
 import piper.im.jsr.undertow.coder.JsonDecode;
 import piper.im.jsr.undertow.coder.JsonEncode;
 import piper.im.jsr.undertow.coder.MsgpackDecode;

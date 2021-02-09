@@ -1,9 +1,9 @@
 package piper.im.netty;
 
 import io.netty.channel.Channel;
-import piper.im.common.pojo.MessageDTO;
-import piper.im.common.enums.MessageOpeEnum;
 import piper.im.common.WebSocketUser;
+import piper.im.common.enums.ChatTypeEnum;
+import piper.im.common.pojo.message.Message;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,27 +21,28 @@ public class MessageHandler {
      *
      * @param dto
      */
-    public static void send(MessageDTO dto) {
-        MessageOpeEnum messageOpeEnum = MessageOpeEnum.valueOf(dto.getOpe());
-        if (Objects.isNull(messageOpeEnum)) {
+    public static void send(Message dto) {
+        ChatTypeEnum chatTypeEnum = ChatTypeEnum.valueOf(dto.getChatType());
+        if (Objects.isNull(chatTypeEnum)) {
             throw new UnsupportedOperationException("不支持的类型");
         }
 
-        switch (messageOpeEnum) {
-            case peerToPeer:
+        switch (chatTypeEnum) {
+            case SINGLE:
                 Channel channel = WebSocketUser.get(dto.getTo());
                 if (channel != null) {
                     channel.writeAndFlush(dto.toString());
                 }
                 break;
-            case group:
+            case GROUP:
+            case CHATROOM:
                 List<Channel> channels = WebSocketUser.getGroupChannels(dto.getTo());
                 if (channels != null) {
                     channels.forEach(v -> v.writeAndFlush(dto.toString()));
                 }
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + messageOpeEnum);
+                throw new IllegalStateException("Unexpected value: " + chatTypeEnum);
         }
     }
 

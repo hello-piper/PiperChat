@@ -7,7 +7,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslHandler;
-import piper.im.common.pojo.MessageDTO;
+import piper.im.common.pojo.message.Message;
 import piper.im.common.pojo.MessageServerConfig;
 import piper.im.common.util.YamlUtil;
 
@@ -56,7 +56,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
                 byte[] content = new byte[len];
                 req.content().readBytes(content);
                 String contentStr = new String(content, StandardCharsets.UTF_8);
-                MessageHandler.send(JSONObject.parseObject(contentStr, MessageDTO.class));
+                MessageHandler.send(JSONObject.parseObject(contentStr, Message.class));
             }
             FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), OK, Unpooled.directBuffer(0));
             sendHttpResponse(ctx, req, res);
