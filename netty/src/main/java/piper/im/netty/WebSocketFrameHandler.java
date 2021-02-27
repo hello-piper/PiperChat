@@ -14,16 +14,16 @@ import piper.im.common.pojo.message.Message;
  * @author piper
  */
 public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
-    protected static final InternalLogger logger = InternalLoggerFactory.getInstance(WebSocketFrameHandler.class);
+    protected static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketFrameHandler.class);
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
-        logger.debug("用户：" + ctx.channel().id().asLongText() + "上线");
+        log.debug("用户：{} 上线", ctx.channel().id().asShortText());
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        logger.debug("用户下线: " + ctx.channel().id().asLongText());
+        log.debug("用户: {} 下线", ctx.channel().id().asShortText());
     }
 
     @Override
