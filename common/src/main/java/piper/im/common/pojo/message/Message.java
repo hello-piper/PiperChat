@@ -38,52 +38,45 @@ public class Message implements Serializable {
      */
     private MessageBody body;
 
-    public static Message createTextMessage(String text, String to) {
+    public static Message createTextMessage(String text) {
         Message message = new Message();
         message.setBody(new TextMessageBody(text));
-        message.setTo(to);
         return message;
     }
 
-    public static Message createImageMessage(double width, double height, long size, String imgUrl, String thumbnailUrl, String to) {
+    public static Message createImageMessage(double width, double height, long size, String imgUrl, String thumbnailUrl) {
         Message message = new Message();
         message.setBody(new ImageMessageBody(width, height, size, imgUrl, thumbnailUrl));
-        message.setTo(to);
         return message;
     }
 
-    public static Message createFileMessage(String fileName, String fileUrl, long size, String to) {
+    public static Message createFileMessage(String fileName, String fileUrl, long size) {
         Message message = new Message();
         message.setBody(new FileMessageBody(fileName, fileUrl, size));
-        message.setTo(to);
         return message;
     }
 
-    public static Message createVoiceMessage(String voiceUrl, int length, long size, String to) {
+    public static Message createVoiceMessage(String voiceUrl, int length, long size) {
         Message message = new Message();
         message.setBody(new VoiceMessageBody(voiceUrl, length, size));
-        message.setTo(to);
         return message;
     }
 
-    public static Message createVideoMessage(String videoName, String videoUrl, int length, long size, String to) {
+    public static Message createVideoMessage(String videoName, String videoUrl, int length, long size) {
         Message message = new Message();
         message.setBody(new VideoMessageBody(videoName, videoUrl, length, size));
-        message.setTo(to);
         return message;
     }
 
-    public static Message createLocationMessage(String address, double latitude, double longitude, String to) {
+    public static Message createLocationMessage(String address, double latitude, double longitude) {
         Message message = new Message();
         message.setBody(new LocationMessageBody(address, latitude, longitude));
-        message.setTo(to);
         return message;
     }
 
-    public static Message createCmdMessage(String action, Map<String, String> params, String to) {
+    public static Message createCmdMessage(String action, Map<String, String> params) {
         Message message = new Message();
         message.setBody(new CmdMessageBody(action, params));
-        message.setTo(to);
         return message;
     }
 

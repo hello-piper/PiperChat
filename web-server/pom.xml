@@ -50,7 +50,7 @@
     </dependencies>
 
     <build>
-        <finalName>test</finalName>
+        <finalName>web-server</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>

@@ -10,19 +10,19 @@ import java.util.Arrays;
 public enum ChatTypeEnum {
 
     // 单聊
-    SINGLE(0),
+    SINGLE((byte) 0),
     // 群聊
-    GROUP(1),
+    GROUP((byte) 1),
     // 聊天室
-    CHATROOM(2);
+    CHATROOM((byte) 2);
 
-    public int type;
+    public byte type;
 
-    ChatTypeEnum(int type) {
+    ChatTypeEnum(byte type) {
         this.type = type;
     }
 
-    public static ChatTypeEnum valueOf(int type) {
+    public static ChatTypeEnum valueOf(byte type) {
         return Arrays.stream(values()).filter(v -> v.type == type).findFirst().orElse(null);
     }
 }

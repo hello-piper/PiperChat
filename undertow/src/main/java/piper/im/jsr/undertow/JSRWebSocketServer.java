@@ -26,7 +26,7 @@ public class JSRWebSocketServer {
         PathHandler path = Handlers.path();
 
         Undertow server = Undertow.builder()
-                .addHttpListener(config.getPort(), "localhost")
+                .addHttpListener(config.getPort(), "0.0.0.0")
                 .setHandler(path)
                 .build();
         server.start();

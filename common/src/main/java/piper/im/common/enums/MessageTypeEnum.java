@@ -10,27 +10,27 @@ import java.util.Arrays;
 public enum MessageTypeEnum {
 
     // 文本消息
-    TEXT(0),
+    TEXT((byte) 0),
     // 图片
-    IMAGE(1),
+    IMAGE((byte) 1),
     // 语音
-    VOICE(2),
+    VOICE((byte) 2),
     // 视频
-    VIDEO(3),
+    VIDEO((byte) 3),
     // 文件
-    FILE(4),
+    FILE((byte) 4),
     // 地理位置信息
-    LOCATION(5),
+    LOCATION((byte) 5),
     // 信令
-    COMMAND(10);
+    COMMAND((byte) 10);
 
-    public int type;
+    public byte type;
 
-    MessageTypeEnum(int type) {
+    MessageTypeEnum(byte type) {
         this.type = type;
     }
 
-    public static MessageTypeEnum valueOf(int type) {
+    public static MessageTypeEnum valueOf(byte type) {
         return Arrays.stream(values()).filter(v -> v.type == type).findFirst().orElse(null);
     }
 }
