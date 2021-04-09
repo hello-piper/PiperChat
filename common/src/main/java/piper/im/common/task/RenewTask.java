@@ -28,7 +28,7 @@ public class RenewTask {
         MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
         REPORT_URL = config.getReportUrl();
         AddressInfo addressInfo = new AddressInfo();
-        addressInfo.setIp(IpUtil.getIpVo(null).getIp());
+        addressInfo.setIp(IpUtil.getIpVo().getIp());
         addressInfo.setPort(config.getPort());
         addressInfo.setSsl(config.getSsl());
         addressInfo.setHttpPath(config.getHttpPath());

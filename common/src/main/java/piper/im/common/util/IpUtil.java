@@ -9,7 +9,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * IP工具类
@@ -75,8 +77,8 @@ public class IpUtil {
         }
 
         StringBuilder inputLine = new StringBuilder();
-        String read;
         try {
+            String read;
             HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
             urlConnection.setRequestProperty("Charset", Charset.forName("GBK").name());
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.forName("GBK").name()));
@@ -87,7 +89,25 @@ public class IpUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return JSONObject.parseObject(inputLine.toString(), IpVO.class);
+    }
 
+    /**
+     * 调用IP地址查询接口（https://ip.dianduidian.com），返回ip、地理位置
+     */
+    public static IpVO getIpVo() {
+        StringBuilder inputLine = new StringBuilder();
+        try {
+            String read;
+            URLConnection urlConnection = new URL("https://ip.dianduidian.com").openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8.name()));
+            while ((read = in.readLine()) != null) {
+                inputLine.append(read);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return JSONObject.parseObject(inputLine.toString(), IpVO.class);
     }
 }

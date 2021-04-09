@@ -3,7 +3,8 @@ package piper.im.common.pojo;
 import java.io.Serializable;
 
 /**
- * IP返回结果
+ * 获取本机IP地址 返回结果
+ * 请求地址 https://ip.dianduidian.com/
  *
  * @author piper
  */
@@ -15,33 +16,21 @@ public class IpVO implements Serializable {
      */
     private String ip;
     /**
-     * 省
+     * 运营商
      */
-    private String pro;
+    private String isp;
     /**
-     * 省编码
+     * 国家
      */
-    private String proCode;
+    private String country;
     /**
      * 城市
      */
     private String city;
     /**
-     * 城市编码
-     */
-    private String cityCode;
-    /**
      * 区
      */
     private String region;
-    /**
-     * 区编码
-     */
-    private String regionCode;
-    /**
-     * 详细地址 + 运营商
-     */
-    private String addr;
 
     public String getIp() {
         return ip;
@@ -51,20 +40,20 @@ public class IpVO implements Serializable {
         this.ip = ip;
     }
 
-    public String getPro() {
-        return pro;
+    public String getIsp() {
+        return isp;
     }
 
-    public void setPro(String pro) {
-        this.pro = pro;
+    public void setIsp(String isp) {
+        this.isp = isp;
     }
 
-    public String getProCode() {
-        return proCode;
+    public String getCountry() {
+        return country;
     }
 
-    public void setProCode(String proCode) {
-        this.proCode = proCode;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getCity() {
@@ -75,35 +64,11 @@ public class IpVO implements Serializable {
         this.city = city;
     }
 
-    public String getCityCode() {
-        return cityCode;
-    }
-
-    public void setCityCode(String cityCode) {
-        this.cityCode = cityCode;
-    }
-
     public String getRegion() {
         return region;
     }
 
     public void setRegion(String region) {
         this.region = region;
-    }
-
-    public String getRegionCode() {
-        return regionCode;
-    }
-
-    public void setRegionCode(String regionCode) {
-        this.regionCode = regionCode;
-    }
-
-    public String getAddr() {
-        return addr;
-    }
-
-    public void setAddr(String addr) {
-        this.addr = addr;
     }
 }
