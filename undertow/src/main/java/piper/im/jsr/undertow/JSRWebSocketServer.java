@@ -10,7 +10,7 @@ import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
-import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.pojo.ServerConfig;
 import piper.im.common.task.RenewTask;
 import piper.im.common.util.YamlUtil;
 
@@ -21,7 +21,7 @@ import javax.servlet.ServletException;
 public class JSRWebSocketServer {
 
     public static void main(final String[] args) {
-        MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
+        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
 
         PathHandler path = Handlers.path();
 

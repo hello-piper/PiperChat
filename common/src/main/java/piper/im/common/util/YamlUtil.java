@@ -33,14 +33,14 @@ public class YamlUtil {
      * @return
      */
     public static <T> T getConfig(String key, Class<T> config) {
+        T instance = null;
         try {
-            T instance = config.newInstance();
+            instance = config.getDeclaredConstructor().newInstance();
             populate((Map) LOADED_CONFIG.get(key), instance);
-            return instance;
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return null;
+        return instance;
     }
 
     /**
@@ -64,5 +64,4 @@ public class YamlUtil {
             e.printStackTrace();
         }
     }
-
 }

@@ -5,14 +5,15 @@
 
 package piper.im.common.pojo.message;
 
-import piper.im.common.enums.MessageTypeEnum;
+import java.io.Serializable;
 
 /**
  * 语言消息
  *
  * @author piper
  */
-public class VoiceMessageBody extends MessageBody {
+public class VoiceMessageBody implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * 语言地址
@@ -60,10 +61,5 @@ public class VoiceMessageBody extends MessageBody {
 
     public void setSize(long size) {
         this.size = size;
-    }
-
-    @Override
-    public MessageTypeEnum getType() {
-        return MessageTypeEnum.VOICE;
     }
 }

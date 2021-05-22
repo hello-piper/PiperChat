@@ -5,14 +5,15 @@
 
 package piper.im.common.pojo.message;
 
-import piper.im.common.enums.MessageTypeEnum;
+import java.io.Serializable;
 
 /**
  * 地址消息
  *
  * @author piper
  */
-public class LocationMessageBody extends MessageBody {
+public class LocationMessageBody implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * 地址
@@ -58,10 +59,5 @@ public class LocationMessageBody extends MessageBody {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }
-
-    @Override
-    public MessageTypeEnum getType() {
-        return MessageTypeEnum.LOCATION;
     }
 }

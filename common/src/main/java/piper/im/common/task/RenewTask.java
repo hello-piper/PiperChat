@@ -6,13 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
 import piper.im.common.pojo.AddressInfo;
-import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.pojo.ServerConfig;
 import piper.im.common.util.IpUtil;
 import piper.im.common.util.YamlUtil;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 定时续约并上报信息
@@ -25,7 +24,8 @@ public class RenewTask {
     private static final AddressInfo ADDRESS_INFO;
 
     static {
-        MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
+        log.info("renew task start");
+        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
         REPORT_URL = config.getReportUrl();
         AddressInfo addressInfo = new AddressInfo();
         addressInfo.setIp(IpUtil.getIpVo().getIp());
@@ -37,13 +37,15 @@ public class RenewTask {
     }
 
     public static void start() {
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleWithFixedDelay(() -> {
-            ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
-            String info = JSONObject.toJSONString(ADDRESS_INFO);
-            HttpRequest.put(REPORT_URL).body(info).execute();
-            log.info("网关机定时汇报信息>>>{}", info);
-        }, 1, 10, TimeUnit.SECONDS);
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
+                String info = JSONObject.toJSONString(ADDRESS_INFO);
+                HttpRequest.put(REPORT_URL).body(info).execute();
+                log.info("网关机定时汇报信息>>>{}", info);
+            }
+        };
+        new Timer("RenewTimer", true).scheduleAtFixedRate(timerTask, 1000, 5000);
     }
-
 }

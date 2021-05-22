@@ -1,6 +1,6 @@
 package piper.im.common.pojo.message;
 
-import com.alibaba.fastjson.JSON;
+import piper.im.common.enums.MessageTypeEnum;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -16,12 +16,17 @@ public class Message implements Serializable {
     /**
      * 消息id
      */
-    private String msgId;
+    private String id;
 
     /**
      * 消息类型
      */
     private Byte chatType;
+
+    /**
+     * 消息内容类型
+     */
+    private Byte messageType;
 
     /**
      * 发送者id
@@ -36,56 +41,66 @@ public class Message implements Serializable {
     /**
      * 消息内容
      */
-    private MessageBody body;
+    private Object body;
+
+    public Message() {
+    }
 
     public static Message createTextMessage(String text) {
         Message message = new Message();
+        message.setMessageType(MessageTypeEnum.TEXT.type);
         message.setBody(new TextMessageBody(text));
         return message;
     }
 
     public static Message createImageMessage(double width, double height, long size, String imgUrl, String thumbnailUrl) {
         Message message = new Message();
+        message.setMessageType(MessageTypeEnum.IMAGE.type);
         message.setBody(new ImageMessageBody(width, height, size, imgUrl, thumbnailUrl));
         return message;
     }
 
     public static Message createFileMessage(String fileName, String fileUrl, long size) {
         Message message = new Message();
+        message.setMessageType(MessageTypeEnum.FILE.type);
         message.setBody(new FileMessageBody(fileName, fileUrl, size));
         return message;
     }
 
     public static Message createVoiceMessage(String voiceUrl, int length, long size) {
         Message message = new Message();
+        message.setMessageType(MessageTypeEnum.VOICE.type);
         message.setBody(new VoiceMessageBody(voiceUrl, length, size));
         return message;
     }
 
     public static Message createVideoMessage(String videoName, String videoUrl, int length, long size) {
         Message message = new Message();
+        message.setMessageType(MessageTypeEnum.VIDEO.type);
         message.setBody(new VideoMessageBody(videoName, videoUrl, length, size));
         return message;
     }
 
     public static Message createLocationMessage(String address, double latitude, double longitude) {
         Message message = new Message();
+        message.setMessageType(MessageTypeEnum.LOCATION.type);
         message.setBody(new LocationMessageBody(address, latitude, longitude));
         return message;
     }
 
     public static Message createCmdMessage(String action, Map<String, String> params) {
         Message message = new Message();
+        message.setMessageType(MessageTypeEnum.COMMAND.type);
         message.setBody(new CmdMessageBody(action, params));
         return message;
     }
 
-    public String getMsgId() {
-        return msgId;
+    public String getId() {
+        return id;
     }
 
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Byte getChatType() {
@@ -94,6 +109,14 @@ public class Message implements Serializable {
 
     public void setChatType(Byte chatType) {
         this.chatType = chatType;
+    }
+
+    public Byte getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(Byte messageType) {
+        this.messageType = messageType;
     }
 
     public String getFrom() {
@@ -112,16 +135,11 @@ public class Message implements Serializable {
         this.to = to;
     }
 
-    public MessageBody getBody() {
+    public Object getBody() {
         return body;
     }
 
-    public void setBody(MessageBody body) {
+    public void setBody(Object body) {
         this.body = body;
-    }
-
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
     }
 }

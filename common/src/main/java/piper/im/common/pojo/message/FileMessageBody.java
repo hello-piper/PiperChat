@@ -5,14 +5,15 @@
 
 package piper.im.common.pojo.message;
 
-import piper.im.common.enums.MessageTypeEnum;
+import java.io.Serializable;
 
 /**
  * 文件消息
  *
  * @author piper
  */
-public class FileMessageBody extends MessageBody {
+public class FileMessageBody implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * 文件名称
@@ -60,10 +61,5 @@ public class FileMessageBody extends MessageBody {
 
     public void setSize(long size) {
         this.size = size;
-    }
-
-    @Override
-    public MessageTypeEnum getType() {
-        return MessageTypeEnum.FILE;
     }
 }

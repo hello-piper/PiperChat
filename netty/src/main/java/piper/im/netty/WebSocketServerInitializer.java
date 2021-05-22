@@ -8,7 +8,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.SslContext;
-import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.pojo.ServerConfig;
 import piper.im.common.util.YamlUtil;
 
 /**
@@ -26,7 +26,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 
     @Override
     public void initChannel(SocketChannel ch) {
-        MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
+        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
 
         ChannelPipeline pipeline = ch.pipeline();
         if (sslCtx != null) {

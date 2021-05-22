@@ -5,14 +5,15 @@
 
 package piper.im.common.pojo.message;
 
-import piper.im.common.enums.MessageTypeEnum;
+import java.io.Serializable;
 
 /**
  * 视频消息
  *
  * @author piper
  */
-public class VideoMessageBody extends MessageBody {
+public class VideoMessageBody implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * 视频名称
@@ -74,10 +75,5 @@ public class VideoMessageBody extends MessageBody {
 
     public void setSize(long size) {
         this.size = size;
-    }
-
-    @Override
-    public MessageTypeEnum getType() {
-        return MessageTypeEnum.VIDEO;
     }
 }

@@ -1,7 +1,6 @@
 package piper.im.common.pojo.message;
 
-import piper.im.common.enums.MessageTypeEnum;
-
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -9,7 +8,8 @@ import java.util.Map;
  *
  * @author piper
  */
-public class CmdMessageBody extends MessageBody {
+public class CmdMessageBody implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * 指令
@@ -43,10 +43,5 @@ public class CmdMessageBody extends MessageBody {
 
     public void setParams(Map<String, String> params) {
         this.params = params;
-    }
-
-    @Override
-    public MessageTypeEnum getType() {
-        return MessageTypeEnum.COMMAND;
     }
 }

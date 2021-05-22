@@ -5,14 +5,15 @@
 
 package piper.im.common.pojo.message;
 
-import piper.im.common.enums.MessageTypeEnum;
+import java.io.Serializable;
 
 /**
  * 图片消息
  *
  * @author piper
  */
-public class ImageMessageBody extends MessageBody {
+public class ImageMessageBody implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * 图片宽度
@@ -88,10 +89,5 @@ public class ImageMessageBody extends MessageBody {
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
-    }
-
-    @Override
-    public MessageTypeEnum getType() {
-        return MessageTypeEnum.IMAGE;
     }
 }

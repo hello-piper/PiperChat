@@ -1,13 +1,14 @@
 package piper.im.common.pojo.message;
 
-import piper.im.common.enums.MessageTypeEnum;
+import java.io.Serializable;
 
 /**
  * 文字消息
  *
  * @author piper
  */
-public class TextMessageBody extends MessageBody {
+public class TextMessageBody implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /**
      * 文字
@@ -27,10 +28,5 @@ public class TextMessageBody extends MessageBody {
 
     public TextMessageBody(String text) {
         this.text = text;
-    }
-
-    @Override
-    public MessageTypeEnum getType() {
-        return MessageTypeEnum.TEXT;
     }
 }

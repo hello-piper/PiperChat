@@ -3,11 +3,11 @@ package piper.im.common.pojo;
 import java.io.Serializable;
 
 /**
- * 服务器地址
+ * 服务器配置
  *
  * @author piper
  */
-public class MessageServerConfig implements Serializable {
+public class ServerConfig implements Serializable {
     private static final long serialVersionUID = 1;
 
     private Boolean ssl = false;

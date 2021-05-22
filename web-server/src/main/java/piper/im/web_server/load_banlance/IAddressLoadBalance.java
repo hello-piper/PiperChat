@@ -10,11 +10,10 @@ public interface IAddressLoadBalance {
     /**
      * 地址信息集合
      */
-
-    ConcurrentHashMap<String, AddressInfo> ADDRESS_MAP = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, AddressInfo> IM_SERVER_MAP = new ConcurrentHashMap<>();
 
     /**
      * 根据权重进行分布
      */
-    CopyOnWriteArrayList<AddressInfo> ADDRESS_LIST_BY_WEIGHT = new CopyOnWriteArrayList<>();
+    CopyOnWriteArrayList<AddressInfo> IM_SERVER_LIST_BY_WEIGHT = new CopyOnWriteArrayList<>();
 }

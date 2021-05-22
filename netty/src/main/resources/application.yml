@@ -1,6 +1,6 @@
 server:
   ssl: false
-  port: 8080
+  port: 8081
   wsPath: /websocket
   httpPath: /msg
-  reportUrl: localhost:8080/address
+  reportUrl: localhost:8090/address

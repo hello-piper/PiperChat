@@ -32,7 +32,7 @@ public class ServerStart {
             PathHandler path = Handlers.path(Handlers.redirect("/")).addPrefixPath("/", manager.start());
 
             Undertow server = Undertow.builder()
-                    .addHttpListener(8080, "0.0.0.0")
+                    .addHttpListener(8090, "0.0.0.0")
                     .setHandler(path)
                     .build();
             server.start();

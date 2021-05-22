@@ -8,7 +8,7 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslHandler;
 import piper.im.common.pojo.message.Message;
-import piper.im.common.pojo.MessageServerConfig;
+import piper.im.common.pojo.ServerConfig;
 import piper.im.common.util.YamlUtil;
 
 import java.io.InputStream;
@@ -25,7 +25,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.*;
  * @author piper
  */
 public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-    MessageServerConfig config = YamlUtil.getConfig("server", MessageServerConfig.class);
+    ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {

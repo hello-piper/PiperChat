@@ -8,11 +8,11 @@ public class AddressRandomByWeightStrategy implements IAddressLoadBalanceStrateg
 
     @Override
     public AddressInfo getAddress() {
-        int size = ADDRESS_LIST_BY_WEIGHT.size();
+        int size = IM_SERVER_LIST_BY_WEIGHT.size();
         if (size == 0) {
             return null;
         }
         int nextInt = ThreadLocalRandom.current().nextInt(size);
-        return ADDRESS_LIST_BY_WEIGHT.get(nextInt);
+        return IM_SERVER_LIST_BY_WEIGHT.get(nextInt);
     }
 }
