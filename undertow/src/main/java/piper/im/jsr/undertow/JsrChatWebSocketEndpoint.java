@@ -6,8 +6,8 @@ import piper.im.common.WebSocketUser;
 import piper.im.common.pojo.message.Message;
 import piper.im.jsr.undertow.coder.JsonDecode;
 import piper.im.jsr.undertow.coder.JsonEncode;
-import piper.im.jsr.undertow.coder.MsgpackDecode;
-import piper.im.jsr.undertow.coder.MsgpackEncode;
+import piper.im.jsr.undertow.coder.ProtostuffDecode;
+import piper.im.jsr.undertow.coder.ProtostuffEncode;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-@ServerEndpoint(value = "/websocket", encoders = {JsonEncode.class, MsgpackEncode.class}, decoders = {JsonDecode.class, MsgpackDecode.class})
+@ServerEndpoint(value = "/websocket", encoders = {JsonEncode.class, ProtostuffEncode.class}, decoders = {JsonDecode.class, ProtostuffDecode.class})
 public class JsrChatWebSocketEndpoint {
 
     private final Logger log = LogManager.getLogger(JsrChatWebSocketEndpoint.class);

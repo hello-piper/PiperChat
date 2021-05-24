@@ -20,11 +20,9 @@ public class JsonEncode implements Encoder.Text<Message> {
 
     @Override
     public void init(EndpointConfig endpointConfig) {
-
     }
 
     @Override
     public void destroy() {
-
     }
 }
