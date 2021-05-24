@@ -3,8 +3,8 @@ package piper.im.web_server;
 import cn.hutool.core.io.IoUtil;
 import com.alibaba.fastjson.JSONObject;
 import piper.im.common.pojo.AddressInfo;
-import piper.im.web_server.load_banlance.handler.AddressLoadBalanceHandler;
-import piper.im.web_server.load_banlance.handler.IAddressLoadBalanceHandler;
+import piper.im.web_server.load_banlance.AddressLoadBalanceHandler;
+import piper.im.web_server.load_banlance.IAddressLoadBalance;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AddressServlet extends HttpServlet {
-    private final IAddressLoadBalanceHandler addressHandler = new AddressLoadBalanceHandler();
+    private final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
 
     /**
      * 接收IM网关的续约信息

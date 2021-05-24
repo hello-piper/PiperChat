@@ -1,4 +1,4 @@
-package piper.im.web_server.load_banlance.handler;
+package piper.im.web_server.load_banlance;
 
 import piper.im.common.pojo.AddressInfo;
 import piper.im.web_server.WeightOnlineConfig;
@@ -6,7 +6,7 @@ import piper.im.web_server.WeightOnlineConfig;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class AddressLoadBalanceHandler implements IAddressLoadBalanceHandler {
+public class AddressLoadBalanceHandler implements IAddressLoadBalance {
 
     @Override
     public void flushAddress(AddressInfo addressInfo) {
