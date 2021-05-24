@@ -1,6 +1,7 @@
 package piper.im.common.pojo;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 服务器地址
@@ -68,5 +69,18 @@ public class AddressInfo implements Serializable {
 
     public void setOnlineNum(Integer onlineNum) {
         this.onlineNum = onlineNum;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AddressInfo that = (AddressInfo) o;
+        return ip.equals(that.ip) && port.equals(that.port);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ip, port);
     }
 }

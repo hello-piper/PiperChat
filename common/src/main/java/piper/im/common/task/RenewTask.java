@@ -24,7 +24,6 @@ public class RenewTask {
     private static final AddressInfo ADDRESS_INFO;
 
     static {
-        log.info("renew task start");
         ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
         REPORT_URL = config.getReportUrl();
         AddressInfo addressInfo = new AddressInfo();
@@ -37,7 +36,8 @@ public class RenewTask {
     }
 
     public static void start() {
-        TimerTask timerTask = new TimerTask() {
+        // 定时续约任务
+        new Timer("RenewTimer", true).scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
@@ -45,7 +45,9 @@ public class RenewTask {
                 HttpRequest.put(REPORT_URL).body(info).execute();
                 log.info("网关机定时汇报信息>>>{}", info);
             }
-        };
-        new Timer("RenewTimer", true).scheduleAtFixedRate(timerTask, 1000, 5000);
+        }, 5000, 10000);
+
+        // 关机回调
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> HttpRequest.delete(REPORT_URL).body(JSONObject.toJSONString(ADDRESS_INFO)).execute()));
     }
 }
