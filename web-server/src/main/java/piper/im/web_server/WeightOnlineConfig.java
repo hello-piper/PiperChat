@@ -2,28 +2,28 @@ package piper.im.web_server;
 
 /**
  * 权重和连接数对应关系
- * 权重5 online<30w
- * 权重4 30w<online<40w
- * 权重3 40w<online<46w
- * 权重2 46w<online<50w
- * 权重1 online>50w
+ * 权重5 online<3W
+ * 权重4 3w<online<5w
+ * 权重3 5w<online<7w
+ * 权重2 7w<online<9w
+ * 权重1 online>9w
  */
 public class WeightOnlineConfig {
 
     /**
      * 根据连接数获取权重
      */
-    public static Integer getWeightBYOnline(Integer online) {
-        if (online < 300000) {
+    public static int getWeightBYOnline(Integer online) {
+        if (online < 30000) {
             return 5;
         }
-        if (online < 400000) {
+        if (online < 50000) {
             return 4;
         }
-        if (online < 460000) {
+        if (online < 70000) {
             return 3;
         }
-        if (online < 500000) {
+        if (online < 90000) {
             return 2;
         }
         return 1;

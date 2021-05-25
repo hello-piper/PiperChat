@@ -5,8 +5,8 @@
         <property name="pattern" value="[#|%d{yyyy-MM-dd' 'HH:mm:ss.SSS} [%-5p] %l [%t] | %m%n"/>
         <property name="patternColor"
                   value="[#|%red{%d{yyyy-MM-dd HH:mm:ss}} %green{[%thread]} %blue{[%-5p]} %magenta{%logger} | %cyan{%msg%n}"/>
-        <property name="logHome">/data/logs</property>
-        <property name="appName">ieg-asset</property>
+        <property name="logHome">/logs</property>
+        <property name="appName">netty</property>
     </properties>
 
     <appenders>
@@ -20,6 +20,10 @@
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
+            <Filters>
+                <!--将ERROR及其以上级别的日志给DENY掉-->
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
         </RollingFile>
 
         <RollingFile name="error-logfile" fileName="${logHome}/error-${appName}.log"
@@ -28,6 +32,10 @@
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
+            <Filters>
+                <!--ACCEPT ERROR 级别的日志-->
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
         </RollingFile>
     </appenders>
 
