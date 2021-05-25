@@ -1,13 +1,12 @@
 package piper.im.common.util;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import piper.im.common.pojo.IpVO;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -70,44 +69,32 @@ public class IpUtil {
     public static IpVO getIpVo(String ip) {
         //查本机
         String url = "http://whois.pconline.com.cn/ipJson.jsp?json=true";
-
         //查指定ip
         if (StrUtil.isNotEmpty(ip)) {
             url = "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip;
         }
 
-        StringBuilder inputLine = new StringBuilder();
         try {
-            String read;
-            HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
-            urlConnection.setRequestProperty("Charset", Charset.forName("GBK").name());
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.forName("GBK").name()));
-            while ((read = in.readLine()) != null) {
-                inputLine.append(read);
-            }
-            in.close();
-        } catch (Exception e) {
+            URLConnection connection = new URL(url).openConnection();
+            String read = IoUtil.read(connection.getInputStream(), Charset.forName("GBK"));
+            return JSONObject.parseObject(read, IpVO.class);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return JSONObject.parseObject(inputLine.toString(), IpVO.class);
+        return null;
     }
 
     /**
      * 调用IP地址查询接口（https://ip.dianduidian.com），返回ip、地理位置
      */
     public static IpVO getIpVo() {
-        StringBuilder inputLine = new StringBuilder();
         try {
-            String read;
-            URLConnection urlConnection = new URL("https://ip.dianduidian.com").openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8.name()));
-            while ((read = in.readLine()) != null) {
-                inputLine.append(read);
-            }
-            in.close();
-        } catch (Exception e) {
+            URLConnection connection = new URL("https://ip.dianduidian.com").openConnection();
+            String read = IoUtil.read(connection.getInputStream(), StandardCharsets.UTF_8);
+            return JSONObject.parseObject(read, IpVO.class);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return JSONObject.parseObject(inputLine.toString(), IpVO.class);
+        return null;
     }
 }
