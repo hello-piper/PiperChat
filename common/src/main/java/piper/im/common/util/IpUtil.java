@@ -1,14 +1,11 @@
 package piper.im.common.util;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 import piper.im.common.pojo.IpVO;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -74,27 +71,15 @@ public class IpUtil {
             url = "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip;
         }
 
-        try {
-            URLConnection connection = new URL(url).openConnection();
-            String read = IoUtil.read(connection.getInputStream(), Charset.forName("GBK"));
-            return JSONObject.parseObject(read, IpVO.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        String read = HttpUtil.get(url, Charset.forName("GBK"));
+        return JSONObject.parseObject(read, IpVO.class);
     }
 
     /**
      * 调用IP地址查询接口（https://ip.dianduidian.com），返回ip、地理位置
      */
     public static IpVO getIpVo() {
-        try {
-            URLConnection connection = new URL("https://ip.dianduidian.com").openConnection();
-            String read = IoUtil.read(connection.getInputStream(), StandardCharsets.UTF_8);
-            return JSONObject.parseObject(read, IpVO.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        String read = HttpUtil.get("https://ip.dianduidian.com", StandardCharsets.UTF_8);
+        return JSONObject.parseObject(read, IpVO.class);
     }
 }
