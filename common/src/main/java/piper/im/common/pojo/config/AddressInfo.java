@@ -1,4 +1,4 @@
-package piper.im.common.pojo;
+package piper.im.common.pojo.config;
 
 import java.io.Serializable;
 import java.util.Objects;

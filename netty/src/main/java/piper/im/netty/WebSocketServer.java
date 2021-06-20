@@ -16,7 +16,7 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import piper.im.common.pojo.ServerConfig;
+import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.task.RenewTask;
 import piper.im.common.util.YamlUtil;
 

@@ -3,7 +3,7 @@ package piper.im.common.util;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
-import piper.im.common.pojo.IpVO;
+import piper.im.common.pojo.config.IpVO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;

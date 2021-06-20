@@ -8,7 +8,7 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslHandler;
 import piper.im.common.pojo.message.Message;
-import piper.im.common.pojo.ServerConfig;
+import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.util.YamlUtil;
 
 import java.io.InputStream;

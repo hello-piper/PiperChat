@@ -8,7 +8,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.SslContext;
-import piper.im.common.pojo.ServerConfig;
+import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.util.YamlUtil;
 
 /**
