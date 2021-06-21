@@ -78,32 +78,41 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <!--                            <minimizeJar>true</minimizeJar>-->
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>piper.im.web_server.ServerStart</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>piper.im.web_server.ServerStart</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <executable>java</executable>
-                    <arguments>
-                        <argument>-jar</argument>
-                        <argument>target/${project.build.finalName}.jar</argument>
-                    </arguments>
-                </configuration>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-jar-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <archive>-->
+            <!--                        <manifest>-->
+            <!--                            <mainClass>piper.im.web_server.ServerStart</mainClass>-->
+            <!--                        </manifest>-->
+            <!--                    </archive>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>exec-maven-plugin</artifactId>-->
+            <!--                <version>1.2.1</version>-->
+            <!--                <configuration>-->
+            <!--                    <executable>java</executable>-->
+            <!--                    <arguments>-->
+            <!--                        <argument>-jar</argument>-->
+            <!--                        <argument>target/${project.build.finalName}.jar</argument>-->
+            <!--                    </arguments>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 </project>
