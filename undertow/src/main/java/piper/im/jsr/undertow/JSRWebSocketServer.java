@@ -11,7 +11,7 @@ import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 import piper.im.common.pojo.config.ServerConfig;
-import piper.im.common.task.RenewTask;
+import piper.im.common.task.GatewayTask;
 import piper.im.common.util.YamlUtil;
 
 import javax.servlet.ServletContextEvent;
@@ -47,7 +47,7 @@ public class JSRWebSocketServer {
                 .addDeploymentCompleteListener(new ServletContextListener() {
                     @Override
                     public void contextInitialized(ServletContextEvent sce) {
-                        RenewTask.start();
+                        GatewayTask.start();
                         System.out.println("Open your web browser and navigate to " +
                                 (config.getSsl() ? "https" : "http") + "://127.0.0.1:" + config.getPort() + '/');
                     }

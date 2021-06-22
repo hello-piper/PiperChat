@@ -1,4 +1,4 @@
-package piper.im.web_server;
+package piper.im.common.load_banlance;
 
 /**
  * 权重和连接数对应关系

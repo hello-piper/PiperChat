@@ -1,7 +1,6 @@
 package piper.im.common.task;
 
 import cn.hutool.db.nosql.redis.RedisDS;
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,12 +16,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 定时续约并上报信息
+ * 网关机定时任务
  *
  * @author piper
  */
-public class RenewTask {
-    private static final Logger log = LogManager.getLogger(RenewTask.class);
+public class GatewayTask {
+    private static final Logger log = LogManager.getLogger(GatewayTask.class);
     private static final String REPORT_URL;
     private static final AddressInfo ADDRESS_INFO;
 
@@ -41,7 +40,7 @@ public class RenewTask {
     public static void start() {
         Jedis jedis = RedisDS.create().getJedis();
 
-        // 订阅 需要处理的消息
+        // 订阅 消息通道
         jedis.subscribe(new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
@@ -49,30 +48,22 @@ public class RenewTask {
             }
         }, "channel:message");
 
-        // 定时续约任务
+        // 定时续约
         new Timer("RenewTimer", true).scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
                 String info = JSONObject.toJSONString(ADDRESS_INFO);
-                HttpRequest.put(REPORT_URL).body(info).execute();
-
-                log.info("网关机定时汇报信息>>>{}", info);
-
-                // 广播当前网关机 负载信息
                 jedis.publish("channel:renew-info", info);
+                log.info("定时广播当前网关机负载信息 >>> {}", info);
             }
         }, 5000, 10000);
 
         // 关机回调
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String info = JSONObject.toJSONString(ADDRESS_INFO);
-            HttpRequest.delete(REPORT_URL).body(info).execute();
-
-            log.info("网关机 关机>>>{}", info);
-
-            // 广播当前网关机 关机信息
             jedis.publish("channel:shutdown", info);
+            log.info("广播当前网关机 关机信息 >>> {}", info);
         }));
     }
 }

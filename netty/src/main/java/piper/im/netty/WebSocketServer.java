@@ -17,7 +17,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import piper.im.common.pojo.config.ServerConfig;
-import piper.im.common.task.RenewTask;
+import piper.im.common.task.GatewayTask;
 import piper.im.common.util.YamlUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -66,7 +66,7 @@ public final class WebSocketServer {
             bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(sslCtx));
             ChannelFuture channelFuture = bootstrap.bind(config.getPort()).sync();
 
-            RenewTask.start();
+            GatewayTask.start();
             log.info("Open your web browser and navigate to " + (config.getSsl() ? "https" : "http") + "://127.0.0.1:{}", config.getPort());
 
             channelFuture.channel().closeFuture().sync();
