@@ -20,6 +20,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <common.version>1.0-SNAPSHOT</common.version>
+        <repository.version>1.0-SNAPSHOT</repository.version>
+        <druid.version>1.2.6</druid.version>
     </properties>
 
     <dependencies>
@@ -27,6 +29,11 @@
             <groupId>im.piper</groupId>
             <artifactId>common</artifactId>
             <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>im.piper</groupId>
+            <artifactId>repository</artifactId>
+            <version>${repository.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -47,6 +54,12 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${druid.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
