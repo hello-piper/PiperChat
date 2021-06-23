@@ -41,12 +41,14 @@ public class GatewayTask {
         Jedis jedis = RedisDS.create().getJedis();
 
         // 订阅 消息通道
-        jedis.subscribe(new JedisPubSub() {
-            @Override
-            public void onMessage(String channel, String message) {
-                log.info("receiveMessage >>> channel:{} message:{}", channel, message);
-            }
-        }, "channel:message");
+        new Thread(() -> {
+            jedis.subscribe(new JedisPubSub() {
+                @Override
+                public void onMessage(String channel, String message) {
+                    log.info("receiveMessage >>> channel:{} message:{}", channel, message);
+                }
+            }, "channel:message");
+        }, "gateway-task-thread").start();
 
         // 定时续约
         new Timer("RenewTimer", true).scheduleAtFixedRate(new TimerTask() {
