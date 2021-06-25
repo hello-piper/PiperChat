@@ -38,10 +38,9 @@ public class GatewayTask {
     }
 
     public static void start() {
-        Jedis jedis = RedisDS.create().getJedis();
-
         // 订阅 消息通道
         new Thread(() -> {
+            Jedis jedis = RedisDS.create().getJedis();
             jedis.subscribe(new JedisPubSub() {
                 @Override
                 public void onMessage(String channel, String message) {
@@ -56,6 +55,7 @@ public class GatewayTask {
             public void run() {
                 ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
                 String info = JSONObject.toJSONString(ADDRESS_INFO);
+                Jedis jedis = RedisDS.create().getJedis();
                 jedis.publish("channel:renew-info", info);
                 log.info("定时广播当前网关机负载信息 >>> {}", info);
             }
@@ -64,6 +64,7 @@ public class GatewayTask {
         // 关机回调
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String info = JSONObject.toJSONString(ADDRESS_INFO);
+            Jedis jedis = RedisDS.create().getJedis();
             jedis.publish("channel:shutdown", info);
             log.info("广播当前网关机 关机信息 >>> {}", info);
         }));
