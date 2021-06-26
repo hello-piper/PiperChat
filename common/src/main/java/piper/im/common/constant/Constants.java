@@ -1,6 +1,6 @@
-package piper.im.common.pojo.config;
+package piper.im.common.constant;
 
-public interface Constant {
+public interface Constants {
     String IM_SERVER_HASH = "im-server-hash";
     String CHANNEL_IM_MESSAGE = "im:message";
     String CHANNEL_IM_RENEW = "im:renew";

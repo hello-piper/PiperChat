@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import piper.im.common.load_banlance.AddressLoadBalanceHandler;
 import piper.im.common.load_banlance.IAddressLoadBalance;
 import piper.im.common.pojo.config.AddressInfo;
-import piper.im.common.pojo.config.Constant;
+import piper.im.common.constant.Constants;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -27,7 +27,7 @@ public class WebServerTask {
         // 订阅 消息通道
         new Thread(() -> {
             Jedis jedis = RedisDS.create().getJedis();
-            Map<String, String> imServerMap = jedis.hgetAll(Constant.IM_SERVER_HASH);
+            Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
             if (!Collections.isEmpty(imServerMap)) {
                 for (String info : imServerMap.values()) {
                     ADDRESS_HANDLER.flushAddress(JSONObject.parseObject(info, AddressInfo.class));
@@ -37,13 +37,13 @@ public class WebServerTask {
                 @Override
                 public void onMessage(String channel, String message) {
                     log.info("receiveMessage >>> channel:{} message:{}", channel, message);
-                    if (channel.equals(Constant.CHANNEL_IM_RENEW)) {
+                    if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
                         ADDRESS_HANDLER.flushAddress(JSONObject.parseObject(message, AddressInfo.class));
-                    } else if (channel.equals(Constant.CHANNEL_IM_SHUTDOWN)) {
+                    } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {
                         ADDRESS_HANDLER.removeAddress(JSONObject.parseObject(message, AddressInfo.class));
                     }
                 }
-            }, Constant.CHANNEL_IM_RENEW, Constant.CHANNEL_IM_SHUTDOWN);
+            }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);
         }, "web-server-task-thread").start();
     }
 }

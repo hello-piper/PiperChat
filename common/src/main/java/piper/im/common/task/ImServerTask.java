@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
 import piper.im.common.pojo.config.AddressInfo;
-import piper.im.common.pojo.config.Constant;
+import piper.im.common.constant.Constants;
 import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.util.IpUtil;
 import piper.im.common.util.YamlUtil;
@@ -45,7 +45,7 @@ public class ImServerTask {
                 public void onMessage(String channel, String message) {
                     log.info("receiveMessage >>> channel:{} message:{}", channel, message);
                 }
-            }, Constant.CHANNEL_IM_MESSAGE);
+            }, Constants.CHANNEL_IM_MESSAGE);
         }, "im-server-task-thread").start();
 
         // 定时续约
@@ -55,9 +55,9 @@ public class ImServerTask {
                 ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
                 String info = JSONObject.toJSONString(ADDRESS_INFO);
                 Jedis jedis = RedisDS.create().getJedis();
-                jedis.publish(Constant.CHANNEL_IM_RENEW, info);
+                jedis.publish(Constants.CHANNEL_IM_RENEW, info);
                 // 更新im-server地址集合
-                jedis.hset(Constant.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
+                jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
                 log.info("定时广播当前网关机负载信息 >>> {}", info);
             }
         }, 5000, 10000);
@@ -66,7 +66,7 @@ public class ImServerTask {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String info = JSONObject.toJSONString(ADDRESS_INFO);
             Jedis jedis = RedisDS.create().getJedis();
-            jedis.publish(Constant.CHANNEL_IM_SHUTDOWN, info);
+            jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
             log.info("广播当前网关机 关机信息 >>> {}", info);
         }));
     }
