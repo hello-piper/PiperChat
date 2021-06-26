@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
 import piper.im.common.pojo.config.AddressInfo;
+import piper.im.common.pojo.config.Constant;
 import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.util.IpUtil;
 import piper.im.common.util.YamlUtil;
@@ -20,8 +21,8 @@ import java.util.TimerTask;
  *
  * @author piper
  */
-public class GatewayTask {
-    private static final Logger log = LogManager.getLogger(GatewayTask.class);
+public class ImServerTask {
+    private static final Logger log = LogManager.getLogger(ImServerTask.class);
     private static final String REPORT_URL;
     private static final AddressInfo ADDRESS_INFO;
 
@@ -46,8 +47,8 @@ public class GatewayTask {
                 public void onMessage(String channel, String message) {
                     log.info("receiveMessage >>> channel:{} message:{}", channel, message);
                 }
-            }, "channel:message");
-        }, "gateway-task-thread").start();
+            }, Constant.CHANNEL_IM_MESSAGE);
+        }, "im-server-task-thread").start();
 
         // 定时续约
         new Timer("RenewTimer", true).scheduleAtFixedRate(new TimerTask() {
@@ -56,7 +57,9 @@ public class GatewayTask {
                 ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
                 String info = JSONObject.toJSONString(ADDRESS_INFO);
                 Jedis jedis = RedisDS.create().getJedis();
-                jedis.publish("channel:renew-info", info);
+                jedis.publish(Constant.CHANNEL_IM_RENEW, info);
+                // 更新im-server地址集合
+                jedis.hset(Constant.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
                 log.info("定时广播当前网关机负载信息 >>> {}", info);
             }
         }, 5000, 10000);
@@ -65,7 +68,7 @@ public class GatewayTask {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String info = JSONObject.toJSONString(ADDRESS_INFO);
             Jedis jedis = RedisDS.create().getJedis();
-            jedis.publish("channel:shutdown", info);
+            jedis.publish(Constant.CHANNEL_IM_SHUTDOWN, info);
             log.info("广播当前网关机 关机信息 >>> {}", info);
         }));
     }

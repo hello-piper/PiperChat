@@ -6,7 +6,7 @@ import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
-import piper.im.common.task.ServerTask;
+import piper.im.common.task.WebServerTask;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -31,7 +31,7 @@ public class ServerStart {
                     .addDeploymentCompleteListener(new ServletContextListener() {
                         @Override
                         public void contextInitialized(ServletContextEvent sce) {
-                            ServerTask.start();
+                            WebServerTask.start();
                         }
                     });
 
