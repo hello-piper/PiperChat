@@ -1,6 +1,5 @@
 package piper.im.jsr.undertow;
 
-import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.DefaultByteBufferPool;
 import io.undertow.server.handlers.PathHandler;
@@ -19,26 +18,17 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 
 public class JSRWebSocketServer {
-
-    public static void main(final String[] args) {
-        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
-
-        PathHandler path = Handlers.path();
-
-        Undertow server = Undertow.builder()
-                .addHttpListener(config.getPort(), "0.0.0.0")
-                .setHandler(path)
-                .build();
-        server.start();
-
+    public static void main(final String[] args) throws ServletException {
+        final PathHandler root = new PathHandler();
         final ServletContainer container = ServletContainer.Factory.newInstance();
+        final ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
 
         DeploymentInfo builder = new DeploymentInfo()
                 .setClassLoader(JSRWebSocketServer.class.getClassLoader())
                 .setContextPath("/")
                 .setDeploymentName("undertow.war")
                 .addWelcomePage("templates/index.html")
-                .setResourceManager(new ClassPathResourceManager(JSRWebSocketServer.class.getClassLoader(), ""))
+                .setResourceManager(new ClassPathResourceManager(JSRWebSocketServer.class.getClassLoader()))
                 .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME,
                         new WebSocketDeploymentInfo().addEndpoint(JsrChatWebSocketEndpoint.class)
                                 .setBuffers(new DefaultByteBufferPool(true, 100))
@@ -55,11 +45,9 @@ public class JSRWebSocketServer {
 
         DeploymentManager manager = container.addDeployment(builder);
         manager.deploy();
-        try {
-            path.addPrefixPath("/", manager.start());
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
-        }
-    }
+        root.addPrefixPath(builder.getContextPath(), manager.start());
 
+        Undertow server = Undertow.builder().addHttpListener(config.getPort(), "0.0.0.0").setHandler(root).build();
+        server.start();
+    }
 }

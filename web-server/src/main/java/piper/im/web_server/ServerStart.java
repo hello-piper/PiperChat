@@ -1,52 +1,43 @@
 package piper.im.web_server;
 
-import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
+import io.undertow.servlet.api.ServletContainer;
 import piper.im.common.task.WebServerTask;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 
-import static io.undertow.servlet.Servlets.*;
+import static io.undertow.servlet.Servlets.servlet;
 
-/**
- * @author Stuart Douglas
- */
 public class ServerStart {
+    public static void main(final String[] args) throws ServletException {
+        final PathHandler root = new PathHandler();
+        final ServletContainer container = ServletContainer.Factory.newInstance();
 
-    public static void main(final String[] args) {
-        try {
-            DeploymentInfo servletBuilder = deployment()
-                    .setClassLoader(ServerStart.class.getClassLoader())
-                    .setContextPath("/")
-                    .setDeploymentName("web-server.war")
-                    .addWelcomePage("templates/index.html")
-                    .setResourceManager(new ClassPathResourceManager(ServerStart.class.getClassLoader(), ""))
-                    .addServlets(servlet(ServerServlet.class).addMapping("/server"))
-                    .addDeploymentCompleteListener(new ServletContextListener() {
-                        @Override
-                        public void contextInitialized(ServletContextEvent sce) {
-                            WebServerTask.start();
-                        }
-                    });
+        DeploymentInfo build = new DeploymentInfo()
+                .setClassLoader(ServerStart.class.getClassLoader())
+                .setContextPath("/")
+                .setDeploymentName("web-server.war")
+                .addWelcomePages("templates/index.html")
+                .setResourceManager(new ClassPathResourceManager(ServerStart.class.getClassLoader(), ServerStart.class.getPackage().getName().replace(".", "/")))
+                .addServlets(servlet(ServerServlet.class).addMapping("/server"))
+                .addDeploymentCompleteListener(new ServletContextListener() {
+                    @Override
+                    public void contextInitialized(ServletContextEvent sce) {
+                        WebServerTask.start();
+                    }
+                });
 
-            DeploymentManager manager = defaultContainer().addDeployment(servletBuilder);
-            manager.deploy();
+        DeploymentManager manager = container.addDeployment(build);
+        manager.deploy();
+        root.addPrefixPath(build.getContextPath(), manager.start());
 
-            PathHandler path = Handlers.path(Handlers.redirect("/")).addPrefixPath("/", manager.start());
-
-            Undertow server = Undertow.builder()
-                    .addHttpListener(8090, "0.0.0.0")
-                    .setHandler(path)
-                    .build();
-            server.start();
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
-        }
+        Undertow server = Undertow.builder().addHttpListener(8090, "0.0.0.0").setHandler(root).build();
+        server.start();
     }
 }
