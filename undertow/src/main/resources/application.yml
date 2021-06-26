@@ -3,4 +3,3 @@ server:
   port: 8080
   wsPath: /websocket
   httpPath: /msg
-  reportUrl: localhost:8090/address

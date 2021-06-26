@@ -23,12 +23,10 @@ import java.util.TimerTask;
  */
 public class ImServerTask {
     private static final Logger log = LogManager.getLogger(ImServerTask.class);
-    private static final String REPORT_URL;
     private static final AddressInfo ADDRESS_INFO;
 
     static {
         ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
-        REPORT_URL = config.getReportUrl();
         AddressInfo addressInfo = new AddressInfo();
         addressInfo.setIp(IpUtil.getIpVo().getIp());
         addressInfo.setPort(config.getPort());

@@ -18,8 +18,6 @@ public class ServerConfig implements Serializable {
 
     private String httpPath;
 
-    private String reportUrl;
-
     public Boolean getSsl() {
         return ssl;
     }
@@ -50,13 +48,5 @@ public class ServerConfig implements Serializable {
 
     public void setHttpPath(String httpPath) {
         this.httpPath = httpPath;
-    }
-
-    public String getReportUrl() {
-        return reportUrl;
-    }
-
-    public void setReportUrl(String reportUrl) {
-        this.reportUrl = reportUrl;
     }
 }
