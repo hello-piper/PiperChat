@@ -6,7 +6,7 @@
 
 <body>
 <form onsubmit="return false;">
-    <textarea id="message" style="width:500px;height:100px;" value='{"type":0,"content":"hello world!"}'></textarea>
+    <textarea id="message" style="width:500px;height:100px;" value='{"type":0,"chatType":0,"to":"uid","content":"hello world!"}'></textarea>
     <input type="button" value="Send Web Socket Data" onclick="send(this.form.message.value)"/>
     <h3>Output</h3>
     <textarea id="responseText" style="width:500px;height:300px;"></textarea>
@@ -21,9 +21,9 @@ if (!window.WebSocket) {
 
 if (window.WebSocket) {
   var ta = document.getElementById('message');
-  ta.value = '{"type":0,"content":"hello world!"}';
+  ta.value = '{"type":0,"chatType":0,"to":"uid","content":"hello world!"}';
 
-  socket = new WebSocket("ws://127.0.0.1:8080/websocket");
+  socket = new WebSocket("ws://127.0.0.1:8080/websocket?token=123");
   socket.onmessage = function(event) {
     var ta = document.getElementById('responseText');
     ta.value = ta.value + '\n' + event.data

@@ -5,16 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
-import piper.im.common.pojo.config.AddressInfo;
 import piper.im.common.constant.Constants;
+import piper.im.common.pojo.config.AddressInfo;
 import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.util.IpUtil;
+import piper.im.common.util.ThreadUtil;
 import piper.im.common.util.YamlUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 网关机定时任务
@@ -37,9 +37,10 @@ public class ImServerTask {
     }
 
     public static void start() {
+        RedisDS redisDS = RedisDS.create();
         // 订阅 消息通道
         new Thread(() -> {
-            Jedis jedis = RedisDS.create().getJedis();
+            Jedis jedis = redisDS.getJedis();
             jedis.subscribe(new JedisPubSub() {
                 @Override
                 public void onMessage(String channel, String message) {
@@ -49,24 +50,25 @@ public class ImServerTask {
         }, "im-server-task-thread").start();
 
         // 定时续约
-        new Timer("RenewTimer", true).scheduleAtFixedRate(new TimerTask() {
+        ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(new Runnable() {
+            Jedis jedis = redisDS.getJedis();
+
             @Override
             public void run() {
                 ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
                 String info = JSONObject.toJSONString(ADDRESS_INFO);
-                Jedis jedis = RedisDS.create().getJedis();
                 jedis.publish(Constants.CHANNEL_IM_RENEW, info);
-                // 更新im-server地址集合
                 jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
-                log.info("定时广播当前网关机负载信息 >>> {}", info);
+                log.info("广播当前网关机 负载信息 >>> {}", info);
             }
-        }, 5000, 10000);
+        }, 5, 10, TimeUnit.SECONDS);
 
         // 关机回调
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String info = JSONObject.toJSONString(ADDRESS_INFO);
-            Jedis jedis = RedisDS.create().getJedis();
+            Jedis jedis = redisDS.getJedis();
             jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
+            jedis.hdel(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort());
             log.info("广播当前网关机 关机信息 >>> {}", info);
         }));
     }

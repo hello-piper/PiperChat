@@ -1,22 +1,18 @@
 package piper.im.netty;
 
-import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslHandler;
-import piper.im.common.pojo.message.Message;
 import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.util.YamlUtil;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpMethod.GET;
-import static io.netty.handler.codec.http.HttpMethod.POST;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 
 /**
@@ -36,7 +32,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
         }
 
         // Allow only GET methods.
-        if (!GET.equals(req.method()) && !POST.equals(req.method())) {
+        if (!GET.equals(req.method())) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(req.protocolVersion(), FORBIDDEN, ctx.alloc().buffer(0)));
             return;
         }
@@ -49,16 +45,6 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
             res.headers().set(CONTENT_TYPE, "text/html; charset=UTF-8");
             HttpUtil.setContentLength(res, content.readableBytes());
 
-            sendHttpResponse(ctx, req, res);
-        } else if (config.getHttpPath().equals(req.uri())) {
-            int len = req.content().readableBytes();
-            if (len > 0) {
-                byte[] content = new byte[len];
-                req.content().readBytes(content);
-                String contentStr = new String(content, StandardCharsets.UTF_8);
-                MessageHandler.send(JSONObject.parseObject(contentStr, Message.class));
-            }
-            FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), OK, Unpooled.directBuffer(0));
             sendHttpResponse(ctx, req, res);
         } else {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(req.protocolVersion(), NOT_FOUND, ctx.alloc().buffer(0)));

@@ -1,5 +1,5 @@
 server:
   ssl: false
-  port: 8081
+  port: 8080
   wsPath: /websocket
   httpPath: /msg

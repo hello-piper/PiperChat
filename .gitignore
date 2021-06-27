@@ -24,3 +24,4 @@ nbproject/
 /var/log/*
 *.factorypath
 dependency-reduced-pom.xml
+rebel.xml
