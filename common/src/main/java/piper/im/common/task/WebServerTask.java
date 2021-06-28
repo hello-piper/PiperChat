@@ -1,14 +1,14 @@
 package piper.im.common.task;
 
-import cn.hutool.db.nosql.redis.RedisDS;
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.lang.Collections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import piper.im.common.constant.Constants;
 import piper.im.common.load_banlance.AddressLoadBalanceHandler;
 import piper.im.common.load_banlance.IAddressLoadBalance;
 import piper.im.common.pojo.config.AddressInfo;
-import piper.im.common.constant.Constants;
+import piper.im.common.util.RedisDS;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -26,7 +26,7 @@ public class WebServerTask {
     public static void start() {
         // 订阅 消息通道
         new Thread(() -> {
-            Jedis jedis = RedisDS.create().getJedis();
+            Jedis jedis = RedisDS.getJedis();
             Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
             if (!Collections.isEmpty(imServerMap)) {
                 for (String info : imServerMap.values()) {

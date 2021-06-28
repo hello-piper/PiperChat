@@ -6,7 +6,9 @@ import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
+import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.task.WebServerTask;
+import piper.im.common.util.YamlUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -18,6 +20,7 @@ public class ServerStart {
     public static void main(final String[] args) throws ServletException {
         final PathHandler root = new PathHandler();
         final ServletContainer container = ServletContainer.Factory.newInstance();
+        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
 
         DeploymentInfo build = new DeploymentInfo()
                 .setClassLoader(ServerStart.class.getClassLoader())
@@ -37,7 +40,7 @@ public class ServerStart {
         manager.deploy();
         root.addPrefixPath(build.getContextPath(), manager.start());
 
-        Undertow server = Undertow.builder().addHttpListener(8090, "0.0.0.0").setHandler(root).build();
+        Undertow server = Undertow.builder().addHttpListener(config.getPort(), "0.0.0.0").setHandler(root).build();
         server.start();
     }
 }
