@@ -17,6 +17,8 @@ public class User implements Serializable {
 
     private String nickname;
 
+    private String avatar;
+
     private String phone;
 
     private String email;
@@ -24,6 +26,10 @@ public class User implements Serializable {
     private Integer age;
 
     private Integer gender;
+
+    private String password;
+
+    private String salt;
 
     private Integer status;
 

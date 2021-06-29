@@ -14,7 +14,7 @@ username = root
 # 密码，此处也可以使用 pass 代替
 password = 123456
 # JDBC驱动名，可选（Hutool会自动识别）
-driver = com.mysql.jdbc.Driver
+driver = com.mysql.cj.jdbc.Driver
 # 是否在日志中显示执行的SQL
 showSql = true
 # 是否格式化显示的SQL

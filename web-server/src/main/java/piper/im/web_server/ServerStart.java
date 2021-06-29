@@ -10,10 +10,12 @@ import piper.im.common.pojo.config.ServerConfig;
 import piper.im.common.task.WebServerTask;
 import piper.im.common.util.YamlUtil;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 
+import static io.undertow.servlet.Servlets.filter;
 import static io.undertow.servlet.Servlets.servlet;
 
 public class ServerStart {
@@ -28,7 +30,8 @@ public class ServerStart {
                 .setDeploymentName("web-server.war")
                 .addWelcomePages("templates/index.html")
                 .setResourceManager(new ClassPathResourceManager(ServerStart.class.getClassLoader(), ServerStart.class.getPackage().getName().replace(".", "/")))
-                .addServlets(servlet(ServerServlet.class).addMapping("/server"))
+                .addServlets(servlet(ServerServlet.class).addMapping("/server"), servlet(LoginServlet.class).addMapping("/login"))
+                .addFilter(filter("filter", ResponseFilter.class)).addFilterUrlMapping("filter", "/*", DispatcherType.ERROR)
                 .addDeploymentCompleteListener(new ServletContextListener() {
                     @Override
                     public void contextInitialized(ServletContextEvent sce) {

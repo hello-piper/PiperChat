@@ -59,7 +59,7 @@ public class ImServerTask {
                 jedis.close();
                 log.info("广播当前网关机 负载信息 >>> {}", info);
             }
-        }, 1, 2, TimeUnit.SECONDS);
+        }, 10, 15, TimeUnit.SECONDS);
 
         // 关机回调
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

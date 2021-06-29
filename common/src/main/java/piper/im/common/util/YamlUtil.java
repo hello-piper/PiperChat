@@ -56,12 +56,34 @@ public class YamlUtil {
             for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
                 String name = descriptor.getName();
                 if (map.containsKey(name)) {
+                    Object writeValue = map.get(name);
+                    Class<?> propertyType = descriptor.getPropertyType();
+                    if (Number.class.isAssignableFrom(propertyType)) {
+                        if (!propertyType.getName().equals(writeValue.getClass().getName())) {
+                            Method valueOfMethod = getMethod(propertyType, "valueOf", String.class);
+                            if (null != valueOfMethod) {
+                                valueOfMethod.invoke(null, writeValue.toString());
+                                continue;
+                            }
+                        }
+                    }
                     Method writeMethod = descriptor.getWriteMethod();
-                    writeMethod.invoke(bean, map.get(name));
+                    writeMethod.invoke(bean, writeValue);
                 }
             }
         } catch (IllegalAccessException | IntrospectionException | InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Method getMethod(Class<?> clz, String name, Class paramClz) {
+        if (Number.class.isAssignableFrom(clz)) {
+            try {
+                return clz.getMethod(name, paramClz);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
