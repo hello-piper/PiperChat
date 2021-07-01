@@ -1,5 +1,7 @@
 package piper.im.common.pojo.message;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSONObject;
 import piper.im.common.enums.MessageTypeEnum;
 
 import java.io.Serializable;
@@ -43,7 +45,7 @@ public class Message implements Serializable {
      */
     private Object body;
 
-    public Message() {
+    private Message() {
     }
 
     public static Message createTextMessage(String text) {
@@ -137,6 +139,14 @@ public class Message implements Serializable {
 
     public Object getBody() {
         return body;
+    }
+
+    public <T> T getBodyByMsgType(Class<T> clz) {
+        if (this.body instanceof JSONObject) {
+            JSONObject body = (JSONObject) this.body;
+            return body.toJavaObject(clz);
+        }
+        return BeanUtil.toBean(this.body, clz);
     }
 
     public void setBody(Object body) {

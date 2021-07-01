@@ -22,8 +22,8 @@ import java.util.Map;
  * @date 2020-08-01 15:17
  */
 public class JwtTokenUtil {
-    private static String SECRET;
-    private static Long EXPIRE_HOUR;
+    public static String SECRET;
+    public static Long EXPIRE_HOUR;
 
     static {
         JwtProperties properties = YamlUtil.getConfig("jwt", JwtProperties.class);

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ServerServlet extends HttpServlet {
+public class ChatServlet extends HttpServlet {
     private final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
 
     /**
@@ -30,8 +30,9 @@ public class ServerServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String chatMsg = IoUtil.read(req.getReader());
         Jedis jedis = RedisDS.getJedis();
-        jedis.publish(Constants.CHANNEL_IM_MESSAGE, IoUtil.read(req.getReader()));
+        jedis.publish(Constants.CHANNEL_IM_MESSAGE, chatMsg);
         jedis.close();
     }
 }

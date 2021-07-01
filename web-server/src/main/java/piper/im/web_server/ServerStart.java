@@ -30,7 +30,7 @@ public class ServerStart {
                 .setDeploymentName("web-server.war")
                 .addWelcomePages("templates/index.html")
                 .setResourceManager(new ClassPathResourceManager(ServerStart.class.getClassLoader(), ServerStart.class.getPackage().getName().replace(".", "/")))
-                .addServlets(servlet(ServerServlet.class).addMapping("/server"), servlet(LoginServlet.class).addMapping("/login"))
+                .addServlets(servlet(ChatServlet.class).addMapping("/chat"), servlet(LoginServlet.class).addMapping("/login"))
                 .addFilter(filter("filter", ResponseFilter.class)).addFilterUrlMapping("filter", "/*", DispatcherType.ERROR)
                 .addDeploymentCompleteListener(new ServletContextListener() {
                     @Override
