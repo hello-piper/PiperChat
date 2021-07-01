@@ -1,0 +1,15 @@
+CREATE TABLE `NewTable` (
+`id`  bigint(64) NOT NULL ,
+`chat_type`  tinyint(2) NULL DEFAULT NULL ,
+`message_type`  tinyint(2) NULL DEFAULT NULL ,
+`from`  varchar(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+`to`  varchar(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+`body`  varchar(256) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+`create_time`  bigint(20) NULL DEFAULT NULL ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=latin1 COLLATE=latin1_swedish_ci
+ROW_FORMAT=DYNAMIC
+;
+
