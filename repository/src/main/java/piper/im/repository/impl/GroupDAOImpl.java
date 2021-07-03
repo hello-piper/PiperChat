@@ -14,8 +14,8 @@ public class GroupDAOImpl implements GroupDAO {
     public Group getById(String id) {
         try {
             return Db.use().find(Entity.create("group").set("id", id), new BeanHandler<>(Group.class));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -25,8 +25,8 @@ public class GroupDAOImpl implements GroupDAO {
         int count = 0;
         try {
             count = Db.use().insert(Entity.parseWithUnderlineCase(group));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return count > 0;
     }

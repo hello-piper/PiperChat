@@ -17,7 +17,7 @@ public class Message implements Serializable {
 
     private Byte chatType;
 
-    private Byte messageType;
+    private Byte msgType;
 
     private String from;
 
@@ -25,5 +25,7 @@ public class Message implements Serializable {
 
     private String body;
 
-    private Long createTime;
+    private String extra;
+
+    private Long timestamp;
 }

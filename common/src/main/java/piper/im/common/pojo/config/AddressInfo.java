@@ -19,8 +19,6 @@ public class AddressInfo implements Serializable {
 
     private String wsPath;
 
-    private String httpPath;
-
     private Integer onlineNum;
 
     public Boolean getSsl() {
@@ -53,14 +51,6 @@ public class AddressInfo implements Serializable {
 
     public void setWsPath(String wsPath) {
         this.wsPath = wsPath;
-    }
-
-    public String getHttpPath() {
-        return httpPath;
-    }
-
-    public void setHttpPath(String httpPath) {
-        this.httpPath = httpPath;
     }
 
     public Integer getOnlineNum() {

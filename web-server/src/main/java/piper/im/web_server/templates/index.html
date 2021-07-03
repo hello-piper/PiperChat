@@ -6,8 +6,8 @@
 
 <body>
 <form onsubmit="return false;">
-    <textarea id="message" style="width:500px;height:100px;" value='{"type":0,"content":"hello world!"}'></textarea>
-    <input type="button" value="Send Web Socket Data" onclick="send(this.form.message.value)"/>
+    <textarea id="msg" style="width:500px;height:100px;" value='{"type":0,"content":"hello world!"}'></textarea>
+    <input type="button" value="Send Web Socket Data" onclick="send(this.form.msg.value)"/>
     <h3>Output</h3>
     <textarea id="responseText" style="width:500px;height:300px;"></textarea>
 </form>
@@ -20,7 +20,7 @@ if (!window.WebSocket) {
 }
 
 if (window.WebSocket) {
-  var ta = document.getElementById('message');
+  var ta = document.getElementById('msg');
   ta.value = '{"type":0,"content":"hello world!"}';
 
   socket = new WebSocket("ws://127.0.0.1:8080/websocket");
@@ -40,10 +40,10 @@ if (window.WebSocket) {
   alert("Your browser does not support Web Socket.");
 }
 
-function send(message) {
+function send(msg) {
   if (!window.WebSocket) { return; }
   if (socket.readyState == WebSocket.OPEN) {
-    socket.send(message);
+    socket.send(msg);
   } else {
     alert("The socket is not open.");
   }

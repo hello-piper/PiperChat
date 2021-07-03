@@ -3,7 +3,8 @@ package piper.im.web_server;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
@@ -19,6 +20,7 @@ import piper.im.repository.impl.UserDAOImpl;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,9 +36,8 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String body = IoUtil.read(req.getReader());
         log.info("login body:{}", body);
-        String clientType = req.getHeader("clientType");
-        JSONObject reqBody = JSONObject.parseObject(body);
-        this.login(req, reqBody.getString("uid"), reqBody.getString("pwd"), clientType);
+        JSONObject reqBody = JSONUtil.parseObj(body);
+        this.login(req, reqBody.getStr("uid"), reqBody.getStr("pwd"), req.getHeader("clientType"));
     }
 
     @Override
@@ -71,7 +72,7 @@ public class LoginServlet extends HttpServlet {
         String token = IdUtil.fastSimpleUUID();
 
         Jedis jedis = RedisDS.getJedis();
-        jedis.set(Constants.USER_TOKEN + token, JSONObject.toJSONString(userBasicDTO),
+        jedis.set(Constants.USER_TOKEN + token, JSONUtil.toJsonStr(userBasicDTO),
                 SetParams.setParams().ex(JwtTokenUtil.EXPIRE_HOUR * 3600));
         jedis.hset(Constants.USER_TOKEN_CLIENT + user.getId(), clientType, token);
         jedis.close();
@@ -81,6 +82,10 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void logout(HttpServletRequest request) {
-        request.getSession().removeAttribute("token");
+        try {
+            request.logout();
+        } catch (ServletException e) {
+            throw IMException.build(IMErrorEnum.SERVER_ERROR);
+        }
     }
 }

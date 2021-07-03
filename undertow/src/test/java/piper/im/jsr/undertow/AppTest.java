@@ -6,18 +6,18 @@ import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
 import org.junit.Test;
 import piper.im.common.enums.ChatTypeEnum;
-import piper.im.common.pojo.message.Message;
+import piper.im.common.pojo.message.Msg;
 
 public class AppTest {
 
     @Test
     public void testProtostuff() {
-        Message message = Message.createTextMessage("hello protostuff");
-        message.setChatType(ChatTypeEnum.SINGLE.type);
-        message.setFrom("1");
-        message.setTo("2");
+        Msg msg = Msg.createTextMsg("hello protostuff");
+        msg.setChatType(ChatTypeEnum.SINGLE.type);
+        msg.setFrom("1");
+        msg.setTo("2");
 
-        Schema<Message> schema = RuntimeSchema.getSchema(Message.class);
+        Schema<Msg> schema = RuntimeSchema.getSchema(Msg.class);
 
         // Re-use (manage) this buffer to avoid allocating on every serialization
         LinkedBuffer buffer = LinkedBuffer.allocate(512);
@@ -25,13 +25,13 @@ public class AppTest {
         // ser
         final byte[] protostuff;
         try {
-            protostuff = ProtostuffIOUtil.toByteArray(message, schema, buffer);
+            protostuff = ProtostuffIOUtil.toByteArray(msg, schema, buffer);
         } finally {
             buffer.clear();
         }
 
         // deser
-        Message fooParsed = schema.newMessage();
+        Msg fooParsed = schema.newMessage();
         ProtostuffIOUtil.mergeFrom(protostuff, fooParsed, schema);
     }
 }

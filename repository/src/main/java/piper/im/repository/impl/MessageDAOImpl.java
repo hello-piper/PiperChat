@@ -24,8 +24,8 @@ public class MessageDAOImpl implements MessageDAO {
         int count = 0;
         try {
             count = Db.use().insert(Entity.parseWithUnderlineCase(message));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return count > 0;
     }

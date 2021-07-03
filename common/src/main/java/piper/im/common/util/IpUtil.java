@@ -2,7 +2,7 @@ package piper.im.common.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONUtil;
 import piper.im.common.pojo.config.IpVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,7 +72,7 @@ public class IpUtil {
         }
 
         String read = HttpUtil.get(url, Charset.forName("GBK"));
-        return JSONObject.parseObject(read, IpVO.class);
+        return JSONUtil.toBean(read, IpVO.class);
     }
 
     /**
@@ -80,6 +80,6 @@ public class IpUtil {
      */
     public static IpVO getIpVo() {
         String read = HttpUtil.get("https://ip.dianduidian.com", StandardCharsets.UTF_8);
-        return JSONObject.parseObject(read, IpVO.class);
+        return JSONUtil.toBean(read, IpVO.class);
     }
 }

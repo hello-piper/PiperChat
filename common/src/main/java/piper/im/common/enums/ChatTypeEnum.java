@@ -8,7 +8,6 @@ import java.util.Arrays;
  * @author piper
  */
 public enum ChatTypeEnum {
-
     // 单聊
     SINGLE((byte) 0),
     // 群聊
@@ -16,13 +15,13 @@ public enum ChatTypeEnum {
     // 聊天室
     CHATROOM((byte) 2);
 
-    public byte type;
+    public Byte type;
 
-    ChatTypeEnum(byte type) {
+    ChatTypeEnum(Byte type) {
         this.type = type;
     }
 
-    public static ChatTypeEnum valueOf(byte type) {
-        return Arrays.stream(values()).filter(v -> v.type == type).findFirst().orElse(null);
+    public static ChatTypeEnum valueOf(Byte type) {
+        return Arrays.stream(values()).filter(v -> v.type.equals(type)).findFirst().orElse(null);
     }
 }

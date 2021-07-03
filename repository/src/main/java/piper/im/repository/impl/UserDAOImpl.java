@@ -25,8 +25,8 @@ public class UserDAOImpl implements UserDAO {
         int count = 0;
         try {
             count = Db.use().insert(Entity.parseWithUnderlineCase(user));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return count > 0;
     }

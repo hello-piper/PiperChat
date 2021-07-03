@@ -10,6 +10,7 @@ public enum IMErrorEnum implements IMBaseError {
     USER_NOT_FOUND(1001, "用户找不到"),
     INVALID_PWD(1002, "密码不正确"),
     INVALID_TOKEN(1003, "登录失效"),
+    SERVER_ERROR(1004, "服务器错误"),
     ;
 
     IMErrorEnum(int code, String msg) {

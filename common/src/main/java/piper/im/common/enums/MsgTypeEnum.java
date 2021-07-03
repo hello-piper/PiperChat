@@ -7,8 +7,7 @@ import java.util.Arrays;
  *
  * @author piper
  */
-public enum MessageTypeEnum {
-
+public enum MsgTypeEnum {
     // 文本消息
     TEXT((byte) 0),
     // 图片
@@ -21,16 +20,16 @@ public enum MessageTypeEnum {
     FILE((byte) 4),
     // 地理位置信息
     LOCATION((byte) 5),
-    // 信令
-    COMMAND((byte) 10);
+    // 通知
+    NOTIFY((byte) 6);
 
-    public byte type;
+    public Byte type;
 
-    MessageTypeEnum(byte type) {
+    MsgTypeEnum(Byte type) {
         this.type = type;
     }
 
-    public static MessageTypeEnum valueOf(byte type) {
-        return Arrays.stream(values()).filter(v -> v.type == type).findFirst().orElse(null);
+    public static MsgTypeEnum valueOf(Byte type) {
+        return Arrays.stream(values()).filter(v -> v.type.equals(type)).findFirst().orElse(null);
     }
 }

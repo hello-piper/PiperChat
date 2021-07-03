@@ -12,12 +12,12 @@
             alert("Your browser does not support Websockets. (Use Chrome)");
         }
 
-        function send(message) {
+        function send(msg) {
             if (!window.WebSocket) {
                 return false;
             }
             if (socket.readyState == WebSocket.OPEN) {
-                socket.send(message);
+                socket.send(msg);
             } else {
                 alert("The socket is not open.");
             }
@@ -77,7 +77,7 @@
 
         <form onsubmit="return false;" class="chatform" action="">
             <label for="msg">Message</label>
-            <input type="text" name="message" id="msg"  onkeypress="if(event.keyCode==13) { send(this.form.message.value); this.value='' } " />
+            <input type="text" name="msg" id="msg"  onkeypress="if(event.keyCode==13) { send(this.form.msg.value); this.value='' } " />
         </form>
     </div>
 </div>

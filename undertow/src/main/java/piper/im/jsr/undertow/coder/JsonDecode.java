@@ -1,7 +1,7 @@
 package piper.im.jsr.undertow.coder;
 
-import com.alibaba.fastjson.JSONObject;
-import piper.im.common.pojo.message.Message;
+import cn.hutool.json.JSONUtil;
+import piper.im.common.pojo.message.Msg;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
@@ -11,11 +11,11 @@ import javax.websocket.EndpointConfig;
  * @author piper
  * @date 2020/9/11 17:11
  */
-public class JsonDecode implements Decoder.Text<Message> {
+public class JsonDecode implements Decoder.Text<Msg> {
 
     @Override
-    public Message decode(String s) throws DecodeException {
-        return JSONObject.parseObject(s, Message.class);
+    public Msg decode(String s) throws DecodeException {
+        return JSONUtil.toBean(s, Msg.class);
     }
 
     @Override

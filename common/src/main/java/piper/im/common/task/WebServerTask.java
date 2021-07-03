@@ -1,6 +1,6 @@
 package piper.im.common.task;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONUtil;
 import io.jsonwebtoken.lang.Collections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ public class WebServerTask {
             Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
             if (!Collections.isEmpty(imServerMap)) {
                 for (String info : imServerMap.values()) {
-                    ADDRESS_HANDLER.flushAddress(JSONObject.parseObject(info, AddressInfo.class));
+                    ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(info, AddressInfo.class));
                 }
             }
             jedis.subscribe(new JedisPubSub() {
@@ -38,9 +38,9 @@ public class WebServerTask {
                 public void onMessage(String channel, String message) {
                     log.info("receiveMessage >>> channel:{} message:{}", channel, message);
                     if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
-                        ADDRESS_HANDLER.flushAddress(JSONObject.parseObject(message, AddressInfo.class));
+                        ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
                     } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {
-                        ADDRESS_HANDLER.removeAddress(JSONObject.parseObject(message, AddressInfo.class));
+                        ADDRESS_HANDLER.removeAddress(JSONUtil.toBean(message, AddressInfo.class));
                     }
                 }
             }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);

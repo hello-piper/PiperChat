@@ -49,10 +49,6 @@
             <artifactId>protostuff-runtime</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
         </dependency>
@@ -74,7 +70,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>piper.im.jsr.undertow.JSRWebSocketServer</mainClass>
+                            <mainClass>piper.im.jsr.undertow.WebSocketServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

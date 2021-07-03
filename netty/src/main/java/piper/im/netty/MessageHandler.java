@@ -3,7 +3,7 @@ package piper.im.netty;
 import io.netty.channel.Channel;
 import piper.im.common.WebSocketUser;
 import piper.im.common.enums.ChatTypeEnum;
-import piper.im.common.pojo.message.Message;
+import piper.im.common.pojo.message.Msg;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +21,7 @@ public class MessageHandler {
      *
      * @param dto
      */
-    public static void send(Message dto) {
+    public static void send(Msg dto) {
         ChatTypeEnum chatTypeEnum = ChatTypeEnum.valueOf(dto.getChatType());
         if (Objects.isNull(chatTypeEnum)) {
             throw new UnsupportedOperationException("不支持的类型");

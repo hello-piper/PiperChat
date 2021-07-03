@@ -26,7 +26,7 @@
         <undertow.version>2.2.4.Final</undertow.version>
         <servlet.version>4.0.1</servlet.version>
         <protostuff.version>1.7.4</protostuff.version>
-        <fastjson.version>1.2.73</fastjson.version>
+        <msgpack.version>0.6.12</msgpack.version>
         <snakeyaml.version>1.26</snakeyaml.version>
         <hutool.version>5.5.7</hutool.version>
         <lombok.version>1.18.20</lombok.version>
@@ -88,9 +88,9 @@
                 <version>${protostuff.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
+                <groupId>org.msgpack</groupId>
+                <artifactId>msgpack</artifactId>
+                <version>${msgpack.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>

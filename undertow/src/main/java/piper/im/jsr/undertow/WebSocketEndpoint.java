@@ -3,7 +3,7 @@ package piper.im.jsr.undertow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
-import piper.im.common.pojo.message.Message;
+import piper.im.common.pojo.message.Msg;
 import piper.im.jsr.undertow.coder.JsonDecode;
 import piper.im.jsr.undertow.coder.JsonEncode;
 import piper.im.jsr.undertow.coder.ProtostuffDecode;
@@ -16,9 +16,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @ServerEndpoint(value = "/websocket", encoders = {JsonEncode.class, ProtostuffEncode.class}, decoders = {JsonDecode.class, ProtostuffDecode.class})
-public class JsrChatWebSocketEndpoint {
+public class WebSocketEndpoint {
 
-    private final Logger log = LogManager.getLogger(JsrChatWebSocketEndpoint.class);
+    private final Logger log = LogManager.getLogger(WebSocketEndpoint.class);
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -54,9 +54,9 @@ public class JsrChatWebSocketEndpoint {
     }
 
     @OnMessage
-    public void message(Message message, Session session) throws IOException, EncodeException {
-        log.debug("来自客户端的消息 {}", message);
-        this.session.getBasicRemote().sendObject(message);
+    public void message(Msg msg, Session session) throws IOException, EncodeException {
+        log.debug("来自客户端的消息 {}", msg);
+        this.session.getBasicRemote().sendObject(msg);
     }
 
     /**

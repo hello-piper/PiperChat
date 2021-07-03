@@ -1,6 +1,6 @@
 package piper.im.common.task;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
@@ -31,7 +31,6 @@ public class ImServerTask {
         addressInfo.setIp(IpUtil.getIpVo().getIp());
         addressInfo.setPort(config.getPort());
         addressInfo.setSsl(config.getSsl());
-        addressInfo.setHttpPath(config.getHttpPath());
         addressInfo.setWsPath(config.getWsPath());
         ADDRESS_INFO = addressInfo;
     }
@@ -52,7 +51,7 @@ public class ImServerTask {
             @Override
             public void run() {
                 ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
-                String info = JSONObject.toJSONString(ADDRESS_INFO);
+                String info = JSONUtil.toJsonStr(ADDRESS_INFO);
                 Jedis jedis = RedisDS.getJedis();
                 jedis.publish(Constants.CHANNEL_IM_RENEW, info);
                 jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
@@ -63,7 +62,7 @@ public class ImServerTask {
 
         // 关机回调
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            String info = JSONObject.toJSONString(ADDRESS_INFO);
+            String info = JSONUtil.toJsonStr(ADDRESS_INFO);
             Jedis jedis = RedisDS.getJedis();
             jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
             jedis.hdel(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort());
