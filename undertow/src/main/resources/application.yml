@@ -1,6 +1,6 @@
 server:
   ssl: false
-  port: 8080
+  port: 8085
   wsPath: /websocket
 
 redis:

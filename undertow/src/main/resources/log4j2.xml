@@ -2,9 +2,9 @@
 <configuration>
 
     <properties>
-        <property name="pattern" value="[#|%d{yyyy-MM-dd' 'HH:mm:ss.SSS} [%-5p] %l [%t] | %m%n"/>
+        <property name="pattern" value="%d{yyyy-MM-dd' 'HH:mm:ss.SSS} [%-5p] %l [%t] | %m%n"/>
         <property name="patternColor"
-                  value="[#|%red{%d{yyyy-MM-dd HH:mm:ss}} %green{[%thread]} %blue{[%-5p]} %magenta{%logger} | %cyan{%msg%n}"/>
+                  value="%red{%d{yyyy-MM-dd HH:mm:ss}} %green{[%thread]} %blue{[%-5p]} %magenta{%logger} | %cyan{%msg%n}"/>
         <property name="logHome">/logs</property>
         <property name="appName">undertow</property>
     </properties>
