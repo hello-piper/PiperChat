@@ -31,7 +31,7 @@ public class ServerStart {
                 .addWelcomePages("templates/index.html")
                 .setResourceManager(new ClassPathResourceManager(ServerStart.class.getClassLoader(), ServerStart.class.getPackage().getName().replace(".", "/")))
                 .addServlets(servlet(ChatServlet.class).addMapping("/chat"), servlet(LoginServlet.class).addMapping("/login"))
-                .addFilter(filter("filter", ResponseFilter.class)).addFilterUrlMapping("filter", "/*", DispatcherType.ERROR)
+                .addFilter(filter(ErrorFilter.class)).addFilterUrlMapping("ErrorFilter", "/*", DispatcherType.REQUEST)
                 .addDeploymentCompleteListener(new ServletContextListener() {
                     @Override
                     public void contextInitialized(ServletContextEvent sce) {
