@@ -12,10 +12,17 @@ public class IMResult<T> {
     public String msg;
     public T data;
 
-    public static <T> IMResult<T> success(T data) {
+    public static IMResult<Void> ok() {
+        IMResult<Void> imResult = new IMResult<>();
+        imResult.setCode(0);
+        imResult.setMsg("ok");
+        return imResult;
+    }
+
+    public static <T> IMResult<T> ok(T data) {
         IMResult<T> imResult = new IMResult<>();
         imResult.setCode(0);
-        imResult.setMsg("success");
+        imResult.setMsg("ok");
         imResult.setData(data);
         return imResult;
     }
