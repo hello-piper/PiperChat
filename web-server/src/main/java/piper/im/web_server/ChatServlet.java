@@ -1,6 +1,7 @@
 package piper.im.web_server;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
@@ -23,9 +24,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * ChatServlet
+ *
+ * @author piper
+ */
 public class ChatServlet extends HttpServlet {
-    private final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
-    MessageDAO messageDAO = new MessageDAOImpl();
+    private static final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
+    private static final MessageDAO messageDAO = Singleton.get(MessageDAOImpl.class);
 
     /**
      * 前端获取可用服务地址
@@ -59,8 +65,8 @@ public class ChatServlet extends HttpServlet {
         message.setChatType(msg.getChatType());
         message.setFrom(from);
         message.setTo(to);
-        message.setBody(JSONUtil.toJsonStr(message.getBody()));
-        this.messageDAO.insert(message);
+        message.setBody(msg.getBodyStr());
+        messageDAO.insert(message);
 
         Jedis jedis = RedisDS.getJedis();
         jedis.publish(Constants.CHANNEL_IM_MESSAGE, chatMsg);

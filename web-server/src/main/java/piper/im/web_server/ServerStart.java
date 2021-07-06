@@ -18,6 +18,11 @@ import javax.servlet.ServletException;
 import static io.undertow.servlet.Servlets.filter;
 import static io.undertow.servlet.Servlets.servlet;
 
+/**
+ * ServerStart
+ *
+ * @author piper
+ */
 public class ServerStart {
     public static void main(final String[] args) throws ServletException {
         final PathHandler root = new PathHandler();

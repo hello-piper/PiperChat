@@ -1,6 +1,7 @@
 package piper.im.web_server;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONObject;
@@ -28,9 +29,14 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * LoginServlet
+ *
+ * @author piper
+ */
 public class LoginServlet extends HttpServlet {
-    private static Logger log = LogManager.getLogger(LoginServlet.class);
-    UserDAO userDAO = new UserDAOImpl();
+    private static final Logger log = LogManager.getLogger(LoginServlet.class);
+    private static final UserDAO userDAO = Singleton.get(UserDAOImpl.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

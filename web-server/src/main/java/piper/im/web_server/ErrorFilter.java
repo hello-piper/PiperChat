@@ -9,6 +9,11 @@ import piper.im.common.exception.IMResult;
 import javax.servlet.*;
 import java.io.IOException;
 
+/**
+ * ErrorFilter
+ *
+ * @author piper
+ */
 public class ErrorFilter implements Filter {
     private static final Logger log = LogManager.getLogger(ErrorFilter.class);
 

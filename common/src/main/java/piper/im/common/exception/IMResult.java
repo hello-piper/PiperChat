@@ -20,15 +20,15 @@ public class IMResult<T> {
         return imResult;
     }
 
-    public static IMResult error(String msg) {
-        IMResult imResult = new IMResult<>();
+    public static IMResult<Void> error(String msg) {
+        IMResult<Void> imResult = new IMResult<>();
         imResult.setCode(IMErrorEnum.SERVER_ERROR.getCode());
         imResult.setMsg(msg);
         return imResult;
     }
 
-    public static IMResult error(IMException e) {
-        IMResult imResult = new IMResult<>();
+    public static IMResult<Void> error(IMException e) {
+        IMResult<Void> imResult = new IMResult<>();
         imResult.setCode(e.getCode());
         imResult.setMsg(e.getMsg());
         return imResult;
