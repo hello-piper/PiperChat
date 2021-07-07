@@ -17,6 +17,8 @@ public class UserDAOJdbc implements UserDAO {
 
     @Override
     public User getById(String id) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         try {
             User user = null;
             //获取连接
@@ -24,11 +26,11 @@ public class UserDAOJdbc implements UserDAO {
             //sql
             String sql = "select * from  user where id = ?";
             //预编译SQL
-            PreparedStatement ptmt = conn.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
             //传参
-            ptmt.setString(1, id);
+            stmt.setString(1, id);
             //执行
-            ResultSet rs = ptmt.executeQuery();
+            rs = stmt.executeQuery();
             while (rs.next()) {
                 user = new User();
                 user.setId(rs.getString("id"));
@@ -48,13 +50,15 @@ public class UserDAOJdbc implements UserDAO {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DbUtil.closeConnection();
+            DbUtil.releaseConnection();
+            DbUtil.release(rs, stmt);
         }
         return null;
     }
 
     @Override
     public boolean insert(User user) {
+        PreparedStatement stmt = null;
         try {
             //获取连接
             Connection conn = DbUtil.getConnection();
@@ -62,26 +66,27 @@ public class UserDAOJdbc implements UserDAO {
             String sql = "INSERT INTO user(id,age,email,nickname,avatar,phone,gender,password,salt,status,create_user,create_time)"
                     + "values(?,?,?,?,?,?,?,?,?,?,?,?)";
             //预编译
-            PreparedStatement tempt = conn.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
             //传参
-            tempt.setString(1, user.getId());
-            tempt.setInt(2, user.getAge());
-            tempt.setString(3, user.getEmail());
-            tempt.setString(4, user.getNickname());
-            tempt.setString(5, user.getAvatar());
-            tempt.setString(6, user.getPhone());
-            tempt.setInt(7, user.getGender());
-            tempt.setString(8, user.getPassword());
-            tempt.setString(9, user.getSalt());
-            tempt.setInt(10, user.getStatus());
-            tempt.setString(11, user.getCreateUser());
-            tempt.setLong(12, user.getCreateTime());
+            stmt.setString(1, user.getId());
+            stmt.setInt(2, user.getAge());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getNickname());
+            stmt.setString(5, user.getAvatar());
+            stmt.setString(6, user.getPhone());
+            stmt.setInt(7, user.getGender());
+            stmt.setString(8, user.getPassword());
+            stmt.setString(9, user.getSalt());
+            stmt.setInt(10, user.getStatus());
+            stmt.setString(11, user.getCreateUser());
+            stmt.setLong(12, user.getCreateTime());
             //执行
-            return tempt.execute();
+            return stmt.execute();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DbUtil.closeConnection();
+            DbUtil.releaseConnection();
+            DbUtil.release(stmt);
         }
         return false;
     }

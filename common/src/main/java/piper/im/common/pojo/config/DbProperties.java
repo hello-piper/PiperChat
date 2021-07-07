@@ -8,8 +8,9 @@ import lombok.Data;
  * @author piper
  */
 @Data
-public class DbConfig {
+public class DbProperties {
+    private String driver;
     private String url;
-    private String user;
+    private String username;
     private String password;
 }

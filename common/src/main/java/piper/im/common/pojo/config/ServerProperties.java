@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author piper
  */
-public class ServerConfig implements Serializable {
+public class ServerProperties implements Serializable {
     private static final long serialVersionUID = 1;
 
     private Boolean ssl = false;

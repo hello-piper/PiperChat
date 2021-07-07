@@ -3,7 +3,7 @@ package piper.im.common.enums;
 import java.util.Arrays;
 
 /**
- * 消息内容类型枚举
+ * 消息类型枚举
  *
  * @author piper
  */

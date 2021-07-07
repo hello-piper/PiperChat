@@ -8,15 +8,6 @@ import java.util.Map;
 
 /**
  * jwt token工具类
- * <p>
- * jwt的claim里一般包含以下几种数据:
- * 1. iss -- token的发行者
- * 2. sub -- 该JWT所面向的用户
- * 3. aud -- 接收该JWT的一方
- * 4. exp -- token的失效时间
- * 5. nbf -- 在此时间段之前,不会被处理
- * 6. iat -- jwt发布时间
- * 7. jti -- jwt唯一标识,防止重复使用
  *
  * @author piper
  * @date 2020-08-01 15:17
@@ -26,14 +17,14 @@ public class JwtTokenUtil {
     public static Long EXPIRE_HOUR;
 
     static {
-        JwtProperties properties = YamlUtil.getConfig("jwt", JwtProperties.class);
-        SECRET = properties.getSecret();
-        EXPIRE_HOUR = properties.getExpireHour();
+        JwtProperties config = YamlUtil.getConfig("jwt", JwtProperties.class);
+        SECRET = config.getSecret();
+        EXPIRE_HOUR = config.getExpireHour();
     }
 
-    public JwtTokenUtil(JwtProperties properties) {
-        SECRET = properties.getSecret();
-        EXPIRE_HOUR = properties.getExpireHour();
+    public JwtTokenUtil(JwtProperties config) {
+        SECRET = config.getSecret();
+        EXPIRE_HOUR = config.getExpireHour();
     }
 
     public JwtTokenUtil(String secret, Long expireHour) {
@@ -80,10 +71,7 @@ public class JwtTokenUtil {
      * 获取jwt的payload部分
      */
     public static Claims getClaimFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET)
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
     }
 
     /**

@@ -10,13 +10,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import piper.im.common.pojo.config.ServerConfig;
+import piper.im.common.pojo.config.ServerProperties;
 import piper.im.common.task.ImServerTask;
 import piper.im.common.util.YamlUtil;
 
@@ -34,20 +31,11 @@ public final class WebSocketServer {
     private static ChannelFuture channelFuture;
 
     public static void main(String[] args) throws Exception {
-        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
-
-        // Configure SSL.
-        final SslContext sslCtx;
-        if (config.getSsl()) {
-            SelfSignedCertificate ssc = new SelfSignedCertificate();
-            sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
-        } else {
-            sslCtx = null;
-        }
+        final ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
 
         try {
             bootstrap = newServerBootstrap();
-            bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(sslCtx));
+            bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(config));
             ChannelFuture channelFuture = bootstrap.bind(config.getPort()).sync();
 
             ImServerTask.start();

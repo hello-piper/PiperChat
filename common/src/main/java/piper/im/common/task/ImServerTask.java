@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import piper.im.common.WebSocketUser;
 import piper.im.common.constant.Constants;
 import piper.im.common.pojo.config.AddressInfo;
-import piper.im.common.pojo.config.ServerConfig;
+import piper.im.common.pojo.config.ServerProperties;
 import piper.im.common.util.IpUtil;
 import piper.im.common.util.RedisDS;
 import piper.im.common.util.ThreadUtil;
@@ -26,7 +26,7 @@ public class ImServerTask {
     private static final AddressInfo ADDRESS_INFO;
 
     static {
-        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
+        ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
         AddressInfo addressInfo = new AddressInfo();
         addressInfo.setIp(IpUtil.getIpVo().getIp());
         addressInfo.setPort(config.getPort());

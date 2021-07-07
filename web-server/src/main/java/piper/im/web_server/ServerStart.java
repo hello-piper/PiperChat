@@ -6,7 +6,7 @@ import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
-import piper.im.common.pojo.config.ServerConfig;
+import piper.im.common.pojo.config.ServerProperties;
 import piper.im.common.task.WebServerTask;
 import piper.im.common.util.YamlUtil;
 
@@ -27,7 +27,7 @@ public class ServerStart {
     public static void main(final String[] args) throws ServletException {
         final PathHandler root = new PathHandler();
         final ServletContainer container = ServletContainer.Factory.newInstance();
-        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
+        ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
 
         DeploymentInfo build = new DeploymentInfo()
                 .setClassLoader(ServerStart.class.getClassLoader())

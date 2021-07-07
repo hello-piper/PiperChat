@@ -8,7 +8,7 @@ import lombok.Data;
  * @author piper
  */
 @Data
-public class RedisConfig {
+public class RedisProperties {
     private String host;
     private int port;
     private String password;

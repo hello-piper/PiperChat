@@ -8,8 +8,9 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.SslContext;
-import piper.im.common.pojo.config.ServerConfig;
-import piper.im.common.util.YamlUtil;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.SelfSignedCertificate;
+import piper.im.common.pojo.config.ServerProperties;
 
 /**
  * WebSocket初始化配置
@@ -17,20 +18,27 @@ import piper.im.common.util.YamlUtil;
  * @author piper
  */
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
+    private final ServerProperties config;
 
-    private final SslContext sslCtx;
-
-    public WebSocketServerInitializer(SslContext sslCtx) {
-        this.sslCtx = sslCtx;
+    public WebSocketServerInitializer(ServerProperties config) {
+        this.config = config;
     }
 
     @Override
     public void initChannel(SocketChannel ch) {
-        ServerConfig config = YamlUtil.getConfig("server", ServerConfig.class);
         ChannelPipeline pipeline = ch.pipeline();
-        if (sslCtx != null) {
-            pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+
+        // Configure SSL.
+        try {
+            if (config.getSsl()) {
+                SelfSignedCertificate ssc = new SelfSignedCertificate();
+                SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+                pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());

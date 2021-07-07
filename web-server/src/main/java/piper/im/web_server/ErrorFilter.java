@@ -22,10 +22,10 @@ public class ErrorFilter implements Filter {
         try {
             filterChain.doFilter(req, resp);
         } catch (IMException e) {
-            log.info("filter catch IMException: {}", e.getMessage());
+            e.printStackTrace();
             IoUtil.writeUtf8(resp.getOutputStream(), true, IMResult.error(e));
         } catch (Exception e) {
-            log.info("filter catch Exception: {}", e.getMessage());
+            e.printStackTrace();
             IoUtil.writeUtf8(resp.getOutputStream(), true, IMResult.error(e.getMessage()));
         }
     }
