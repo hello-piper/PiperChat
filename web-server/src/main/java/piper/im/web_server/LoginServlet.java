@@ -17,7 +17,7 @@ import piper.im.common.pojo.dto.UserBasicDTO;
 import piper.im.common.pojo.entity.User;
 import piper.im.common.util.JwtTokenUtil;
 import piper.im.common.util.RedisDS;
-import piper.im.repository.impl.UserDAOImpl;
+import piper.im.repository.impl.UserDAOJdbc;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
@@ -36,7 +36,7 @@ import java.util.Objects;
  */
 public class LoginServlet extends HttpServlet {
     private static final Logger log = LogManager.getLogger(LoginServlet.class);
-    private static final UserDAO userDAO = Singleton.get(UserDAOImpl.class);
+    private static final UserDAO userDAO = Singleton.get(UserDAOJdbc.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

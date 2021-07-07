@@ -8,7 +8,13 @@ import piper.im.common.pojo.entity.Message;
 
 import java.sql.SQLException;
 
+/**
+ * MessageDAOImpl
+ *
+ * @author piper
+ */
 public class MessageDAOImpl implements MessageDAO {
+
     @Override
     public Message getById(String id) {
         try {

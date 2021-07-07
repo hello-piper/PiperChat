@@ -35,5 +35,5 @@ public class User implements Serializable {
 
     private String createUser;
 
-    private String createTime;
+    private Long createTime;
 }

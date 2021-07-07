@@ -8,6 +8,11 @@ import piper.im.common.pojo.entity.User;
 
 import java.sql.SQLException;
 
+/**
+ * UserDAOImpl
+ *
+ * @author piper
+ */
 public class UserDAOImpl implements UserDAO {
 
     @Override

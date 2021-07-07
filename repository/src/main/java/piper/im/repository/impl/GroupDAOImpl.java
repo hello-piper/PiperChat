@@ -8,6 +8,11 @@ import piper.im.common.pojo.entity.Group;
 
 import java.sql.SQLException;
 
+/**
+ * GroupDAOImpl
+ *
+ * @author piper
+ */
 public class GroupDAOImpl implements GroupDAO {
 
     @Override
