@@ -12,11 +12,12 @@
     <url>http://www.example.com</url>
 
     <modules>
+        <module>common</module>
         <module>netty</module>
         <module>undertow</module>
-        <module>web-server</module>
-        <module>common</module>
         <module>repository</module>
+        <module>web-server</module>
+        <module>spring-server</module>
     </modules>
 
     <properties>
