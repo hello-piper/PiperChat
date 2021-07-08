@@ -1,0 +1,40 @@
+server:
+  port: 8095
+  compression:
+    enabled: true
+    mime-types: application/json,text/html
+spring:
+  profiles:
+    active: local
+  output:
+    ansi:
+      enabled: always
+  jpa:
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/im
+    username: root
+    password: "123456"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: localhost
+    port: 6379
+    pool:
+      max-active: 3
+
+logging:
+  config: classpath:log4j2.xml
+  level:
+    root: info
+
+mybatis:
+  type-aliases-package: im.piper.spring_server.pojo.entity
+  mapper-locations: classpath:im/piper/spring_server/pojo/mapper/xml/*.xml
+  configuration:
+    log-prefix: mybatis
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
