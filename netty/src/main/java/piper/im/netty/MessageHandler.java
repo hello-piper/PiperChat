@@ -16,11 +16,6 @@ import java.util.Objects;
  */
 public class MessageHandler {
 
-    /**
-     * 处理消息
-     *
-     * @param dto
-     */
     public static void send(Msg dto) {
         ChatTypeEnum chatTypeEnum = ChatTypeEnum.valueOf(dto.getChatType());
         if (Objects.isNull(chatTypeEnum)) {
@@ -45,5 +40,4 @@ public class MessageHandler {
                 throw new IllegalStateException("Unexpected value: " + chatTypeEnum);
         }
     }
-
 }

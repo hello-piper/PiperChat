@@ -25,22 +25,18 @@ import java.util.concurrent.TimeUnit;
  * @author piper
  */
 public final class WebSocketServer {
-
     private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketServer.class);
     private static ServerBootstrap bootstrap;
     private static ChannelFuture channelFuture;
 
     public static void main(String[] args) throws Exception {
         final ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
-
         try {
             bootstrap = newServerBootstrap();
             bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(config));
             ChannelFuture channelFuture = bootstrap.bind(config.getPort()).sync();
-
             ImServerTask.start();
             log.info("Open your web browser and navigate to " + (config.getSsl() ? "https" : "http") + "://127.0.0.1:{}", config.getPort());
-
             channelFuture.channel().closeFuture().sync();
         } finally {
             close();
@@ -78,5 +74,4 @@ public final class WebSocketServer {
         bootstrap = null;
         log.info("WebSocket server stopped");
     }
-
 }

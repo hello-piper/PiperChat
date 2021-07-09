@@ -6,7 +6,7 @@
 
 <body>
 <form onsubmit="return false;">
-    <textarea id="msg" style="width:500px;height:100px;" value='{"type":0,"content":"hello world!"}'></textarea>
+    <textarea id="msg" style="width:500px;height:100px;"></textarea>
     <input type="button" value="Send Web Socket Data" onclick="send(this.form.msg.value)"/>
     <h3>Output</h3>
     <textarea id="responseText" style="width:500px;height:300px;"></textarea>
@@ -21,9 +21,9 @@ if (!window.WebSocket) {
 
 if (window.WebSocket) {
   var ta = document.getElementById('msg');
-  ta.value = '{"type":0,"content":"hello world!"}';
+  ta.value = '{"chatType":0,"msgType":0,"from":"0","to":"1","text":"hello world!"}';
 
-  socket = new WebSocket("ws://127.0.0.1:8080/websocket");
+  socket = new WebSocket("ws://127.0.0.1:8080/websocket/123456");
   socket.onmessage = function(event) {
     var ta = document.getElementById('responseText');
     ta.value = ta.value + '\n' + event.data
@@ -34,7 +34,7 @@ if (window.WebSocket) {
   };
   socket.onclose = function(event) {
     var ta = document.getElementById('responseText');
-    ta.value = ta.value + "Web Socket closed";
+    ta.value = ta.value + '\n' + "Web Socket closed";
   };
 } else {
   alert("Your browser does not support Web Socket.");
@@ -48,6 +48,7 @@ function send(msg) {
     alert("The socket is not open.");
   }
 }
+
 </script>
 </body>
 
