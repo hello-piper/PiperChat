@@ -2,7 +2,7 @@ package im.piper.spring_server.pojo.entity;
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public class ImMessage implements Serializable {
     private Long id;
 
     private Byte chatType;

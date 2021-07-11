@@ -2,8 +2,8 @@ package im.piper.spring_server.service;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import im.piper.spring_server.pojo.entity.Message;
-import im.piper.spring_server.pojo.mapper.MessageMapper;
+import im.piper.spring_server.pojo.entity.ImMessage;
+import im.piper.spring_server.pojo.mapper.ImMessageMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import piper.im.common.constant.Constants;
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 public class ChatService {
 
     @Resource
-    private MessageMapper messageMapper;
+    private ImMessageMapper imMessageMapper;
 
     @Resource
     private RedisTemplate redisTemplate;
@@ -46,7 +46,7 @@ public class ChatService {
         msg.setTimestamp(now);
         msg.setId(msgId);
 
-        Message message = new Message();
+        ImMessage message = new ImMessage();
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
@@ -54,7 +54,7 @@ public class ChatService {
         message.setTo(to);
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
-        messageMapper.insert(message);
+        imMessageMapper.insert(message);
 
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg.toString());
     }

@@ -2,7 +2,7 @@ package im.piper.spring_server.pojo.entity;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class ImUser implements Serializable {
     private Long id;
 
     private String nickname;

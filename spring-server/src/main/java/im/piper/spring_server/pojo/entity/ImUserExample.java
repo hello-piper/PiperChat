@@ -3,14 +3,14 @@ package im.piper.spring_server.pojo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserExample {
+public class ImUserExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public UserExample() {
+    public ImUserExample() {
         oredCriteria = new ArrayList<>();
     }
 

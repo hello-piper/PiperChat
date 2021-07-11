@@ -1,12 +1,11 @@
 package im.piper.spring_server.service;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONUtil;
-import im.piper.spring_server.pojo.entity.User;
-import im.piper.spring_server.pojo.entity.UserExample;
-import im.piper.spring_server.pojo.mapper.UserMapper;
+import im.piper.spring_server.dto.LoginDTO;
+import im.piper.spring_server.pojo.entity.ImUser;
+import im.piper.spring_server.pojo.mapper.ImUserMapper;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,30 +19,29 @@ import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Objects;
 
 @Service
 public class LoginService {
 
     @Resource
-    private UserMapper userMapper;
+    private ImUserMapper imUserMapper;
 
     @Resource
     private RedisTemplate redisTemplate;
 
-    public void login(HttpServletRequest req, String uid, String pwd, String clientType) {
+    public void login(HttpServletRequest req, LoginDTO dto) {
+        Long uid = dto.getUid();
+        String pwd = dto.getPwd();
+        String clientType = req.getHeader("clientType");
         if (Objects.isNull(uid) || Strings.isBlank(pwd)) {
             throw IMException.build(IMErrorEnum.USER_NOT_FOUND);
         }
 
-        UserExample example = new UserExample();
-        example.createCriteria().andIdEqualTo(Long.valueOf(uid));
-        List<User> users = userMapper.selectByExample(example);
-        if (CollectionUtil.isEmpty(users)) {
+        ImUser user = imUserMapper.selectByPrimaryKey(uid);
+        if (Objects.isNull(user)) {
             throw IMException.build(IMErrorEnum.USER_NOT_FOUND);
         }
-        User user = users.get(0);
 
         String md5Hex = DigestUtil.md5Hex(user.getSalt() + pwd);
         if (!md5Hex.equals(user.getPassword())) {
