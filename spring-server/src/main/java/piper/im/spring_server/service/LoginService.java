@@ -59,7 +59,7 @@ public class LoginService {
 
         String token = IdUtil.fastSimpleUUID();
 
-        redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, JSONUtil.toJsonStr(userBasicDTO), JwtTokenUtil.EXPIRE_HOUR * 3600);
+        redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, userBasicDTO, JwtTokenUtil.EXPIRE_HOUR * 3600);
         redisTemplate.opsForHash().put(Constants.USER_TOKEN_CLIENT + user.getId(), clientType, token);
 
         HttpSession session = req.getSession();
