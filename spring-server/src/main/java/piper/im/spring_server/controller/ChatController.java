@@ -1,6 +1,6 @@
-package im.piper.spring_server.controller;
+package piper.im.spring_server.controller;
 
-import im.piper.spring_server.service.ChatService;
+import piper.im.spring_server.service.ChatService;
 import org.springframework.web.bind.annotation.*;
 import piper.im.common.exception.IMResult;
 import piper.im.common.pojo.config.AddressInfo;

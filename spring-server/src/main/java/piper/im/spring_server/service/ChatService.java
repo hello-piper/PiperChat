@@ -1,9 +1,9 @@
-package im.piper.spring_server.service;
+package piper.im.spring_server.service;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import im.piper.spring_server.pojo.entity.ImMessage;
-import im.piper.spring_server.pojo.mapper.ImMessageMapper;
+import piper.im.spring_server.pojo.entity.ImMessage;
+import piper.im.spring_server.pojo.mapper.ImMessageMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import piper.im.common.constant.Constants;

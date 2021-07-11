@@ -1,4 +1,4 @@
-package im.piper.spring_server.pojo.entity;
+package piper.im.spring_server.pojo.entity;
 
 import java.util.ArrayList;
 import java.util.List;

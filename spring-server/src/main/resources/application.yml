@@ -22,14 +22,19 @@ spring:
     pool:
       max-active: 3
 
+jwt:
+  secret: 7Rv9OTzS
+  expireHour: 24
+  name: token
+
 logging:
   config: classpath:log4j2.xml
   level:
     root: info
 
 mybatis:
-  type-aliases-package: im.piper.spring_server.pojo.entity
-  mapper-locations: classpath:im/piper/spring_server/pojo/mapper/xml/*.xml
+  type-aliases-package: piper.im.spring_server.pojo.entity
+  mapper-locations: classpath:piper/im/spring_server/pojo/mapper/xml/*.xml
   configuration:
     log-prefix: mybatis
 

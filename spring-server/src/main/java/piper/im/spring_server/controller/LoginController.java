@@ -1,7 +1,7 @@
-package im.piper.spring_server.controller;
+package piper.im.spring_server.controller;
 
-import im.piper.spring_server.dto.LoginDTO;
-import im.piper.spring_server.service.LoginService;
+import piper.im.spring_server.dto.LoginDTO;
+import piper.im.spring_server.service.LoginService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="im.piper.spring_server.pojo.mapper.ImUserMapper">
-  <resultMap id="BaseResultMap" type="im.piper.spring_server.pojo.entity.ImUser">
+<mapper namespace="piper.im.spring_server.pojo.mapper.ImUserMapper">
+  <resultMap id="BaseResultMap" type="piper.im.spring_server.pojo.entity.ImUser">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
@@ -77,7 +77,7 @@
     id, nickname, avatar, phone, email, age, gender, `password`, salt, `status`, create_user, 
     create_time
   </sql>
-  <select id="selectByExample" parameterType="im.piper.spring_server.pojo.entity.ImUserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="piper.im.spring_server.pojo.entity.ImUserExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -102,13 +102,13 @@
     delete from im_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="im.piper.spring_server.pojo.entity.ImUserExample">
+  <delete id="deleteByExample" parameterType="piper.im.spring_server.pojo.entity.ImUserExample">
     delete from im_user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="im.piper.spring_server.pojo.entity.ImUser">
+  <insert id="insert" parameterType="piper.im.spring_server.pojo.entity.ImUser">
     insert into im_user (id, nickname, avatar, 
       phone, email, age, 
       gender, `password`, salt, 
@@ -120,7 +120,7 @@
       #{status,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="im.piper.spring_server.pojo.entity.ImUser">
+  <insert id="insertSelective" parameterType="piper.im.spring_server.pojo.entity.ImUser">
     insert into im_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -199,7 +199,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="im.piper.spring_server.pojo.entity.ImUserExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="piper.im.spring_server.pojo.entity.ImUserExample" resultType="java.lang.Long">
     select count(*) from im_user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -267,7 +267,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="im.piper.spring_server.pojo.entity.ImUser">
+  <update id="updateByPrimaryKeySelective" parameterType="piper.im.spring_server.pojo.entity.ImUser">
     update im_user
     <set>
       <if test="nickname != null">
@@ -306,7 +306,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="im.piper.spring_server.pojo.entity.ImUser">
+  <update id="updateByPrimaryKey" parameterType="piper.im.spring_server.pojo.entity.ImUser">
     update im_user
     set nickname = #{nickname,jdbcType=VARCHAR},
       avatar = #{avatar,jdbcType=VARCHAR},

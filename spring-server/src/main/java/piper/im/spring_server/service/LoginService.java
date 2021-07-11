@@ -1,11 +1,11 @@
-package im.piper.spring_server.service;
+package piper.im.spring_server.service;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONUtil;
-import im.piper.spring_server.dto.LoginDTO;
-import im.piper.spring_server.pojo.entity.ImUser;
-import im.piper.spring_server.pojo.mapper.ImUserMapper;
+import piper.im.spring_server.dto.LoginDTO;
+import piper.im.spring_server.pojo.entity.ImUser;
+import piper.im.spring_server.pojo.mapper.ImUserMapper;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

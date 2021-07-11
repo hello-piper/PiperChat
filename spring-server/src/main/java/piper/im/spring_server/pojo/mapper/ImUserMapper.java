@@ -1,7 +1,7 @@
-package im.piper.spring_server.pojo.mapper;
+package piper.im.spring_server.pojo.mapper;
 
-import im.piper.spring_server.pojo.entity.ImUser;
-import im.piper.spring_server.pojo.entity.ImUserExample;
+import piper.im.spring_server.pojo.entity.ImUser;
+import piper.im.spring_server.pojo.entity.ImUserExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

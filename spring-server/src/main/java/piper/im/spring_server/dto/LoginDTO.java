@@ -1,4 +1,4 @@
-package im.piper.spring_server.dto;
+package piper.im.spring_server.dto;
 
 import lombok.Data;
 
