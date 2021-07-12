@@ -24,6 +24,7 @@ import java.net.URI;
 public class MultipleWebSocketClient {
 
     static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket");
+    static final EventLoopGroup group = new NioEventLoopGroup(30);
 
     public static void main(String[] args) throws Exception {
         for (int i = 0; i < 10240; i++) {
@@ -35,7 +36,7 @@ public class MultipleWebSocketClient {
                     e.printStackTrace();
                 }
             }).start();
-            Thread.sleep(50);
+            Thread.sleep(3);
         }
     }
 
@@ -70,7 +71,6 @@ public class MultipleWebSocketClient {
             sslCtx = null;
         }
 
-        EventLoopGroup group = new NioEventLoopGroup();
         try {
             final WebSocketClientHandler handler =
                     new WebSocketClientHandler(
@@ -89,7 +89,7 @@ public class MultipleWebSocketClient {
                             }
                             p.addLast(
                                     new HttpClientCodec(),
-                                    new HttpObjectAggregator(8192),
+                                    new HttpObjectAggregator(5120),
                                     WebSocketClientCompressionHandler.INSTANCE,
                                     handler);
                         }

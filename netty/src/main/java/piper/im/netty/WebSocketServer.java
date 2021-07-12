@@ -45,12 +45,12 @@ public final class WebSocketServer {
 
     public static ServerBootstrap newServerBootstrap() {
         if (Epoll.isAvailable()) {
-            EventLoopGroup bossGroup = new EpollEventLoopGroup(1, new DefaultThreadFactory("WebSocketBossGroup", true));
-            EventLoopGroup workerGroup = new EpollEventLoopGroup(new DefaultThreadFactory("WebSocketWorkerGroup", true));
+            EventLoopGroup bossGroup = new EpollEventLoopGroup(8, new DefaultThreadFactory("WebSocketBossGroup", true));
+            EventLoopGroup workerGroup = new EpollEventLoopGroup(100, new DefaultThreadFactory("WebSocketWorkerGroup", true));
             return new ServerBootstrap().group(bossGroup, workerGroup).channel(EpollServerSocketChannel.class);
         } else {
-            EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-            EventLoopGroup workerGroup = new NioEventLoopGroup();
+            EventLoopGroup bossGroup = new NioEventLoopGroup(8);
+            EventLoopGroup workerGroup = new NioEventLoopGroup(100);
             return new ServerBootstrap().group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
         }
     }
