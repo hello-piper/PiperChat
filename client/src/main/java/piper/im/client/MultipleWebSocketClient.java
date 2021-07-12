@@ -18,27 +18,28 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import piper.im.common.util.ThreadUtil;
 
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
 
 public class MultipleWebSocketClient {
 
     static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket");
 
     public static void main(String[] args) throws Exception {
-        for (int i = 0; i < 1; i++) {
-            Channel one = getOne();
-            if (one != null) {
-                ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() ->
-                        one.writeAndFlush(new TextWebSocketFrame("hello")), 1, 20, TimeUnit.SECONDS);
-            }
+        for (int i = 0; i < 10240; i++) {
+            int finalI = i;
+            new Thread(() -> {
+                try {
+                    new MultipleWebSocketClient().run(finalI);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            Thread.sleep(50);
         }
-        Thread.sleep(100000000000L);
     }
 
-    public static Channel getOne() throws Exception {
+    public void run(Integer num) throws Exception {
         URI uri = new URI(URL);
         String scheme = uri.getScheme() == null ? "ws" : uri.getScheme();
         final String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
@@ -57,7 +58,7 @@ public class MultipleWebSocketClient {
 
         if (!"ws".equalsIgnoreCase(scheme) && !"wss".equalsIgnoreCase(scheme)) {
             System.err.println("Only WS(S) is supported.");
-            return null;
+            return;
         }
 
         final boolean ssl = "wss".equalsIgnoreCase(scheme);
@@ -96,8 +97,14 @@ public class MultipleWebSocketClient {
 
             Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
             handler.handshakeFuture().sync();
-            return ch;
-            // todo
+
+            while (true) {
+                ch.writeAndFlush(new TextWebSocketFrame(num + " ping"));
+                try {
+                    Thread.sleep(20000);
+                } catch (Exception e) {
+                }
+            }
         } finally {
             group.shutdownGracefully();
         }

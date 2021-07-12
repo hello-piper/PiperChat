@@ -2,10 +2,6 @@ package piper.im.spring_server.service;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.json.JSONUtil;
-import piper.im.spring_server.dto.LoginDTO;
-import piper.im.spring_server.pojo.entity.ImUser;
-import piper.im.spring_server.pojo.mapper.ImUserMapper;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +10,9 @@ import piper.im.common.exception.IMErrorEnum;
 import piper.im.common.exception.IMException;
 import piper.im.common.pojo.dto.UserBasicDTO;
 import piper.im.common.util.JwtTokenUtil;
+import piper.im.spring_server.dto.LoginDTO;
+import piper.im.spring_server.pojo.entity.ImUser;
+import piper.im.spring_server.pojo.mapper.ImUserMapper;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;

@@ -54,7 +54,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>piper.im.client.WebSocketClient</mainClass>
+                            <mainClass>piper.im.client.MultipleWebSocketClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

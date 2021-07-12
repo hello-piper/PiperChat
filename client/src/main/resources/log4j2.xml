@@ -6,7 +6,7 @@
         <property name="patternColor"
                   value="%red{%d{yyyy-MM-dd HH:mm:ss}} %green{[%thread]} %blue{[%-5p]} %magenta{%logger} %cyan{%msg%n}"/>
         <property name="logHome">/logs</property>
-        <property name="appName">web-server</property>
+        <property name="appName">client</property>
     </properties>
 
     <appenders>
