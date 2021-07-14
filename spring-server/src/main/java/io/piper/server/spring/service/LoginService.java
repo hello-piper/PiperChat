@@ -2,9 +2,6 @@ package io.piper.server.spring.service;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
 import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
@@ -13,6 +10,10 @@ import io.piper.common.util.JwtTokenUtil;
 import io.piper.server.spring.dto.LoginDTO;
 import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -22,6 +23,9 @@ import java.util.Objects;
 
 @Service
 public class LoginService {
+
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     @Resource
     private ImUserMapper imUserMapper;
@@ -55,14 +59,15 @@ public class LoginService {
         userBasicDTO.setId(user.getId());
         userBasicDTO.setNickname(user.getNickname());
         userBasicDTO.setClientType(clientType);
-
         String token = IdUtil.fastSimpleUUID();
-
-        redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, userBasicDTO, JwtTokenUtil.EXPIRE_HOUR * 3600);
-        redisTemplate.opsForHash().put(Constants.USER_TOKEN_CLIENT + user.getId(), clientType, token);
 
         HttpSession session = req.getSession();
         session.setAttribute("token", token);
+
+        if (!"local".equals(profile)) {
+            redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, userBasicDTO, JwtTokenUtil.EXPIRE_HOUR * 3600);
+            redisTemplate.opsForHash().put(Constants.USER_TOKEN_CLIENT + user.getId(), clientType, token);
+        }
     }
 
     public void logout(HttpServletRequest req) {
