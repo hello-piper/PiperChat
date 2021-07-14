@@ -53,7 +53,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>piper.im.netty.WebSocketServer</mainClass>
+                            <mainClass>io.piper.im.netty.WebSocketServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

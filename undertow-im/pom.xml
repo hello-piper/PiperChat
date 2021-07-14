@@ -69,7 +69,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>piper.im.jsr.undertow.WebSocketServer</mainClass>
+                            <mainClass>io.piper.im.undertow.WebSocketServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

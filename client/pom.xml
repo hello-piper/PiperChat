@@ -53,7 +53,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>piper.im.client.MultipleWebSocketClient</mainClass>
+                            <mainClass>io.piper.client.MultipleWebSocketClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

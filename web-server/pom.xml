@@ -84,7 +84,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>piper.im.web_server.ServerStart</mainClass>
+                                    <mainClass>io.piper.server.web.ServerStart</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -97,7 +97,7 @@
             <!--                <configuration>-->
             <!--                    <archive>-->
             <!--                        <manifest>-->
-            <!--                            <mainClass>piper.im.web_server.ServerStart</mainClass>-->
+            <!--                            <mainClass>io.piper.server.web.ServerStart</mainClass>-->
             <!--                        </manifest>-->
             <!--                    </archive>-->
             <!--                </configuration>-->

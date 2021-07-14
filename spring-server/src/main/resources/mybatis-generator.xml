@@ -35,18 +35,18 @@
         </javaTypeResolver>
 
         <!-- 生成实体类地址 -->
-        <javaModelGenerator targetProject="src/main/java" targetPackage="piper.im.spring_server.pojo.entity">
+        <javaModelGenerator targetProject="src/main/java" targetPackage="io.piper.server.spring.pojo.entity">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- 生成mapxml文件 -->
-        <sqlMapGenerator targetProject="src/main/java" targetPackage="piper.im.spring_server.pojo.mapper.xml">
+        <sqlMapGenerator targetProject="src/main/java" targetPackage="io.piper.server.spring.pojo.mapper.xml">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- 生成mapxml对应client，也就是接口dao -->
-        <javaClientGenerator targetProject="src/main/java" targetPackage="piper.im.spring_server.pojo.mapper"
+        <javaClientGenerator targetProject="src/main/java" targetPackage="io.piper.server.spring.pojo.mapper"
                              type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
