@@ -13,8 +13,8 @@
 
     <modules>
         <module>common</module>
-        <module>netty</module>
-        <module>undertow</module>
+        <module>netty-im</module>
+        <module>undertow-im</module>
         <module>web-server</module>
         <module>spring-server</module>
         <module>client</module>

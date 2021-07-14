@@ -13,7 +13,6 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>spring-server</name>
-    <description>spring server</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
