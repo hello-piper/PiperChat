@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author piper
  */
-public class Group implements Serializable {
+public class ImGroup implements Serializable {
     private static final long serialVersionUID = 1;
 
     private String id;

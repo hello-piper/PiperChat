@@ -52,7 +52,7 @@ public class LoginService {
         // uid -> [web-token,android-token,ios-token]
 
         UserBasicDTO userBasicDTO = new UserBasicDTO();
-        userBasicDTO.setId(user.getId().toString());
+        userBasicDTO.setId(user.getId());
         userBasicDTO.setNickname(user.getNickname());
         userBasicDTO.setClientType(clientType);
 

@@ -12,7 +12,7 @@ import piper.im.common.exception.IMErrorEnum;
 import piper.im.common.exception.IMException;
 import piper.im.common.load_banlance.AddressLoadBalanceHandler;
 import piper.im.common.load_banlance.IAddressLoadBalance;
-import piper.im.common.pojo.entity.Message;
+import piper.im.common.pojo.entity.ImMessage;
 import piper.im.common.pojo.message.Msg;
 import piper.im.common.util.RedisDS;
 import piper.im.web_server.repository.dao.MessageDAO;
@@ -59,14 +59,14 @@ public class ChatServlet extends HttpServlet {
         long msgId = IdUtil.getSnowflake(0, 0).nextId();
         msg.setId(msgId);
 
-        Message message = new Message();
-        message.setId(msgId);
-        message.setMsgType(msg.getMsgType());
-        message.setChatType(msg.getChatType());
-        message.setFrom(from);
-        message.setTo(to);
-        message.setBody(msg.getBodyStr());
-        messageDAO.insert(message);
+        ImMessage imMessage = new ImMessage();
+        imMessage.setId(msgId);
+        imMessage.setMsgType(msg.getMsgType());
+        imMessage.setChatType(msg.getChatType());
+        imMessage.setFrom(from);
+        imMessage.setTo(to);
+        imMessage.setBody(msg.getBodyStr());
+        messageDAO.insert(imMessage);
 
         Jedis jedis = RedisDS.getJedis();
         jedis.publish(Constants.CHANNEL_IM_MESSAGE, chatMsg);

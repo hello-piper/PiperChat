@@ -3,7 +3,7 @@ package piper.im.web_server.repository.impl;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.BeanHandler;
-import piper.im.common.pojo.entity.Message;
+import piper.im.common.pojo.entity.ImMessage;
 import piper.im.web_server.repository.dao.MessageDAO;
 
 import java.sql.SQLException;
@@ -16,9 +16,9 @@ import java.sql.SQLException;
 public class MessageDAOImpl implements MessageDAO {
 
     @Override
-    public Message getById(String id) {
+    public ImMessage getById(String id) {
         try {
-            return Db.use().find(Entity.create("message").set("id", id), new BeanHandler<>(Message.class));
+            return Db.use().find(Entity.create("message").set("id", id), new BeanHandler<>(ImMessage.class));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -26,10 +26,10 @@ public class MessageDAOImpl implements MessageDAO {
     }
 
     @Override
-    public boolean insert(Message message) {
+    public boolean insert(ImMessage imMessage) {
         int count = 0;
         try {
-            count = Db.use().insert(Entity.parseWithUnderlineCase(message));
+            count = Db.use().insert(Entity.parseWithUnderlineCase(imMessage));
         } catch (SQLException e) {
             e.printStackTrace();
         }

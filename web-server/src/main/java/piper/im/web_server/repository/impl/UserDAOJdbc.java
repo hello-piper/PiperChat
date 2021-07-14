@@ -1,7 +1,7 @@
 package piper.im.web_server.repository.impl;
 
 import piper.im.common.db.DbUtil;
-import piper.im.common.pojo.entity.User;
+import piper.im.common.pojo.entity.ImUser;
 import piper.im.web_server.repository.dao.UserDAO;
 
 import java.sql.Connection;
@@ -16,15 +16,15 @@ import java.sql.ResultSet;
 public class UserDAOJdbc implements UserDAO {
 
     @Override
-    public User getById(String id) {
+    public ImUser getById(String id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            User user = null;
+            ImUser imUser = null;
             //获取连接
             Connection conn = DbUtil.getConnection();
             //sql
-            String sql = "select * from  user where id = ?";
+            String sql = "select * from user where id = ?";
             //预编译SQL
             stmt = conn.prepareStatement(sql);
             //传参
@@ -32,21 +32,21 @@ public class UserDAOJdbc implements UserDAO {
             //执行
             rs = stmt.executeQuery();
             while (rs.next()) {
-                user = new User();
-                user.setId(rs.getString("id"));
-                user.setAge(rs.getInt("age"));
-                user.setEmail(rs.getString("email"));
-                user.setNickname(rs.getString("nickname"));
-                user.setAvatar(rs.getString("avatar"));
-                user.setPhone(rs.getString("phone"));
-                user.setGender(rs.getInt("gender"));
-                user.setPassword(rs.getString("password"));
-                user.setSalt(rs.getString("salt"));
-                user.setStatus(rs.getInt("status"));
-                user.setCreateUser(rs.getString("create_user"));
-                user.setCreateTime(rs.getLong("create_time"));
+                imUser = new ImUser();
+                imUser.setId(rs.getLong("id"));
+                imUser.setAge(rs.getInt("age"));
+                imUser.setEmail(rs.getString("email"));
+                imUser.setNickname(rs.getString("nickname"));
+                imUser.setAvatar(rs.getString("avatar"));
+                imUser.setPhone(rs.getString("phone"));
+                imUser.setGender(rs.getInt("gender"));
+                imUser.setPassword(rs.getString("password"));
+                imUser.setSalt(rs.getString("salt"));
+                imUser.setStatus(rs.getInt("status"));
+                imUser.setCreateUser(rs.getString("create_user"));
+                imUser.setCreateTime(rs.getLong("create_time"));
             }
-            return user;
+            return imUser;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -57,29 +57,28 @@ public class UserDAOJdbc implements UserDAO {
     }
 
     @Override
-    public boolean insert(User user) {
+    public boolean insert(ImUser imUser) {
         PreparedStatement stmt = null;
         try {
             //获取连接
             Connection conn = DbUtil.getConnection();
             //sql
-            String sql = "INSERT INTO user(id,age,email,nickname,avatar,phone,gender,password,salt,status,create_user,create_time)"
-                    + "values(?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO user(create_time,age,email,nickname,avatar,phone,gender,password,salt,status,create_user)"
+                    + "values(?,?,?,?,?,?,?,?,?,?,?)";
             //预编译
             stmt = conn.prepareStatement(sql);
             //传参
-            stmt.setString(1, user.getId());
-            stmt.setInt(2, user.getAge());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getNickname());
-            stmt.setString(5, user.getAvatar());
-            stmt.setString(6, user.getPhone());
-            stmt.setInt(7, user.getGender());
-            stmt.setString(8, user.getPassword());
-            stmt.setString(9, user.getSalt());
-            stmt.setInt(10, user.getStatus());
-            stmt.setString(11, user.getCreateUser());
-            stmt.setLong(12, user.getCreateTime());
+            stmt.setLong(1, imUser.getCreateTime());
+            stmt.setInt(2, imUser.getAge());
+            stmt.setString(3, imUser.getEmail());
+            stmt.setString(4, imUser.getNickname());
+            stmt.setString(5, imUser.getAvatar());
+            stmt.setString(6, imUser.getPhone());
+            stmt.setInt(7, imUser.getGender());
+            stmt.setString(8, imUser.getPassword());
+            stmt.setString(9, imUser.getSalt());
+            stmt.setInt(10, imUser.getStatus());
+            stmt.setString(11, imUser.getCreateUser());
             //执行
             return stmt.execute();
         } catch (Exception e) {

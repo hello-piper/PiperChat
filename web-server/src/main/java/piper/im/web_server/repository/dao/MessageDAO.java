@@ -1,10 +1,10 @@
 package piper.im.web_server.repository.dao;
 
-import piper.im.common.pojo.entity.Message;
+import piper.im.common.pojo.entity.ImMessage;
 
 public interface MessageDAO {
 
-    Message getById(String id);
+    ImMessage getById(String id);
 
-    boolean insert(Message message);
+    boolean insert(ImMessage imMessage);
 }

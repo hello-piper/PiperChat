@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class UserBasicDTO implements Serializable {
     private static final long serialVersionUID = 1;
 
-    private String id;
+    private Long id;
 
     private String nickname;
 

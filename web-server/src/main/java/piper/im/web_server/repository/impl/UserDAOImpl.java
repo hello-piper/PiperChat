@@ -3,7 +3,7 @@ package piper.im.web_server.repository.impl;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.BeanHandler;
-import piper.im.common.pojo.entity.User;
+import piper.im.common.pojo.entity.ImUser;
 import piper.im.web_server.repository.dao.UserDAO;
 
 import java.sql.SQLException;
@@ -16,9 +16,9 @@ import java.sql.SQLException;
 public class UserDAOImpl implements UserDAO {
 
     @Override
-    public User getById(String id) {
+    public ImUser getById(String id) {
         try {
-            return Db.use().find(Entity.create("user").set("id", id), new BeanHandler<>(User.class));
+            return Db.use().find(Entity.create("user").set("id", id), new BeanHandler<>(ImUser.class));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -26,10 +26,10 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean insert(User user) {
+    public boolean insert(ImUser imUser) {
         int count = 0;
         try {
-            count = Db.use().insert(Entity.parseWithUnderlineCase(user));
+            count = Db.use().insert(Entity.parseWithUnderlineCase(imUser));
         } catch (SQLException e) {
             e.printStackTrace();
         }

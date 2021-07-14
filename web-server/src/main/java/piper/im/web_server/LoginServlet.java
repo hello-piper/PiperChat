@@ -13,7 +13,7 @@ import piper.im.common.constant.Constants;
 import piper.im.common.exception.IMErrorEnum;
 import piper.im.common.exception.IMException;
 import piper.im.common.pojo.dto.UserBasicDTO;
-import piper.im.common.pojo.entity.User;
+import piper.im.common.pojo.entity.ImUser;
 import piper.im.common.util.JwtTokenUtil;
 import piper.im.common.util.RedisDS;
 import piper.im.web_server.repository.dao.UserDAO;
@@ -56,13 +56,13 @@ public class LoginServlet extends HttpServlet {
             throw IMException.build(IMErrorEnum.USER_NOT_FOUND);
         }
 
-        User user = userDAO.getById(uid);
-        if (Objects.isNull(user)) {
+        ImUser imUser = userDAO.getById(uid);
+        if (Objects.isNull(imUser)) {
             throw IMException.build(IMErrorEnum.USER_NOT_FOUND);
         }
 
-        String md5Hex = DigestUtil.md5Hex(user.getSalt() + pwd);
-        if (!md5Hex.equals(user.getPassword())) {
+        String md5Hex = DigestUtil.md5Hex(imUser.getSalt() + pwd);
+        if (!md5Hex.equals(imUser.getPassword())) {
             throw IMException.build(IMErrorEnum.INVALID_PWD);
         }
 
@@ -71,8 +71,8 @@ public class LoginServlet extends HttpServlet {
         // uid -> [web-token,android-token,ios-token]
 
         UserBasicDTO userBasicDTO = new UserBasicDTO();
-        userBasicDTO.setId(user.getId());
-        userBasicDTO.setNickname(user.getNickname());
+        userBasicDTO.setId(imUser.getId());
+        userBasicDTO.setNickname(imUser.getNickname());
         userBasicDTO.setClientType(clientType);
 
         String token = IdUtil.fastSimpleUUID();
@@ -80,7 +80,7 @@ public class LoginServlet extends HttpServlet {
         Jedis jedis = RedisDS.getJedis();
         jedis.set(Constants.USER_TOKEN + token, JSONUtil.toJsonStr(userBasicDTO),
                 SetParams.setParams().ex(JwtTokenUtil.EXPIRE_HOUR * 3600));
-        jedis.hset(Constants.USER_TOKEN_CLIENT + user.getId(), clientType, token);
+        jedis.hset(Constants.USER_TOKEN_CLIENT + imUser.getId(), clientType, token);
         jedis.close();
 
         HttpSession session = req.getSession();
