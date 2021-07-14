@@ -12,7 +12,7 @@
     <artifactId>undertow-im</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>undertow</name>
+    <name>undertow-im</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,7 +58,7 @@
     </dependencies>
 
     <build>
-        <finalName>undertow</finalName>
+        <finalName>undertow-im</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
