@@ -1,10 +1,10 @@
-package piper.im.repository.impl;
+package piper.im.web_server.repository.impl;
 
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.BeanHandler;
-import piper.im.common.dao.MessageDAO;
 import piper.im.common.pojo.entity.Message;
+import piper.im.web_server.repository.dao.MessageDAO;
 
 import java.sql.SQLException;
 

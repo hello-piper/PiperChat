@@ -1,8 +1,8 @@
-package piper.im.repository.impl;
+package piper.im.web_server.repository.impl;
 
-import piper.im.common.dao.UserDAO;
 import piper.im.common.db.DbUtil;
 import piper.im.common.pojo.entity.User;
+import piper.im.web_server.repository.dao.UserDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

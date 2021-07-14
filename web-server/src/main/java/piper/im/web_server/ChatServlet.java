@@ -6,7 +6,6 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import piper.im.common.constant.Constants;
-import piper.im.common.dao.MessageDAO;
 import piper.im.common.enums.ChatTypeEnum;
 import piper.im.common.enums.MsgTypeEnum;
 import piper.im.common.exception.IMErrorEnum;
@@ -16,7 +15,8 @@ import piper.im.common.load_banlance.IAddressLoadBalance;
 import piper.im.common.pojo.entity.Message;
 import piper.im.common.pojo.message.Msg;
 import piper.im.common.util.RedisDS;
-import piper.im.repository.impl.MessageDAOImpl;
+import piper.im.web_server.repository.dao.MessageDAO;
+import piper.im.web_server.repository.impl.MessageDAOImpl;
 import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServlet;

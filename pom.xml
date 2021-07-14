@@ -15,7 +15,6 @@
         <module>common</module>
         <module>netty</module>
         <module>undertow</module>
-        <module>repository</module>
         <module>web-server</module>
         <module>spring-server</module>
         <module>client</module>

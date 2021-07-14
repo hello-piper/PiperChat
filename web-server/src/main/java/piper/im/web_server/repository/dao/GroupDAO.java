@@ -1,4 +1,4 @@
-package piper.im.common.dao;
+package piper.im.web_server.repository.dao;
 
 import piper.im.common.pojo.entity.Group;
 

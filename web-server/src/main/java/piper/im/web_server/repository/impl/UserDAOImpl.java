@@ -1,24 +1,24 @@
-package piper.im.repository.impl;
+package piper.im.web_server.repository.impl;
 
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.BeanHandler;
-import piper.im.common.dao.GroupDAO;
-import piper.im.common.pojo.entity.Group;
+import piper.im.common.pojo.entity.User;
+import piper.im.web_server.repository.dao.UserDAO;
 
 import java.sql.SQLException;
 
 /**
- * GroupDAOImpl
+ * UserDAOImpl
  *
  * @author piper
  */
-public class GroupDAOImpl implements GroupDAO {
+public class UserDAOImpl implements UserDAO {
 
     @Override
-    public Group getById(String id) {
+    public User getById(String id) {
         try {
-            return Db.use().find(Entity.create("group").set("id", id), new BeanHandler<>(Group.class));
+            return Db.use().find(Entity.create("user").set("id", id), new BeanHandler<>(User.class));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -26,10 +26,10 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public boolean insert(Group group) {
+    public boolean insert(User user) {
         int count = 0;
         try {
-            count = Db.use().insert(Entity.parseWithUnderlineCase(group));
+            count = Db.use().insert(Entity.parseWithUnderlineCase(user));
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -10,14 +10,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 import piper.im.common.constant.Constants;
-import piper.im.common.dao.UserDAO;
 import piper.im.common.exception.IMErrorEnum;
 import piper.im.common.exception.IMException;
 import piper.im.common.pojo.dto.UserBasicDTO;
 import piper.im.common.pojo.entity.User;
 import piper.im.common.util.JwtTokenUtil;
 import piper.im.common.util.RedisDS;
-import piper.im.repository.impl.UserDAOJdbc;
+import piper.im.web_server.repository.dao.UserDAO;
+import piper.im.web_server.repository.impl.UserDAOJdbc;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
