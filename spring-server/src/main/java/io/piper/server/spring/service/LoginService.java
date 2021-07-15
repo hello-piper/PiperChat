@@ -1,3 +1,16 @@
+/*
+ * Copyright 2020 The PiperChat
+ *
+ * The PiperChat is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *
+ * http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 package io.piper.server.spring.service;
 
 import cn.hutool.core.util.IdUtil;
@@ -5,8 +18,8 @@ import cn.hutool.crypto.digest.DigestUtil;
 import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
-import io.piper.common.pojo.dto.UserBasicDTO;
-import io.piper.common.util.JwtTokenUtil;
+import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.LRUCache;
 import io.piper.server.spring.dto.LoginDTO;
 import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
@@ -18,8 +31,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LoginService {
@@ -32,6 +47,8 @@ public class LoginService {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    public static final Map<String, UserTokenDTO> USER_TOKENS = Collections.synchronizedMap(new LRUCache<>(10));
 
     public void login(HttpServletRequest req, LoginDTO dto) {
         Long uid = dto.getUid();
@@ -51,28 +68,26 @@ public class LoginService {
             throw IMException.build(IMErrorEnum.INVALID_PWD);
         }
 
-        // web-token - userBasicInfo
-        // android-token - userBasicInfo
-        // uid -> [web-token,android-token,ios-token]
+        UserTokenDTO tokenDTO = new UserTokenDTO();
+        tokenDTO.setId(user.getId());
+        tokenDTO.setNickname(user.getNickname());
+        tokenDTO.setAvatar(user.getAvatar());
+        tokenDTO.setPhone(user.getPhone());
+        tokenDTO.setClientType(clientType);
 
-        UserBasicDTO userBasicDTO = new UserBasicDTO();
-        userBasicDTO.setId(user.getId());
-        userBasicDTO.setNickname(user.getNickname());
-        userBasicDTO.setClientType(clientType);
         String token = IdUtil.fastSimpleUUID();
 
-        HttpSession session = req.getSession();
-        session.setAttribute("token", token);
-
-        if (!"local".equals(profile)) {
-            redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, userBasicDTO, JwtTokenUtil.EXPIRE_HOUR * 3600);
-            redisTemplate.opsForHash().put(Constants.USER_TOKEN_CLIENT + user.getId(), clientType, token);
+        if ("local".equals(profile)) {
+            USER_TOKENS.put(Constants.USER_TOKEN + token, tokenDTO);
+        } else {
+            redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, tokenDTO, 12L, TimeUnit.HOURS);
         }
     }
 
     public void logout(HttpServletRequest req) {
         try {
             req.logout();
+            USER_TOKENS.remove(Constants.USER_TOKEN + req.getHeader("token"));
         } catch (ServletException e) {
             throw IMException.build(IMErrorEnum.SERVER_ERROR);
         }

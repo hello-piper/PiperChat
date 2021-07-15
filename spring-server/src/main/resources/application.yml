@@ -7,11 +7,6 @@ spring:
   profiles:
     active: ${profile}
 
-jwt:
-  secret: 7Rv9OTzS
-  expireHour: 24
-  name: token
-
 logging:
   config: classpath:log4j2.xml
   level:

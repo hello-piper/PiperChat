@@ -1,11 +1,6 @@
 server:
   port: 8090
 
-jwt:
-  secret: 7Rv9OTzS
-  expireHour: 24
-  name: token
-
 redis:
   host: localhost
   port: 6379

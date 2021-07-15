@@ -11,23 +11,21 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.common.pojo.dto;
+package io.piper.common.util;
 
-import lombok.Data;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
-import java.io.Serializable;
+public class LRUCache<K, V> extends LinkedHashMap<K, V> {
+    private static final long serialVersionUID = 1L;
+    private final int capacity;
 
-@Data
-public class UserBasicDTO implements Serializable {
-    private static final long serialVersionUID = 1;
+    public LRUCache(int capacity) {
+        super(capacity, 0.75F, true);
+        this.capacity = capacity;
+    }
 
-    private Long id;
-
-    private String nickname;
-
-    private String avatar;
-
-    private String phone;
-
-    private String clientType;
+    protected boolean removeEldestEntry(Entry<K, V> eldest) {
+        return this.size() > this.capacity;
+    }
 }

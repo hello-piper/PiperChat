@@ -19,18 +19,17 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Strings;
 import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
-import io.piper.common.pojo.dto.UserBasicDTO;
+import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.entity.ImUser;
-import io.piper.common.util.JwtTokenUtil;
 import io.piper.common.util.RedisDS;
 import io.piper.server.web.repository.dao.UserDAO;
 import io.piper.server.web.repository.impl.UserDAOJdbc;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
@@ -79,21 +78,15 @@ public class LoginServlet extends HttpServlet {
             throw IMException.build(IMErrorEnum.INVALID_PWD);
         }
 
-        // web-token - userBasicInfo
-        // android-token - userBasicInfo
-        // uid -> [web-token,android-token,ios-token]
-
-        UserBasicDTO userBasicDTO = new UserBasicDTO();
-        userBasicDTO.setId(imUser.getId());
-        userBasicDTO.setNickname(imUser.getNickname());
-        userBasicDTO.setClientType(clientType);
+        UserTokenDTO tokenDTO = new UserTokenDTO();
+        tokenDTO.setId(imUser.getId());
+        tokenDTO.setNickname(imUser.getNickname());
+        tokenDTO.setClientType(clientType);
 
         String token = IdUtil.fastSimpleUUID();
 
         Jedis jedis = RedisDS.getJedis();
-        jedis.set(Constants.USER_TOKEN + token, JSONUtil.toJsonStr(userBasicDTO),
-                SetParams.setParams().ex(JwtTokenUtil.EXPIRE_HOUR * 3600));
-        jedis.hset(Constants.USER_TOKEN_CLIENT + imUser.getId(), clientType, token);
+        jedis.set(Constants.USER_TOKEN + token, JSONUtil.toJsonStr(tokenDTO), SetParams.setParams().ex(43200L));
         jedis.close();
 
         HttpSession session = req.getSession();

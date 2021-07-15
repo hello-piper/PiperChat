@@ -11,31 +11,23 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.common.pojo.config;
+package io.piper.common.pojo.dto;
 
 import lombok.Data;
 
-/**
- * Jwt配置类
- *
- * @author piper
- * @date 2021年6月29日 08点00分
- */
+import java.io.Serializable;
+
 @Data
-public class JwtProperties {
+public class UserTokenDTO implements Serializable {
+    private static final long serialVersionUID = 1;
 
-    /**
-     * jwt的秘钥
-     */
-    private String secret = "7Rv9OTzS";
+    private Long id;
 
-    /**
-     * jwt过期时间(单位:小时)
-     */
-    private Long expireHour = 24L;
+    private String nickname;
 
-    /**
-     * header中标识jwt的字段名称
-     */
-    private String name = "token";
+    private String avatar;
+
+    private String phone;
+
+    private String clientType;
 }
