@@ -1,13 +1,13 @@
-package io.piper.common.pojo.entity;
+package io.piper.server.spring.pojo.entity;
 
 import java.io.Serializable;
 
-public class ImGroup implements Serializable {
+public class ImGroupUser implements Serializable {
     private Long id;
 
-    private String name;
+    private Long uid;
 
-    private String placard;
+    private Long groupId;
 
     private Integer status;
 
@@ -25,20 +25,20 @@ public class ImGroup implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public String getPlacard() {
-        return placard;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setPlacard(String placard) {
-        this.placard = placard == null ? null : placard.trim();
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public Integer getStatus() {
@@ -72,8 +72,8 @@ public class ImGroup implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", placard=").append(placard);
+        sb.append(", uid=").append(uid);
+        sb.append(", groupId=").append(groupId);
         sb.append(", status=").append(status);
         sb.append(", createUid=").append(createUid);
         sb.append(", createTime=").append(createTime);

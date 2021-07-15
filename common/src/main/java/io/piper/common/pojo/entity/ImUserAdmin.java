@@ -2,12 +2,8 @@ package io.piper.common.pojo.entity;
 
 import java.io.Serializable;
 
-public class ImGroup implements Serializable {
-    private Long id;
-
-    private String name;
-
-    private String placard;
+public class ImUserAdmin implements Serializable {
+    private Long uid;
 
     private Integer status;
 
@@ -17,28 +13,12 @@ public class ImGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Long getId() {
-        return id;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-    public String getPlacard() {
-        return placard;
-    }
-
-    public void setPlacard(String placard) {
-        this.placard = placard == null ? null : placard.trim();
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
     public Integer getStatus() {
@@ -71,9 +51,7 @@ public class ImGroup implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", placard=").append(placard);
+        sb.append(", uid=").append(uid);
         sb.append(", status=").append(status);
         sb.append(", createUid=").append(createUid);
         sb.append(", createTime=").append(createTime);

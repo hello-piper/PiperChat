@@ -1,9 +1,9 @@
 package io.piper.server.spring.pojo.mapper;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.entity.ImUserExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ImUserMapper {
     long countByExample(ImUserExample example);

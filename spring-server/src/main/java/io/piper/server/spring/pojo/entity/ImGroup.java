@@ -1,4 +1,4 @@
-package io.piper.common.pojo.entity;
+package io.piper.server.spring.pojo.entity;
 
 import java.io.Serializable;
 

@@ -1,9 +1,9 @@
 package io.piper.server.spring.pojo.mapper;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 import io.piper.server.spring.pojo.entity.ImMessage;
 import io.piper.server.spring.pojo.entity.ImMessageExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ImMessageMapper {
     long countByExample(ImMessageExample example);

@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="io.piper.server.spring.pojo.mapper.ImUserMapper">
-  <resultMap id="BaseResultMap" type="io.piper.server.spring.pojo.entity.ImUser">
+<mapper namespace="io.piper.server.spring.pojo.mapper.ImGroupUserMapper">
+  <resultMap id="BaseResultMap" type="io.piper.server.spring.pojo.entity.ImGroupUser">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="age" jdbcType="INTEGER" property="age" />
-    <result column="gender" jdbcType="INTEGER" property="gender" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_uid" jdbcType="BIGINT" property="createUid" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
@@ -74,17 +68,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, nickname, avatar, phone, email, age, gender, `password`, salt, `status`, create_uid, 
-    create_time
+    id, `uid`, group_id, `status`, create_uid, create_time
   </sql>
-  <select id="selectByExample" parameterType="io.piper.server.spring.pojo.entity.ImUserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="io.piper.server.spring.pojo.entity.ImGroupUserExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from im_user
+    from im_group_user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -95,61 +88,39 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from im_user
+    from im_group_user
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from im_user
+    delete from im_group_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="io.piper.server.spring.pojo.entity.ImUserExample">
-    delete from im_user
+  <delete id="deleteByExample" parameterType="io.piper.server.spring.pojo.entity.ImGroupUserExample">
+    delete from im_group_user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImUser">
+  <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImGroupUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into im_user (nickname, avatar, phone, 
-      email, age, gender, 
-      `password`, salt, `status`, 
+    insert into im_group_user (`uid`, group_id, `status`, 
       create_uid, create_time)
-    values (#{nickname,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{gender,jdbcType=INTEGER}, 
-      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+    values (#{uid,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
       #{createUid,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImUser">
+  <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImGroupUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into im_user
+    insert into im_group_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="nickname != null">
-        nickname,
+      <if test="uid != null">
+        `uid`,
       </if>
-      <if test="avatar != null">
-        avatar,
-      </if>
-      <if test="phone != null">
-        phone,
-      </if>
-      <if test="email != null">
-        email,
-      </if>
-      <if test="age != null">
-        age,
-      </if>
-      <if test="gender != null">
-        gender,
-      </if>
-      <if test="password != null">
-        `password`,
-      </if>
-      <if test="salt != null">
-        salt,
+      <if test="groupId != null">
+        group_id,
       </if>
       <if test="status != null">
         `status`,
@@ -162,29 +133,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="nickname != null">
-        #{nickname,jdbcType=VARCHAR},
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
       </if>
-      <if test="avatar != null">
-        #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null">
-        #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null">
-        #{age,jdbcType=INTEGER},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=INTEGER},
-      </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="salt != null">
-        #{salt,jdbcType=VARCHAR},
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -197,41 +150,23 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="io.piper.server.spring.pojo.entity.ImUserExample" resultType="java.lang.Long">
-    select count(*) from im_user
+  <select id="countByExample" parameterType="io.piper.server.spring.pojo.entity.ImGroupUserExample" resultType="java.lang.Long">
+    select count(*) from im_group_user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update im_user
+    update im_group_user
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.nickname != null">
-        nickname = #{record.nickname,jdbcType=VARCHAR},
+      <if test="record.uid != null">
+        `uid` = #{record.uid,jdbcType=BIGINT},
       </if>
-      <if test="record.avatar != null">
-        avatar = #{record.avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="record.phone != null">
-        phone = #{record.phone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.email != null">
-        email = #{record.email,jdbcType=VARCHAR},
-      </if>
-      <if test="record.age != null">
-        age = #{record.age,jdbcType=INTEGER},
-      </if>
-      <if test="record.gender != null">
-        gender = #{record.gender,jdbcType=INTEGER},
-      </if>
-      <if test="record.password != null">
-        `password` = #{record.password,jdbcType=VARCHAR},
-      </if>
-      <if test="record.salt != null">
-        salt = #{record.salt,jdbcType=VARCHAR},
+      <if test="record.groupId != null">
+        group_id = #{record.groupId,jdbcType=BIGINT},
       </if>
       <if test="record.status != null">
         `status` = #{record.status,jdbcType=INTEGER},
@@ -248,16 +183,10 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update im_user
+    update im_group_user
     set id = #{record.id,jdbcType=BIGINT},
-      nickname = #{record.nickname,jdbcType=VARCHAR},
-      avatar = #{record.avatar,jdbcType=VARCHAR},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
-      age = #{record.age,jdbcType=INTEGER},
-      gender = #{record.gender,jdbcType=INTEGER},
-      `password` = #{record.password,jdbcType=VARCHAR},
-      salt = #{record.salt,jdbcType=VARCHAR},
+      `uid` = #{record.uid,jdbcType=BIGINT},
+      group_id = #{record.groupId,jdbcType=BIGINT},
       `status` = #{record.status,jdbcType=INTEGER},
       create_uid = #{record.createUid,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=BIGINT}
@@ -265,32 +194,14 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="io.piper.server.spring.pojo.entity.ImUser">
-    update im_user
+  <update id="updateByPrimaryKeySelective" parameterType="io.piper.server.spring.pojo.entity.ImGroupUser">
+    update im_group_user
     <set>
-      <if test="nickname != null">
-        nickname = #{nickname,jdbcType=VARCHAR},
+      <if test="uid != null">
+        `uid` = #{uid,jdbcType=BIGINT},
       </if>
-      <if test="avatar != null">
-        avatar = #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null">
-        age = #{age,jdbcType=INTEGER},
-      </if>
-      <if test="gender != null">
-        gender = #{gender,jdbcType=INTEGER},
-      </if>
-      <if test="password != null">
-        `password` = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="salt != null">
-        salt = #{salt,jdbcType=VARCHAR},
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
       </if>
       <if test="status != null">
         `status` = #{status,jdbcType=INTEGER},
@@ -304,16 +215,10 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="io.piper.server.spring.pojo.entity.ImUser">
-    update im_user
-    set nickname = #{nickname,jdbcType=VARCHAR},
-      avatar = #{avatar,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      age = #{age,jdbcType=INTEGER},
-      gender = #{gender,jdbcType=INTEGER},
-      `password` = #{password,jdbcType=VARCHAR},
-      salt = #{salt,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="io.piper.server.spring.pojo.entity.ImGroupUser">
+    update im_group_user
+    set `uid` = #{uid,jdbcType=BIGINT},
+      group_id = #{groupId,jdbcType=BIGINT},
       `status` = #{status,jdbcType=INTEGER},
       create_uid = #{createUid,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=BIGINT}

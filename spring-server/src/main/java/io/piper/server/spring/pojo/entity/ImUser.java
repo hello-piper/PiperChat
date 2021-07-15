@@ -23,7 +23,7 @@ public class ImUser implements Serializable {
 
     private Integer status;
 
-    private String createUser;
+    private Long createUid;
 
     private Long createTime;
 
@@ -109,12 +109,12 @@ public class ImUser implements Serializable {
         this.status = status;
     }
 
-    public String getCreateUser() {
-        return createUser;
+    public Long getCreateUid() {
+        return createUid;
     }
 
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
+    public void setCreateUid(Long createUid) {
+        this.createUid = createUid;
     }
 
     public Long getCreateTime() {
@@ -141,7 +141,7 @@ public class ImUser implements Serializable {
         sb.append(", password=").append(password);
         sb.append(", salt=").append(salt);
         sb.append(", status=").append(status);
-        sb.append(", createUser=").append(createUser);
+        sb.append(", createUid=").append(createUid);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

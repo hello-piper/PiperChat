@@ -1,17 +1,19 @@
-package io.piper.common.pojo.entity;
+package io.piper.server.spring.pojo.entity;
 
 import java.io.Serializable;
 
-public class ImGroup implements Serializable {
+public class ImUserFriend implements Serializable {
     private Long id;
 
-    private String name;
+    private Long uid;
 
-    private String placard;
+    private Long friendId;
+
+    private String alias;
 
     private Integer status;
 
-    private Long createUid;
+    private String reqMsg;
 
     private Long createTime;
 
@@ -25,20 +27,28 @@ public class ImGroup implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
-    public String getPlacard() {
-        return placard;
+    public Long getFriendId() {
+        return friendId;
     }
 
-    public void setPlacard(String placard) {
-        this.placard = placard == null ? null : placard.trim();
+    public void setFriendId(Long friendId) {
+        this.friendId = friendId;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias == null ? null : alias.trim();
     }
 
     public Integer getStatus() {
@@ -49,12 +59,12 @@ public class ImGroup implements Serializable {
         this.status = status;
     }
 
-    public Long getCreateUid() {
-        return createUid;
+    public String getReqMsg() {
+        return reqMsg;
     }
 
-    public void setCreateUid(Long createUid) {
-        this.createUid = createUid;
+    public void setReqMsg(String reqMsg) {
+        this.reqMsg = reqMsg == null ? null : reqMsg.trim();
     }
 
     public Long getCreateTime() {
@@ -72,10 +82,11 @@ public class ImGroup implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", placard=").append(placard);
+        sb.append(", uid=").append(uid);
+        sb.append(", friendId=").append(friendId);
+        sb.append(", alias=").append(alias);
         sb.append(", status=").append(status);
-        sb.append(", createUid=").append(createUid);
+        sb.append(", reqMsg=").append(reqMsg);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

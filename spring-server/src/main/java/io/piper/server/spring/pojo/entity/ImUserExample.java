@@ -764,73 +764,63 @@ public class ImUserExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIsNull() {
-            addCriterion("create_user is null");
+        public Criteria andCreateUidIsNull() {
+            addCriterion("create_uid is null");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIsNotNull() {
-            addCriterion("create_user is not null");
+        public Criteria andCreateUidIsNotNull() {
+            addCriterion("create_uid is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserEqualTo(String value) {
-            addCriterion("create_user =", value, "createUser");
+        public Criteria andCreateUidEqualTo(Long value) {
+            addCriterion("create_uid =", value, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserNotEqualTo(String value) {
-            addCriterion("create_user <>", value, "createUser");
+        public Criteria andCreateUidNotEqualTo(Long value) {
+            addCriterion("create_uid <>", value, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserGreaterThan(String value) {
-            addCriterion("create_user >", value, "createUser");
+        public Criteria andCreateUidGreaterThan(Long value) {
+            addCriterion("create_uid >", value, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserGreaterThanOrEqualTo(String value) {
-            addCriterion("create_user >=", value, "createUser");
+        public Criteria andCreateUidGreaterThanOrEqualTo(Long value) {
+            addCriterion("create_uid >=", value, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserLessThan(String value) {
-            addCriterion("create_user <", value, "createUser");
+        public Criteria andCreateUidLessThan(Long value) {
+            addCriterion("create_uid <", value, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserLessThanOrEqualTo(String value) {
-            addCriterion("create_user <=", value, "createUser");
+        public Criteria andCreateUidLessThanOrEqualTo(Long value) {
+            addCriterion("create_uid <=", value, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserLike(String value) {
-            addCriterion("create_user like", value, "createUser");
+        public Criteria andCreateUidIn(List<Long> values) {
+            addCriterion("create_uid in", values, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserNotLike(String value) {
-            addCriterion("create_user not like", value, "createUser");
+        public Criteria andCreateUidNotIn(List<Long> values) {
+            addCriterion("create_uid not in", values, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserIn(List<String> values) {
-            addCriterion("create_user in", values, "createUser");
+        public Criteria andCreateUidBetween(Long value1, Long value2) {
+            addCriterion("create_uid between", value1, value2, "createUid");
             return (Criteria) this;
         }
 
-        public Criteria andCreateUserNotIn(List<String> values) {
-            addCriterion("create_user not in", values, "createUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserBetween(String value1, String value2) {
-            addCriterion("create_user between", value1, value2, "createUser");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateUserNotBetween(String value1, String value2) {
-            addCriterion("create_user not between", value1, value2, "createUser");
+        public Criteria andCreateUidNotBetween(Long value1, Long value2) {
+            addCriterion("create_uid not between", value1, value2, "createUid");
             return (Criteria) this;
         }
 
