@@ -17,6 +17,6 @@ import lombok.Data;
 
 @Data
 public class LoginDTO {
-    private Long uid;
+    private String email;
     private String pwd;
 }
