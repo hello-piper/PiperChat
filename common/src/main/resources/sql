@@ -7,7 +7,7 @@ CREATE TABLE `im_group`  (
   `create_uid` bigint(20) NULL DEFAULT NULL,
   `create_time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 DROP TABLE IF EXISTS `im_group_user`;
 CREATE TABLE `im_group_user`  (
@@ -18,7 +18,7 @@ CREATE TABLE `im_group_user`  (
   `create_uid` bigint(20) NULL DEFAULT NULL,
   `create_time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 DROP TABLE IF EXISTS `im_message`;
 CREATE TABLE `im_message`  (
@@ -48,7 +48,7 @@ CREATE TABLE `im_user`  (
   `create_uid` bigint(20) NULL DEFAULT NULL,
   `create_time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 DROP TABLE IF EXISTS `im_user_admin`;
 CREATE TABLE `im_user_admin`  (
@@ -69,7 +69,7 @@ CREATE TABLE `im_user_friend`  (
   `req_msg` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `create_time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 
 INSERT INTO `im_user` (`id`, `nickname`, `avatar`, `phone`, `email`, `age`, `gender`, `password`, `salt`, `status`, `create_uid`, `create_time`)
