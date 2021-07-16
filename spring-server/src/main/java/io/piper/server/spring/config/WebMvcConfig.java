@@ -31,17 +31,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations(
-                "classpath:/static/");
-        registry.addResourceHandler("doc.html").addResourceLocations(
-                "classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations(
-                "classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor).addPathPatterns("/**")
-                .excludePathPatterns("/login", "/error", "/", "static/", "/favicon.ico", "/doc.html", "/webjars/**", "/swagger-resources/**");
+                .excludePathPatterns("/login", "/error", "/doc.html", "/webjars/**", "/swagger-resources/**");
     }
 }
