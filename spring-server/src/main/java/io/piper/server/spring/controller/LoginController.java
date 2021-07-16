@@ -13,13 +13,16 @@
  */
 package io.piper.server.spring.controller;
 
-import org.springframework.web.bind.annotation.*;
 import io.piper.server.spring.dto.LoginDTO;
 import io.piper.server.spring.service.LoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+@Api(tags = "登录接口")
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -28,11 +31,13 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping
+    @ApiOperation("登录/注册")
     public void login(HttpServletRequest req, @RequestBody LoginDTO dto) {
         loginService.login(req, dto);
     }
 
     @DeleteMapping
+    @ApiOperation("退出登录")
     public void logout(HttpServletRequest req) {
         loginService.logout(req);
     }

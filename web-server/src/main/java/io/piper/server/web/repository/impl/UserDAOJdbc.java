@@ -56,7 +56,7 @@ public class UserDAOJdbc implements UserDAO {
                 imUser.setPassword(rs.getString("password"));
                 imUser.setSalt(rs.getString("salt"));
                 imUser.setStatus(rs.getInt("status"));
-                imUser.setCreateUser(rs.getString("create_user"));
+                imUser.setCreateUid(rs.getLong("create_uid"));
                 imUser.setCreateTime(rs.getLong("create_time"));
             }
             return imUser;
@@ -91,7 +91,7 @@ public class UserDAOJdbc implements UserDAO {
             stmt.setString(8, imUser.getPassword());
             stmt.setString(9, imUser.getSalt());
             stmt.setInt(10, imUser.getStatus());
-            stmt.setString(11, imUser.getCreateUser());
+            stmt.setLong(11, imUser.getCreateUid());
             //执行
             return stmt.execute();
         } catch (Exception e) {

@@ -38,8 +38,8 @@ public class AuthInterceptor implements HandlerInterceptor {
     private RedisTemplate redisTemplate;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Object objToken = request.getSession().getAttribute("token");
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        Object objToken = request.getHeader("token");
         if (Objects.isNull(objToken)) {
             throw new IMException(IMErrorEnum.INVALID_TOKEN);
         }
