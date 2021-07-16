@@ -17,6 +17,7 @@ import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.LoginUserHolder;
 import io.piper.server.spring.service.LoginService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,22 +40,25 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        Object objToken = request.getHeader("token");
-        if (Objects.isNull(objToken)) {
+        String token = request.getHeader("token");
+        if (Objects.isNull(token)) {
             throw new IMException(IMErrorEnum.INVALID_TOKEN);
         }
-        String token = String.valueOf(objToken);
+        UserTokenDTO tokenDTO;
         if ("local".equals(profile)) {
-            boolean exToken = LoginService.USER_TOKENS.containsKey(Constants.USER_TOKEN + token);
-            if (!exToken) {
-                throw new IMException(IMErrorEnum.INVALID_TOKEN);
-            }
+            tokenDTO = LoginService.USER_TOKENS.get(Constants.USER_TOKEN + token);
         } else {
-            UserTokenDTO dto = (UserTokenDTO) redisTemplate.opsForValue().get(Constants.USER_TOKEN + token);
-            if (Objects.isNull(dto)) {
-                throw new IMException(IMErrorEnum.INVALID_TOKEN);
-            }
+            tokenDTO = (UserTokenDTO) redisTemplate.opsForValue().get(Constants.USER_TOKEN + token);
         }
+        if (Objects.isNull(tokenDTO)) {
+            throw new IMException(IMErrorEnum.INVALID_TOKEN);
+        }
+        LoginUserHolder.put(tokenDTO);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        LoginUserHolder.remove();
     }
 }

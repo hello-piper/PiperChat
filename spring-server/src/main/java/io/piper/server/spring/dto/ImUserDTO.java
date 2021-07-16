@@ -13,18 +13,44 @@
  */
 package io.piper.server.spring.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class LoginDTO implements Serializable {
+@ApiModel("ImUserDTO")
+public class ImUserDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("邮箱")
+    @ApiModelProperty("id")
+    private Long id;
+
+    @ApiModelProperty("nickname")
+    private String nickname;
+
+    @ApiModelProperty("avatar")
+    private String avatar;
+
+    @ApiModelProperty("phone")
+    private String phone;
+
+    @ApiModelProperty("email")
     private String email;
 
-    @ApiModelProperty("密码")
-    private String pwd;
+    @ApiModelProperty("age")
+    private Integer age;
+
+    @ApiModelProperty("gender")
+    private Integer gender;
+
+    @ApiModelProperty("status")
+    private Integer status;
+
+    @ApiModelProperty("createUid")
+    private Long createUid;
+
+    @ApiModelProperty("createTime")
+    private Long createTime;
 }

@@ -11,20 +11,22 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.server.spring.dto;
+package io.piper.common.util;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import io.piper.common.pojo.dto.UserTokenDTO;
 
-import java.io.Serializable;
+public class LoginUserHolder {
+    private static final ThreadLocal<UserTokenDTO> holder = new ThreadLocal<>();
 
-@Data
-public class LoginDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
+    public static void put(UserTokenDTO dto) {
+        holder.set(dto);
+    }
 
-    @ApiModelProperty("邮箱")
-    private String email;
+    public static UserTokenDTO get() {
+        return holder.get();
+    }
 
-    @ApiModelProperty("密码")
-    private String pwd;
+    public static void remove() {
+        holder.remove();
+    }
 }
