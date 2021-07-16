@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The PiperChat
+ * Copyright (c) 2020-2030 The Piper(https://github.com/hello-piper)
  *
  * The PiperChat is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
