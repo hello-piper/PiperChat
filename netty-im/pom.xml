@@ -21,6 +21,24 @@
         <common.version>1.0-SNAPSHOT</common.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <profile>local</profile>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profile>dev</profile>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>io.piper</groupId>
@@ -43,6 +61,15 @@
 
     <build>
         <finalName>netty-im</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

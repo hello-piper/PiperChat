@@ -2,6 +2,7 @@ server:
   ssl: false
   port: 8080
   wsPath: /websocket
+  profile: ${profile}
 
 redis:
   host: localhost
