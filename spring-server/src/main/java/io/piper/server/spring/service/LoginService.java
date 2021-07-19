@@ -107,7 +107,6 @@ public class LoginService {
     public void logout(HttpServletRequest req) {
         try {
             req.logout();
-            USER_TOKENS.remove(Constants.USER_TOKEN + req.getHeader("token"));
         } catch (ServletException e) {
             throw IMException.build(IMErrorEnum.SERVER_ERROR);
         }
