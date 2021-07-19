@@ -15,10 +15,6 @@ package io.piper.server.spring.service;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import io.piper.server.spring.pojo.entity.ImMessage;
-import io.piper.server.spring.pojo.mapper.ImMessageMapper;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
 import io.piper.common.constant.Constants;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
@@ -28,7 +24,13 @@ import io.piper.common.load_banlance.AddressLoadBalanceHandler;
 import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.message.Msg;
+import io.piper.common.task.WebServerTask;
+import io.piper.server.spring.pojo.entity.ImMessage;
+import io.piper.server.spring.pojo.mapper.ImMessageMapper;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 @Service
@@ -39,6 +41,11 @@ public class ChatService {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @PostConstruct
+    public void init() {
+        WebServerTask.start();
+    }
 
     private static final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
 
