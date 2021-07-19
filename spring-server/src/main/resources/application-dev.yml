@@ -9,4 +9,7 @@ spring:
     port: 6379
     password: "123456"
     pool:
-      max-active: 3
+      max-active: 8
+      max-wait: 3000
+      max-idle: 8
+      min-idle: 0
