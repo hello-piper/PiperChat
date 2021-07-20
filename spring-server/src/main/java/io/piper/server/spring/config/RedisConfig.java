@@ -59,7 +59,7 @@ public class RedisConfig {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);
         jedisPoolConfig.setMaxWaitMillis(maxWait);
-        return new JedisPool(jedisPoolConfig, host, port, timeout);
+        return new JedisPool(jedisPoolConfig, host, port, timeout, password);
     }
 
     @Bean
