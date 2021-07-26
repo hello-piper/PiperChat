@@ -13,6 +13,7 @@
  */
 package io.piper.server.spring.controller;
 
+import io.piper.common.exception.IMResult;
 import io.piper.server.spring.dto.LoginDTO;
 import io.piper.server.spring.service.LoginService;
 import io.swagger.annotations.Api;
@@ -32,8 +33,8 @@ public class LoginController {
 
     @PostMapping
     @ApiOperation("登录/注册")
-    public void login(HttpServletRequest req, @RequestBody LoginDTO dto) {
-        loginService.login(req, dto);
+    public IMResult<String> login(HttpServletRequest req, @RequestBody LoginDTO dto) {
+        return IMResult.ok(loginService.login(req, dto));
     }
 
     @DeleteMapping

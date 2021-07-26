@@ -53,7 +53,7 @@ public class LoginService {
 
     public static final Map<String, UserTokenDTO> USER_TOKENS = Collections.synchronizedMap(new LRUCache<>(10));
 
-    public void login(HttpServletRequest req, LoginDTO dto) {
+    public String login(HttpServletRequest req, LoginDTO dto) {
         String email = dto.getEmail();
         String pwd = dto.getPwd();
         String clientType = req.getHeader("clientType");
@@ -102,6 +102,7 @@ public class LoginService {
         } else {
             redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, tokenDTO, 12L, TimeUnit.HOURS);
         }
+        return token;
     }
 
     public void logout(HttpServletRequest req) {
