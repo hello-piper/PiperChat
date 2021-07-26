@@ -24,8 +24,8 @@
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://39.96.187.148:3306/im"
-                        userId="root" password="root">
+                        connectionURL="jdbc:mysql://localhost:3306/im"
+                        userId="root" password="123456">
         </jdbcConnection>
 
         <!-- 类型转换 -->
@@ -54,13 +54,11 @@
         <table tableName="im_user" enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
         <table tableName="im_user_friend" enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
         <table tableName="im_user_admin" enableCountByExample="true" enableUpdateByExample="true"
@@ -71,13 +69,11 @@
         <table tableName="im_group" enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
         <table tableName="im_group_user" enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
         <table tableName="im_message" enableCountByExample="true" enableUpdateByExample="true"

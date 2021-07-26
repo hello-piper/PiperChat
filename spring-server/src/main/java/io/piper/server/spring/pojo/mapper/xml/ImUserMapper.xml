@@ -109,24 +109,23 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImUser">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into im_user (nickname, avatar, phone, 
-      email, age, gender, 
-      `password`, salt, `status`, 
-      create_uid, create_time)
-    values (#{nickname,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{gender,jdbcType=INTEGER}, 
-      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{createUid,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT})
+    insert into im_user (id, nickname, avatar, 
+      phone, email, age, 
+      gender, `password`, salt, 
+      `status`, create_uid, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{nickname,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
+      #{gender,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createUid,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImUser">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into im_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="nickname != null">
         nickname,
       </if>
@@ -162,6 +161,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="nickname != null">
         #{nickname,jdbcType=VARCHAR},
       </if>

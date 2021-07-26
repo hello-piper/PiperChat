@@ -68,6 +68,7 @@ public class LoginService {
         if (CollectionUtil.isEmpty(imUsers)) {
             // register
             user = new ImUser();
+            user.setId(IdUtil.getSnowflake(0, 0).nextId());
             user.setEmail(email);
             user.setNickname("萌爆的小鹬" + RandomUtil.randomNumbers(3));
             user.setAvatar("https://profile.csdnimg.cn/6/C/F/1_gy325416");

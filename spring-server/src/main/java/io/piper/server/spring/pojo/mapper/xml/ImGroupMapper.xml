@@ -102,20 +102,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImGroup">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into im_group (`name`, placard, `status`, 
-      create_uid, create_time)
-    values (#{name,jdbcType=VARCHAR}, #{placard,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{createUid,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT})
+    insert into im_group (id, `name`, placard, 
+      `status`, create_uid, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{placard,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createUid,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImGroup">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into im_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="name != null">
         `name`,
       </if>
@@ -133,6 +132,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>

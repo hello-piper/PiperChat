@@ -103,22 +103,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImUserFriend">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into im_user_friend (`uid`, friend_id, `alias`, 
-      `status`, req_msg, create_time
-      )
-    values (#{uid,jdbcType=BIGINT}, #{friendId,jdbcType=BIGINT}, #{alias,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{reqMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
-      )
+    insert into im_user_friend (id, `uid`, friend_id, 
+      `alias`, `status`, req_msg, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{friendId,jdbcType=BIGINT}, 
+      #{alias,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{reqMsg,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImUserFriend">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into im_user_friend
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="uid != null">
         `uid`,
       </if>
@@ -139,6 +136,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="uid != null">
         #{uid,jdbcType=BIGINT},
       </if>
