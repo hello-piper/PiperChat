@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * yml文件读取工具
@@ -35,15 +36,16 @@ public class YamlUtil {
 
     static {
         LOADED_CONFIG = new Yaml().load(ClassLoader.getSystemResourceAsStream("application.yml"));
+        String profile = getProfile();
+        if (!Objects.isNull(profile)) {
+            LinkedHashMap<String, Object> profileMap =
+                    new Yaml().load(ClassLoader.getSystemResourceAsStream("application-" + profile + ".yml"));
+            LOADED_CONFIG.putAll(profileMap);
+        }
     }
 
     /**
      * 获取配置
-     *
-     * @param key
-     * @param config
-     * @param <T>
-     * @return
      */
     public static <T> T getConfig(String key, Class<T> config) {
         T instance = null;
@@ -58,10 +60,6 @@ public class YamlUtil {
 
     /**
      * 属性填充
-     *
-     * @param map
-     * @param bean
-     * @param <T>
      */
     public static <T> void populate(Map<String, Object> map, T bean) {
         try {
@@ -95,6 +93,17 @@ public class YamlUtil {
                 return clz.getMethod(name, paramClz);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static String getProfile() {
+        LinkedHashMap<String, Object> server = (LinkedHashMap) LOADED_CONFIG.get("server");
+        if (server != null && !server.isEmpty()) {
+            Object profile = server.get("profile");
+            if (!Objects.isNull(profile)) {
+                return (String) profile;
             }
         }
         return null;
