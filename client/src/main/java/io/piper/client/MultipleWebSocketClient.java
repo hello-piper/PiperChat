@@ -31,20 +31,33 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.piper.common.enums.ChatTypeEnum;
+import io.piper.common.enums.MsgTypeEnum;
+import io.piper.common.pojo.message.Msg;
 
 import java.net.URI;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class MultipleWebSocketClient {
-
+    static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
     static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket");
-    static final EventLoopGroup group = new NioEventLoopGroup(30);
+    static final EventLoopGroup group = new NioEventLoopGroup(300);
+
+    static Msg msg = new Msg();
+
+    static {
+        msg.setMsgType(MsgTypeEnum.TEXT.type);
+        msg.setChatType(ChatTypeEnum.SINGLE.type);
+        msg.setTo("0");
+    }
 
     public static void main(String[] args) throws Exception {
         for (int i = 0; i < 10240; i++) {
             int finalI = i;
             new Thread(() -> {
                 try {
-                    new MultipleWebSocketClient().run(finalI);
+                    run(finalI);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -53,7 +66,7 @@ public class MultipleWebSocketClient {
         }
     }
 
-    public void run(Integer num) throws Exception {
+    public static void run(Integer num) throws Exception {
         URI uri = new URI(URL);
         String scheme = uri.getScheme() == null ? "ws" : uri.getScheme();
         final String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
@@ -84,39 +97,33 @@ public class MultipleWebSocketClient {
             sslCtx = null;
         }
 
-        try {
-            final WebSocketClientHandler handler =
-                    new WebSocketClientHandler(
-                            WebSocketClientHandshakerFactory.newHandshaker(
-                                    uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
+        final WebSocketClientHandler handler =
+                new WebSocketClientHandler(WebSocketClientHandshakerFactory.newHandshaker(
+                        uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
 
-            Bootstrap b = new Bootstrap();
-            b.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) {
-                            ChannelPipeline p = ch.pipeline();
-                            if (sslCtx != null) {
-                                p.addLast(sslCtx.newHandler(ch.alloc(), host, port));
-                            }
-                            p.addLast(
-                                    new HttpClientCodec(),
-                                    new HttpObjectAggregator(5120),
-                                    WebSocketClientCompressionHandler.INSTANCE,
-                                    handler);
+        Bootstrap b = new Bootstrap();
+        b.group(group)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) {
+                        ChannelPipeline p = ch.pipeline();
+                        if (sslCtx != null) {
+                            p.addLast(sslCtx.newHandler(ch.alloc(), host, port));
                         }
-                    });
+                        p.addLast(
+                                new HttpClientCodec(),
+                                new HttpObjectAggregator(5120),
+                                WebSocketClientCompressionHandler.INSTANCE,
+                                handler);
+                    }
+                });
 
-            Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
-            handler.handshakeFuture().sync();
+        Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
+        handler.handshakeFuture().sync();
 
-            while (true) {
-                ch.writeAndFlush(new TextWebSocketFrame(num + " ping"));
-                Thread.sleep(20000);
-            }
-        } finally {
-            group.shutdownGracefully();
-        }
+        SCHEDULED_POOL.scheduleWithFixedDelay(() -> {
+            ch.writeAndFlush(new TextWebSocketFrame(msg.toString()));
+        }, 25, 25, TimeUnit.SECONDS);
     }
 }
