@@ -13,6 +13,7 @@
  */
 package io.piper.im.netty;
 
+import cn.hutool.json.JSONUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -21,8 +22,11 @@ import io.netty.util.internal.StringUtil;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.WebSocketUser;
+import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
+import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.RedisDS;
 
 /**
  * LoginHandler
@@ -31,7 +35,7 @@ import io.piper.common.exception.IMException;
  */
 public class LoginHandler extends ChannelInboundHandlerAdapter {
     private static final InternalLogger log = InternalLoggerFactory.getInstance(LoginHandler.class);
-    public static final AttributeKey<String> TOKEN_ATTRIBUTE_KEY = AttributeKey.valueOf("token");
+    public static final AttributeKey<String> UID_ATTRIBUTE_KEY = AttributeKey.valueOf("uid");
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -40,12 +44,20 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
             String[] uriSplit = uri.split("/");
             String token = uriSplit[uriSplit.length - 1];
             if (StringUtil.isNullOrEmpty(token)) {
-                throw IMException.build(IMErrorEnum.INVALID_TOKEN, "请登录");
+                throw IMException.build(IMErrorEnum.INVALID_TOKEN);
             }
-            ctx.channel().attr(TOKEN_ATTRIBUTE_KEY).set(token);
-            // todo 解析用户token获取用户uid  放入用户容器
-            WebSocketUser.put(ctx.channel().id().asShortText(), ctx.channel());
-            log.debug("用户：{} 上线", ctx.channel().id().asShortText());
+            String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
+            if (StringUtil.isNullOrEmpty(tokenDTOStr)) {
+                throw IMException.build(IMErrorEnum.INVALID_TOKEN);
+            }
+            UserTokenDTO tokenDTO = JSONUtil.toBean(tokenDTOStr, UserTokenDTO.class);
+            String uid = tokenDTO.getId().toString();
+            if (StringUtil.isNullOrEmpty(uid)) {
+                throw IMException.build(IMErrorEnum.INVALID_TOKEN);
+            }
+            WebSocketUser.put(uid, ctx.channel());
+            ctx.channel().attr(UID_ATTRIBUTE_KEY).set(uid);
+            log.debug("用户：{} 上线", tokenDTO.getNickname());
         }
         ctx.pipeline().remove(LoginHandler.class);
         super.channelRead(ctx, msg);

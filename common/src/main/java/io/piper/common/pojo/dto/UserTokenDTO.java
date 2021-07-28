@@ -30,4 +30,6 @@ public class UserTokenDTO implements Serializable {
     private String phone;
 
     private String clientType;
+
+    private Boolean isAdmin;
 }

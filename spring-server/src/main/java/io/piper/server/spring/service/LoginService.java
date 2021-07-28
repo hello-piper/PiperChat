@@ -21,10 +21,11 @@ import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.util.LRUCache;
 import io.piper.server.spring.dto.LoginDTO;
 import io.piper.server.spring.pojo.entity.ImUser;
+import io.piper.server.spring.pojo.entity.ImUserAdmin;
 import io.piper.server.spring.pojo.entity.ImUserExample;
+import io.piper.server.spring.pojo.mapper.ImUserAdminMapper;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +35,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -49,9 +49,10 @@ public class LoginService {
     private ImUserMapper imUserMapper;
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private ImUserAdminMapper imUserAdminMapper;
 
-    public static final Map<String, UserTokenDTO> USER_TOKENS = Collections.synchronizedMap(new LRUCache<>(10));
+    @Resource
+    private RedisTemplate redisTemplate;
 
     public String login(HttpServletRequest req, LoginDTO dto) {
         String email = dto.getEmail();
@@ -95,14 +96,14 @@ public class LoginService {
         tokenDTO.setAvatar(user.getAvatar());
         tokenDTO.setPhone(user.getPhone());
         tokenDTO.setClientType(clientType);
+        tokenDTO.setIsAdmin(false);
+        ImUserAdmin imUserAdmin = imUserAdminMapper.selectByPrimaryKey(user.getId());
+        if (!Objects.isNull(imUserAdmin)) {
+            tokenDTO.setIsAdmin(true);
+        }
 
         String token = IdUtil.fastSimpleUUID();
-
-        if ("local".equals(profile)) {
-            USER_TOKENS.put(Constants.USER_TOKEN + token, tokenDTO);
-        } else {
-            redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, tokenDTO, 12L, TimeUnit.HOURS);
-        }
+        redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, tokenDTO, 12L, TimeUnit.HOURS);
         return token;
     }
 

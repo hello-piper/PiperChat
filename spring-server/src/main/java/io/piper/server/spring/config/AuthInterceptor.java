@@ -18,8 +18,6 @@ import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.util.LoginUserHolder;
-import io.piper.server.spring.service.LoginService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -32,9 +30,6 @@ import java.util.Objects;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
-    @Value("${spring.profiles.active}")
-    private String profile;
-
     @Resource
     private RedisTemplate redisTemplate;
 
@@ -44,12 +39,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (Objects.isNull(token)) {
             throw new IMException(IMErrorEnum.INVALID_TOKEN);
         }
-        UserTokenDTO tokenDTO;
-        if ("local".equals(profile)) {
-            tokenDTO = LoginService.USER_TOKENS.get(Constants.USER_TOKEN + token);
-        } else {
-            tokenDTO = (UserTokenDTO) redisTemplate.opsForValue().get(Constants.USER_TOKEN + token);
-        }
+        UserTokenDTO tokenDTO = (UserTokenDTO) redisTemplate.opsForValue().get(Constants.USER_TOKEN + token);
         if (Objects.isNull(tokenDTO)) {
             throw new IMException(IMErrorEnum.INVALID_TOKEN);
         }
