@@ -13,13 +13,21 @@
  */
 package io.piper.server.spring.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.server.spring.dto.ImUserAdminDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.ImUserAdminPageDTO;
+import io.piper.server.spring.pojo.entity.ImUserAdmin;
+import io.piper.server.spring.pojo.entity.ImUserAdminExample;
 import io.piper.server.spring.pojo.mapper.ImUserAdminMapper;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ImUserAdminService {
@@ -27,8 +35,17 @@ public class ImUserAdminService {
     @Resource
     private ImUserAdminMapper imUserAdminMapper;
 
-    public PageImpl<ImUserAdminDTO> page(Integer pageNum, Integer pageSize) {
-        return null;
+    public PageVO<ImUserAdminDTO> page(ImUserAdminPageDTO pageDTO) {
+        Page<Object> page = PageHelper.startPage(pageDTO.getPageNum(), pageDTO.getPageSize());
+        ImUserAdminExample example = new ImUserAdminExample();
+        List<ImUserAdmin> imGroups = imUserAdminMapper.selectByExample(example);
+        List<ImUserAdminDTO> list = new ArrayList<>();
+        for (ImUserAdmin userAdmin : imGroups) {
+            ImUserAdminDTO dto = new ImUserAdminDTO();
+            BeanUtil.copyProperties(userAdmin, dto);
+            list.add(dto);
+        }
+        return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
     }
 
     public boolean add(ImUserAdminDTO dto, UserTokenDTO userTokenDTO) {

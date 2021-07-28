@@ -16,11 +16,11 @@ package io.piper.server.spring.controller.admin;
 import io.piper.common.exception.IMResult;
 import io.piper.common.util.LoginUserHolder;
 import io.piper.server.spring.dto.ImUserAdminDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.ImUserAdminPageDTO;
 import io.piper.server.spring.service.ImUserAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -35,11 +35,8 @@ public class AdminImUserAdminController {
 
     @GetMapping("/page")
     @ApiOperation("管理员管理 分页")
-    public IMResult<PageImpl<ImUserAdminDTO>> page(
-            @RequestHeader("token") String token,
-            @ApiParam("页码数") @RequestParam Integer pageNum,
-            @ApiParam("每页条数") @RequestParam Integer pageSize) {
-        return IMResult.ok(imUserAdminService.page(pageNum, pageSize));
+    public IMResult<PageVO<ImUserAdminDTO>> page(@RequestHeader("token") String token, @RequestBody ImUserAdminPageDTO pageDTO) {
+        return IMResult.ok(imUserAdminService.page(pageDTO));
     }
 
     @PostMapping("/add")

@@ -13,13 +13,21 @@
  */
 package io.piper.server.spring.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.server.spring.dto.ImGroupDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.ImGroupPageDTO;
+import io.piper.server.spring.pojo.entity.ImGroup;
+import io.piper.server.spring.pojo.entity.ImGroupExample;
 import io.piper.server.spring.pojo.mapper.ImGroupMapper;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ImGroupService {
@@ -27,8 +35,17 @@ public class ImGroupService {
     @Resource
     private ImGroupMapper imGroupMapper;
 
-    public PageImpl<ImGroupDTO> page(Integer pageNum, Integer pageSize) {
-        return null;
+    public PageVO<ImGroupDTO> page(ImGroupPageDTO pageDTO) {
+        Page<Object> page = PageHelper.startPage(pageDTO.getPageNum(), pageDTO.getPageSize());
+        ImGroupExample example = new ImGroupExample();
+        List<ImGroup> imGroups = imGroupMapper.selectByExample(example);
+        List<ImGroupDTO> list = new ArrayList<>();
+        for (ImGroup group : imGroups) {
+            ImGroupDTO dto = new ImGroupDTO();
+            BeanUtil.copyProperties(group, dto);
+            list.add(dto);
+        }
+        return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
     }
 
     public boolean add(ImGroupDTO dto, UserTokenDTO userTokenDTO) {

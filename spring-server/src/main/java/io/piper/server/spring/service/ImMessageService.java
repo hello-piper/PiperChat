@@ -13,13 +13,21 @@
  */
 package io.piper.server.spring.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.server.spring.dto.ImMessageDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
+import io.piper.server.spring.pojo.entity.ImMessage;
+import io.piper.server.spring.pojo.entity.ImMessageExample;
 import io.piper.server.spring.pojo.mapper.ImMessageMapper;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ImMessageService {
@@ -27,8 +35,17 @@ public class ImMessageService {
     @Resource
     private ImMessageMapper imMessageMapper;
 
-    public PageImpl<ImMessageDTO> page(Integer pageNum, Integer pageSize) {
-        return null;
+    public PageVO<ImMessageDTO> page(ImMessagePageDTO pageDTO) {
+        Page<Object> page = PageHelper.startPage(pageDTO.getPageNum(), pageDTO.getPageSize());
+        ImMessageExample example = new ImMessageExample();
+        List<ImMessage> imGroups = imMessageMapper.selectByExample(example);
+        List<ImMessageDTO> list = new ArrayList<>();
+        for (ImMessage message : imGroups) {
+            ImMessageDTO dto = new ImMessageDTO();
+            BeanUtil.copyProperties(message, dto);
+            list.add(dto);
+        }
+        return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
     }
 
     public boolean add(ImMessageDTO dto, UserTokenDTO userTokenDTO) {
