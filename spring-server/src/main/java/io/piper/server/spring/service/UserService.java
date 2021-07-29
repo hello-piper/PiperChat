@@ -22,12 +22,23 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
 
     @Resource
     private ImUserMapper imUserMapper;
+
+    public ImUserDTO userInfo(Long uid) {
+        ImUser imUser = imUserMapper.selectByPrimaryKey(uid);
+        if (Objects.isNull(imUser)) {
+            return null;
+        }
+        ImUserDTO userDTO = new ImUserDTO();
+        BeanUtil.copyProperties(imUser, userDTO);
+        return userDTO;
+    }
 
     public List<ImUserDTO> friends() {
         List<ImUserDTO> result = new ArrayList<>();

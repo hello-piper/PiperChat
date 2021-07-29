@@ -18,8 +18,10 @@ import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -32,6 +34,12 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @GetMapping("user-info")
+    @ApiOperation("用户信息")
+    public IMResult<ImUserDTO> userInfo(@ApiParam("uid") @RequestParam Long uid) {
+        return IMResult.ok(userService.userInfo(uid));
+    }
 
     @GetMapping("friends")
     @ApiOperation("好友列表")
