@@ -13,9 +13,12 @@
  */
 package io.piper.server.spring.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
 import io.piper.common.enums.ChatTypeEnum;
@@ -25,8 +28,14 @@ import io.piper.common.exception.IMException;
 import io.piper.common.load_banlance.AddressLoadBalanceHandler;
 import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.config.AddressInfo;
+import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
+import io.piper.common.util.LoginUserHolder;
+import io.piper.server.spring.dto.ImMessageDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
 import io.piper.server.spring.pojo.entity.ImMessage;
+import io.piper.server.spring.pojo.entity.ImMessageExample;
 import io.piper.server.spring.pojo.mapper.ImMessageMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +47,8 @@ import redis.clients.jedis.JedisPubSub;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -86,11 +97,11 @@ public class ChatService {
     public void chat(Msg msg) {
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
-        String from = msg.getFrom();
         String to = msg.getTo();
-        if (ObjectUtil.hasNull(msgTypeEnum, chatTypeEnum, from, to)) {
+        if (ObjectUtil.hasNull(msgTypeEnum, chatTypeEnum, to)) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
+        UserTokenDTO loginUser = LoginUserHolder.get();
         long now = System.currentTimeMillis();
         long msgId = IdUtil.getSnowflake(0, 0).nextId();
         msg.setTimestamp(now);
@@ -100,12 +111,27 @@ public class ChatService {
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
-        message.setFrom(from);
+        message.setFrom(loginUser.getId().toString());
         message.setTo(to);
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
         imMessageMapper.insert(message);
 
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg.toString());
+    }
+
+    public PageVO<ImMessageDTO> chatRecord(ImMessagePageDTO pageDTO) {
+        UserTokenDTO loginUser = LoginUserHolder.get();
+        Page<Object> page = PageHelper.startPage(pageDTO.getPageNum(), pageDTO.getPageSize());
+        ImMessageExample example = new ImMessageExample();
+        example.createCriteria().andFromEqualTo(loginUser.getId().toString()).andToEqualTo(pageDTO.getTo());
+        List<ImMessage> imGroups = imMessageMapper.selectByExample(example);
+        List<ImMessageDTO> list = new ArrayList<>();
+        for (ImMessage message : imGroups) {
+            ImMessageDTO dto = new ImMessageDTO();
+            BeanUtil.copyProperties(message, dto);
+            list.add(dto);
+        }
+        return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
     }
 }

@@ -29,4 +29,10 @@ public class ImMessagePageDTO implements Serializable {
 
     @ApiModelProperty("每页条数")
     Integer pageSize;
+
+    @ApiModelProperty("发送人ID")
+    private String from;
+
+    @ApiModelProperty("接收人ID")
+    private String to;
 }

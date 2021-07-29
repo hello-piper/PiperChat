@@ -16,6 +16,9 @@ package io.piper.server.spring.controller;
 import io.piper.common.exception.IMResult;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.message.Msg;
+import io.piper.server.spring.dto.ImMessageDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
 import io.piper.server.spring.service.ChatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,5 +45,11 @@ public class ChatController {
     public IMResult<Void> chat(@RequestBody Msg msg) {
         chatService.chat(msg);
         return IMResult.ok();
+    }
+
+    @PostMapping("records")
+    @ApiOperation("聊天记录")
+    public IMResult<PageVO<ImMessageDTO>> chatRecord(@RequestBody ImMessagePageDTO pageDTO) {
+        return IMResult.ok(chatService.chatRecord(pageDTO));
     }
 }

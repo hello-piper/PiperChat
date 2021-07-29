@@ -14,10 +14,10 @@
 package io.piper.common.pojo.message;
 
 import cn.hutool.json.JSONUtil;
-import lombok.Data;
-import org.msgpack.annotation.Message;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
+import lombok.Data;
+import org.msgpack.annotation.Message;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -107,7 +107,6 @@ public class Msg implements Serializable {
 
     public static Msg createTextMsg(String text) {
         Msg msg = new Msg();
-        msg.setTimestamp(System.currentTimeMillis());
         msg.setMsgType(MsgTypeEnum.TEXT.type);
         msg.setText(text);
         return msg;
@@ -115,7 +114,6 @@ public class Msg implements Serializable {
 
     public static Msg createImageMsg(Double width, Double height, Long size, String imgUrl, String thumbnailUrl) {
         Msg msg = new Msg();
-        msg.setTimestamp(System.currentTimeMillis());
         msg.setMsgType(MsgTypeEnum.IMAGE.type);
         msg.setImageMsgBody(new ImageMsgBody(width, height, size, imgUrl, thumbnailUrl));
         return msg;
@@ -123,7 +121,6 @@ public class Msg implements Serializable {
 
     public static Msg createVoiceMsg(String voiceUrl, int length, Long size) {
         Msg msg = new Msg();
-        msg.setTimestamp(System.currentTimeMillis());
         msg.setMsgType(MsgTypeEnum.VOICE.type);
         msg.setVoiceMsgBody(new VoiceMsgBody(voiceUrl, length, size));
         return msg;
@@ -131,7 +128,6 @@ public class Msg implements Serializable {
 
     public static Msg createVideoMsg(String videoName, String videoUrl, int length, Long size) {
         Msg msg = new Msg();
-        msg.setTimestamp(System.currentTimeMillis());
         msg.setMsgType(MsgTypeEnum.VIDEO.type);
         msg.setVideoMsgBody(new VideoMsgBody(videoName, videoUrl, length, size));
         return msg;
@@ -139,7 +135,6 @@ public class Msg implements Serializable {
 
     public static Msg createFileMsg(String fileName, String fileUrl, Long size) {
         Msg msg = new Msg();
-        msg.setTimestamp(System.currentTimeMillis());
         msg.setMsgType(MsgTypeEnum.FILE.type);
         msg.setFileMsgBody(new FileMsgBody(fileName, fileUrl, size));
         return msg;
@@ -147,7 +142,6 @@ public class Msg implements Serializable {
 
     public static Msg createLocationMsg(String address, Double latitude, Double longitude) {
         Msg msg = new Msg();
-        msg.setTimestamp(System.currentTimeMillis());
         msg.setMsgType(MsgTypeEnum.LOCATION.type);
         msg.setLocationMsgBody(new LocationMsgBody(address, latitude, longitude));
         return msg;
@@ -155,7 +149,6 @@ public class Msg implements Serializable {
 
     public static Msg createNotifyMsg(String type, Map<String, String> params) {
         Msg msg = new Msg();
-        msg.setTimestamp(System.currentTimeMillis());
         msg.setMsgType(MsgTypeEnum.NOTIFY.type);
         msg.setNotifyMsgBody(new NotifyMsgBody(type, params));
         return msg;
