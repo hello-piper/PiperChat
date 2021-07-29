@@ -15,6 +15,7 @@ package io.piper.server.spring.controller;
 
 import io.piper.common.exception.IMResult;
 import io.piper.server.spring.dto.LoginDTO;
+import io.piper.server.spring.dto.LoginVO;
 import io.piper.server.spring.service.LoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +34,7 @@ public class LoginController {
 
     @PostMapping
     @ApiOperation("登录/注册")
-    public IMResult<String> login(HttpServletRequest req, @RequestBody LoginDTO dto) {
+    public IMResult<LoginVO> login(HttpServletRequest req, @RequestBody LoginDTO dto) {
         return IMResult.ok(loginService.login(req, dto));
     }
 

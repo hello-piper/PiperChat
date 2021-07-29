@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping("user-info")
     @ApiOperation("用户信息")
-    public IMResult<ImUserDTO> userInfo(@ApiParam("uid") @RequestParam Long uid) {
+    public IMResult<ImUserDTO> userInfo(@ApiParam("uid") @RequestParam(required = false) Long uid) {
         return IMResult.ok(userService.userInfo(uid));
     }
 

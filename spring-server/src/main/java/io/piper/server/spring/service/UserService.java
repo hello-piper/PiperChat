@@ -14,6 +14,7 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import io.piper.common.util.LoginUserHolder;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
@@ -31,6 +32,9 @@ public class UserService {
     private ImUserMapper imUserMapper;
 
     public ImUserDTO userInfo(Long uid) {
+        if (Objects.isNull(uid)) {
+            uid = LoginUserHolder.get().getId();
+        }
         ImUser imUser = imUserMapper.selectByPrimaryKey(uid);
         if (Objects.isNull(imUser)) {
             return null;

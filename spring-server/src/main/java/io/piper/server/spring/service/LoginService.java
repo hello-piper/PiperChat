@@ -13,6 +13,7 @@
  */
 package io.piper.server.spring.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -21,7 +22,9 @@ import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.LoginDTO;
+import io.piper.server.spring.dto.LoginVO;
 import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.entity.ImUserAdmin;
 import io.piper.server.spring.pojo.entity.ImUserExample;
@@ -54,7 +57,7 @@ public class LoginService {
     @Resource
     private RedisTemplate redisTemplate;
 
-    public String login(HttpServletRequest req, LoginDTO dto) {
+    public LoginVO login(HttpServletRequest req, LoginDTO dto) {
         String email = dto.getEmail();
         String pwd = dto.getPwd();
         String clientType = req.getHeader("clientType");
@@ -104,7 +107,11 @@ public class LoginService {
 
         String token = IdUtil.fastSimpleUUID();
         redisTemplate.opsForValue().set(Constants.USER_TOKEN + token, tokenDTO, 12L, TimeUnit.HOURS);
-        return token;
+
+        LoginVO loginVO = new LoginVO();
+        loginVO.setToken(token);
+        loginVO.setUser(BeanUtil.toBean(user, ImUserDTO.class));
+        return loginVO;
     }
 
     public void logout(HttpServletRequest req) {
