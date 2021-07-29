@@ -49,7 +49,7 @@ public class WebServerTask {
             jedis.subscribe(new JedisPubSub() {
                 @Override
                 public void onMessage(String channel, String message) {
-                    log.info("receiveMessage >>> channel:{} message:{}", channel, message);
+                    log.debug("receiveMessage >>> channel:{} message:{}", channel, message);
                     if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
                         ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
                     } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {

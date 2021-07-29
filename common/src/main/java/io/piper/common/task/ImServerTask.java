@@ -54,7 +54,7 @@ public class ImServerTask {
             RedisDS.getJedis().subscribe(new JedisPubSub() {
                 @Override
                 public void onMessage(String channel, String message) {
-                    log.info("receiveMessage >>> channel:{} message:{}", channel, message);
+                    log.debug("receiveMessage >>> channel:{} message:{}", channel, message);
                 }
             }, Constants.CHANNEL_IM_MESSAGE);
         }, "im-server-task-thread").start();
@@ -69,7 +69,7 @@ public class ImServerTask {
                 jedis.publish(Constants.CHANNEL_IM_RENEW, info);
                 jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
                 jedis.close();
-                log.info("广播当前网关机 负载信息 >>> {}", info);
+                log.debug("广播当前网关机 负载信息 >>> {}", info);
             }
         }, 10, 15, TimeUnit.SECONDS);
 
@@ -80,7 +80,7 @@ public class ImServerTask {
             jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
             jedis.hdel(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort());
             jedis.close();
-            log.info("广播当前网关机 关机信息 >>> {}", info);
+            log.debug("广播当前网关机 关机信息 >>> {}", info);
         }));
     }
 }
