@@ -14,6 +14,7 @@
 package io.piper.im.netty;
 
 import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.piper.common.WebSocketUser;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.pojo.message.Msg;
@@ -44,14 +45,14 @@ public class MessageHandler extends AbstractMessageHandler {
             case SINGLE:
                 Channel channel = WebSocketUser.get(msg.getTo());
                 if (channel != null) {
-                    channel.writeAndFlush(msg.toString());
+                    channel.writeAndFlush(new TextWebSocketFrame(msg.toString()));
                 }
                 break;
             case GROUP:
             case CHATROOM:
                 List<Channel> channels = WebSocketUser.getGroupChannels(msg.getTo());
                 if (channels != null) {
-                    channels.forEach(v -> v.writeAndFlush(msg.toString()));
+                    channels.forEach(v -> v.writeAndFlush(new TextWebSocketFrame(msg.toString())));
                 }
                 break;
             default:
