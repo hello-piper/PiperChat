@@ -17,14 +17,14 @@ import io.piper.common.exception.IMResult;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.message.Msg;
 import io.piper.server.spring.dto.ImMessageDTO;
-import io.piper.server.spring.dto.PageVO;
-import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
+import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
 import io.piper.server.spring.service.ChatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Api(tags = "聊天接口")
 @RestController
@@ -34,22 +34,21 @@ public class ChatController {
     @Resource
     private ChatService chatService;
 
-    @GetMapping
+    @GetMapping("im-server")
     @ApiOperation("获取IM服务地址")
     public IMResult<AddressInfo> getAddress() {
         return IMResult.ok(chatService.getAddress());
     }
 
-    @PostMapping
+    @PostMapping("send")
     @ApiOperation("发消息")
-    public IMResult<Void> chat(@RequestBody Msg msg) {
-        chatService.chat(msg);
-        return IMResult.ok();
+    public IMResult<Boolean> chat(@RequestBody Msg msg) {
+        return IMResult.ok(chatService.chat(msg));
     }
 
     @PostMapping("records")
     @ApiOperation("聊天记录")
-    public IMResult<PageVO<ImMessageDTO>> chatRecord(@RequestBody ImMessagePageDTO pageDTO) {
-        return IMResult.ok(chatService.chatRecord(pageDTO));
+    public IMResult<List<ImMessageDTO>> chatRecord(@RequestBody MsgSearchDTO searchDTO) {
+        return IMResult.ok(chatService.chatRecord(searchDTO));
     }
 }

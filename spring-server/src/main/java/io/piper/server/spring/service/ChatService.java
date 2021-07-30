@@ -17,7 +17,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
@@ -32,8 +31,7 @@ import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.LoginUserHolder;
 import io.piper.server.spring.dto.ImMessageDTO;
-import io.piper.server.spring.dto.PageVO;
-import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
+import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
 import io.piper.server.spring.pojo.entity.ImMessage;
 import io.piper.server.spring.pojo.entity.ImMessageExample;
 import io.piper.server.spring.pojo.mapper.ImMessageMapper;
@@ -94,7 +92,7 @@ public class ChatService {
         return ADDRESS_HANDLER.getAddressByWeight();
     }
 
-    public void chat(Msg msg) {
+    public boolean chat(Msg msg) {
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
         String to = msg.getTo();
@@ -106,7 +104,6 @@ public class ChatService {
         long msgId = IdUtil.getSnowflake(0, 0).nextId();
         msg.setTimestamp(now);
         msg.setId(msgId);
-
         ImMessage message = new ImMessage();
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
@@ -116,15 +113,18 @@ public class ChatService {
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
         imMessageMapper.insert(message);
-
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg.toString());
+        return true;
     }
 
-    public PageVO<ImMessageDTO> chatRecord(ImMessagePageDTO pageDTO) {
+    public List<ImMessageDTO> chatRecord(MsgSearchDTO searchDTO) {
         UserTokenDTO loginUser = LoginUserHolder.get();
-        Page<Object> page = PageHelper.startPage(pageDTO.getPageNum(), pageDTO.getPageSize());
+        PageHelper.startPage(0, searchDTO.getTotal());
         ImMessageExample example = new ImMessageExample();
-        example.createCriteria().andFromEqualTo(loginUser.getId().toString()).andToEqualTo(pageDTO.getTo());
+        ImMessageExample.Criteria criteria = example.createCriteria();
+        criteria.andIdGreaterThan(searchDTO.getLastMsgId());
+        criteria.andFromEqualTo(loginUser.getId().toString());
+        criteria.andToEqualTo(searchDTO.getTo());
         List<ImMessage> imGroups = imMessageMapper.selectByExample(example);
         List<ImMessageDTO> list = new ArrayList<>();
         for (ImMessage message : imGroups) {
@@ -132,6 +132,6 @@ public class ChatService {
             BeanUtil.copyProperties(message, dto);
             list.add(dto);
         }
-        return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
+        return list;
     }
 }
