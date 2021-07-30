@@ -42,7 +42,7 @@ public final class WebSocketServer {
             ServerBootstrap bootstrap = new ServerBootstrap().group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
             bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(config));
             Channel channel = bootstrap.bind(config.getPort()).sync().channel();
-            ImServerTask.start();
+            ImServerTask.start(MessageHandler.class.getName());
             log.info("Open your web browser and navigate to " + (config.getSsl() ? "https" : "http") + "://127.0.0.1:" + config.getPort());
             channel.closeFuture().sync();
         } finally {

@@ -13,9 +13,8 @@
  */
 package io.piper.common.task;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import io.piper.common.WebSocketUser;
 import io.piper.common.constant.Constants;
 import io.piper.common.pojo.config.AddressInfo;
@@ -24,9 +23,11 @@ import io.piper.common.util.IpUtil;
 import io.piper.common.util.RedisDS;
 import io.piper.common.util.ThreadUtil;
 import io.piper.common.util.YamlUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPubSub;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,17 +49,16 @@ public class ImServerTask {
         ADDRESS_INFO = addressInfo;
     }
 
-    public static void start() {
-        // 订阅 消息通道
-        new Thread(() -> {
-            RedisDS.getJedis().subscribe(new JedisPubSub() {
-                @Override
-                public void onMessage(String channel, String message) {
-                    log.debug("receiveMessage >>> channel:{} message:{}", channel, message);
+    public static void start(String... clazz) {
+        try {
+            if (null != clazz && !CollectionUtil.isEmpty(Arrays.asList(clazz))) {
+                for (String clz : clazz) {
+                    Class.forName(clz);
                 }
-            }, Constants.CHANNEL_IM_MESSAGE);
-        }, "im-server-task-thread").start();
-
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         // 定时续约
         ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(new Runnable() {
             @Override

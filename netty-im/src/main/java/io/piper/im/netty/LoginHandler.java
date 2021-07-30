@@ -57,7 +57,7 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
             }
             WebSocketUser.put(uid, ctx.channel());
             ctx.channel().attr(UID_ATTRIBUTE_KEY).set(uid);
-            log.debug("用户：{} 上线", tokenDTO.getNickname());
+            log.debug("用户：{} 上线", uid);
         }
         ctx.pipeline().remove(LoginHandler.class);
         super.channelRead(ctx, msg);

@@ -109,7 +109,7 @@ public class ChatService {
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
         imMessageMapperExt.insert(message);
-        redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg.toString());
+        redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);
         return true;
     }
 

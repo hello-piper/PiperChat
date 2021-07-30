@@ -18,10 +18,13 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.Attribute;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.WebSocketUser;
 import io.piper.common.pojo.message.Msg;
+
+import java.util.Objects;
 
 /**
  * WebSocketFrameHandler
@@ -34,9 +37,12 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        // todo 清理用户在线状态
-        WebSocketUser.remove(ctx.channel().id().asShortText());
-        log.debug("用户: {} 下线", ctx.channel().id().asShortText());
+        Attribute<String> uidAttr = ctx.channel().attr(LoginHandler.UID_ATTRIBUTE_KEY);
+        if (!Objects.isNull(uidAttr)) {
+            String uid = uidAttr.get();
+            WebSocketUser.remove(uid);
+            log.debug("用户: {} 下线", uid);
+        }
     }
 
     @Override
@@ -44,7 +50,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         // ping and pong frames already handled
         if (frame != null) {
             // Send the uppercase string back.
-            MessageHandler.send(JSONUtil.toBean(frame.text(), Msg.class));
+            MessageHandler.INSTANCE.handler(JSONUtil.toBean(frame.text(), Msg.class));
         } else {
             throw new UnsupportedOperationException("frame is null");
         }

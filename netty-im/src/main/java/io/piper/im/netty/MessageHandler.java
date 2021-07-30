@@ -17,6 +17,9 @@ import io.netty.channel.Channel;
 import io.piper.common.WebSocketUser;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.pojo.message.Msg;
+import io.piper.common.task.AbstractMessageHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,26 +30,28 @@ import java.util.Objects;
  * @author piper
  * @date 2021-01-24 20:04
  */
-public class MessageHandler {
+public class MessageHandler extends AbstractMessageHandler {
+    private static final Logger log = LogManager.getLogger(MessageHandler.class);
+    public static final MessageHandler INSTANCE = new MessageHandler();
 
-    public static void send(Msg dto) {
-        ChatTypeEnum chatTypeEnum = ChatTypeEnum.valueOf(dto.getChatType());
+    @Override
+    public void handler(Msg msg) {
+        ChatTypeEnum chatTypeEnum = ChatTypeEnum.valueOf(msg.getChatType());
         if (Objects.isNull(chatTypeEnum)) {
             throw new UnsupportedOperationException("不支持的类型");
         }
-
         switch (chatTypeEnum) {
             case SINGLE:
-                Channel channel = WebSocketUser.get(dto.getTo());
+                Channel channel = WebSocketUser.get(msg.getTo());
                 if (channel != null) {
-                    channel.writeAndFlush(dto.toString());
+                    channel.writeAndFlush(msg.toString());
                 }
                 break;
             case GROUP:
             case CHATROOM:
-                List<Channel> channels = WebSocketUser.getGroupChannels(dto.getTo());
+                List<Channel> channels = WebSocketUser.getGroupChannels(msg.getTo());
                 if (channels != null) {
-                    channels.forEach(v -> v.writeAndFlush(dto.toString()));
+                    channels.forEach(v -> v.writeAndFlush(msg.toString()));
                 }
                 break;
             default:
