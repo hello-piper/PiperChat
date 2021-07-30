@@ -14,9 +14,15 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import io.netty.util.internal.StringUtil;
 import io.piper.common.util.LoginUserHolder;
 import io.piper.server.spring.dto.ImUserDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.FriendSearchDTO;
 import io.piper.server.spring.pojo.entity.ImUser;
+import io.piper.server.spring.pojo.entity.ImUserExample;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
 import org.springframework.stereotype.Service;
 
@@ -44,14 +50,19 @@ public class UserService {
         return userDTO;
     }
 
-    public List<ImUserDTO> friends() {
-        List<ImUserDTO> result = new ArrayList<>();
-        List<ImUser> imUsers = imUserMapper.selectByExample(null);
-        for (ImUser imUser : imUsers) {
-            ImUserDTO dto = new ImUserDTO();
-            BeanUtil.copyProperties(imUser, dto);
-            result.add(dto);
+    public PageVO<ImUserDTO> friends(FriendSearchDTO searchDTO) {
+        Page<Object> page = PageHelper.startPage(searchDTO.getPageNum(), searchDTO.getPageSize());
+        ImUserExample example = new ImUserExample();
+        if (!StringUtil.isNullOrEmpty(searchDTO.getNickname())) {
+            example.createCriteria().andNicknameLike(searchDTO.getNickname());
         }
-        return result;
+        List<ImUser> imGroups = imUserMapper.selectByExample(example);
+        List<ImUserDTO> list = new ArrayList<>();
+        for (ImUser user : imGroups) {
+            ImUserDTO dto = new ImUserDTO();
+            BeanUtil.copyProperties(user, dto);
+            list.add(dto);
+        }
+        return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
     }
 }

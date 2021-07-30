@@ -15,17 +15,15 @@ package io.piper.server.spring.controller;
 
 import io.piper.common.exception.IMResult;
 import io.piper.server.spring.dto.ImUserDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.FriendSearchDTO;
 import io.piper.server.spring.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Api(tags = "用户接口")
 @RestController
@@ -43,7 +41,7 @@ public class UserController {
 
     @GetMapping("friends")
     @ApiOperation("好友列表")
-    public IMResult<List<ImUserDTO>> friends() {
-        return IMResult.ok(userService.friends());
+    public IMResult<PageVO<ImUserDTO>> friends(@RequestBody FriendSearchDTO searchDTO) {
+        return IMResult.ok(userService.friends(searchDTO));
     }
 }

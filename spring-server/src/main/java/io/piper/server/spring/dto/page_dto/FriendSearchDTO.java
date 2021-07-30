@@ -20,8 +20,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@ApiModel("ImMessagePageDTO")
-public class ImMessagePageDTO implements Serializable {
+@ApiModel("FriendSearchDTO")
+public class FriendSearchDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("页码数")
@@ -30,9 +30,6 @@ public class ImMessagePageDTO implements Serializable {
     @ApiModelProperty("每页条数")
     private Integer pageSize;
 
-    @ApiModelProperty("发送人ID")
-    private String from;
-
-    @ApiModelProperty("接收人ID")
-    private String to;
+    @ApiModelProperty("用户昵称")
+    private String nickname;
 }

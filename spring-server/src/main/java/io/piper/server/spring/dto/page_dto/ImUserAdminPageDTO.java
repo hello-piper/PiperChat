@@ -25,8 +25,8 @@ public class ImUserAdminPageDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("页码数")
-    Integer pageNum;
+    private Integer pageNum;
 
     @ApiModelProperty("每页条数")
-    Integer pageSize;
+    private Integer pageSize;
 }
