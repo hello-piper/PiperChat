@@ -13,11 +13,9 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
-import com.github.pagehelper.PageHelper;
 import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
 import io.piper.common.enums.ChatTypeEnum;
@@ -33,8 +31,7 @@ import io.piper.common.util.LoginUserHolder;
 import io.piper.server.spring.dto.ImMessageDTO;
 import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
 import io.piper.server.spring.pojo.entity.ImMessage;
-import io.piper.server.spring.pojo.entity.ImMessageExample;
-import io.piper.server.spring.pojo.mapper.ImMessageMapper;
+import io.piper.server.spring.pojo.mapper.ImMessageMapperExt;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -45,7 +42,6 @@ import redis.clients.jedis.JedisPubSub;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +50,7 @@ import java.util.Map;
 public class ChatService {
 
     @Resource
-    private ImMessageMapper imMessageMapper;
+    private ImMessageMapperExt imMessageMapperExt;
 
     @Autowired
     private JedisPool jedisPool;
@@ -112,26 +108,12 @@ public class ChatService {
         message.setTo(to);
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
-        imMessageMapper.insert(message);
+        imMessageMapperExt.insert(message);
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg.toString());
         return true;
     }
 
     public List<ImMessageDTO> chatRecord(MsgSearchDTO searchDTO) {
-        UserTokenDTO loginUser = LoginUserHolder.get();
-        PageHelper.startPage(0, searchDTO.getTotal());
-        ImMessageExample example = new ImMessageExample();
-        ImMessageExample.Criteria criteria = example.createCriteria();
-        criteria.andIdGreaterThan(searchDTO.getLastMsgId());
-        criteria.andFromEqualTo(loginUser.getId().toString());
-        criteria.andToEqualTo(searchDTO.getTo());
-        List<ImMessage> imGroups = imMessageMapper.selectByExample(example);
-        List<ImMessageDTO> list = new ArrayList<>();
-        for (ImMessage message : imGroups) {
-            ImMessageDTO dto = new ImMessageDTO();
-            BeanUtil.copyProperties(message, dto);
-            list.add(dto);
-        }
-        return list;
+        return imMessageMapperExt.selectMessage(searchDTO.getLastMsgId(), LoginUserHolder.get().getId().toString(), searchDTO.getTo(), searchDTO.getTotal());
     }
 }

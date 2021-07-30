@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.piper.server.spring.pojo.mapper.ImMessageMapperExt">
+
+    <select id="selectMessage" resultType="io.piper.server.spring.dto.ImMessageDTO">
+        SELECT
+        id, chat_type chatType, msg_type msgType, `from`, `to`, body, extra, create_time createTime
+        FROM im_message
+        WHERE id &gt; #{lastMsgId}
+        AND ( ( `from` = #{from} AND `to` = #{to} ) OR ( `from` = #{to} AND `to` = #{from} ) )
+        LIMIT #{total}
+    </select>
+</mapper>

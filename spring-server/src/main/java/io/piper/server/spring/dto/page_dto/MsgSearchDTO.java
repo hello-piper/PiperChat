@@ -25,11 +25,11 @@ public class MsgSearchDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("最后一条消息ID")
-    private Long lastMsgId;
+    private Long lastMsgId = 0L;
 
     @ApiModelProperty("接收人ID")
     private String to;
 
     @ApiModelProperty("需要条数")
-    private Integer total;
+    private Integer total = 10;
 }
