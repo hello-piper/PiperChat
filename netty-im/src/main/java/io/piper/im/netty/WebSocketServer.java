@@ -20,8 +20,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.internal.logging.InternalLogger;
-import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.task.ImServerTask;
 import io.piper.common.util.YamlUtil;
@@ -32,8 +30,6 @@ import io.piper.common.util.YamlUtil;
  * @author piper
  */
 public final class WebSocketServer {
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketServer.class);
-
     public static void main(String[] args) throws Exception {
         final ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
         EventLoopGroup bossGroup = new NioEventLoopGroup(8);
@@ -43,7 +39,6 @@ public final class WebSocketServer {
             bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(config));
             Channel channel = bootstrap.bind(config.getPort()).sync().channel();
             ImServerTask.start(MessageHandler.class.getName());
-            log.info("Open your web browser and navigate to " + (config.getSsl() ? "https" : "http") + "://127.0.0.1:" + config.getPort());
             channel.closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

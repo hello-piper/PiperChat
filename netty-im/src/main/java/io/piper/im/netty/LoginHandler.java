@@ -37,7 +37,6 @@ import io.piper.common.util.RedisDS;
 @ChannelHandler.Sharable
 public class LoginHandler extends ChannelInboundHandlerAdapter {
     private static final InternalLogger log = InternalLoggerFactory.getInstance(LoginHandler.class);
-    public static final AttributeKey<String> UID_ATTRIBUTE_KEY = AttributeKey.valueOf("uid");
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -58,7 +57,7 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
                 throw IMException.build(IMErrorEnum.INVALID_TOKEN);
             }
             WebSocketUser.put(uid, ctx.channel());
-            ctx.channel().attr(UID_ATTRIBUTE_KEY).set(uid);
+            ctx.channel().attr(AttributeKey.valueOf(Constants.USER_ATTRIBUTE_KEY)).set(tokenDTO);
             log.debug("用户：{} 上线", uid);
         }
         ctx.pipeline().remove(LoginHandler.class);

@@ -14,6 +14,7 @@
 package io.piper.common.constant;
 
 public interface Constants {
+    String USER_ATTRIBUTE_KEY = "current-user";
     String IM_SERVER_HASH = "im-server-hash";
     String CHANNEL_IM_MESSAGE = "im:message";
     String CHANNEL_IM_RENEW = "im:renew";

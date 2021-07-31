@@ -19,9 +19,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.WebSocketUser;
+import io.piper.common.constant.Constants;
+import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
 
 import java.util.Objects;
@@ -37,10 +40,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        Attribute<String> uidAttr = ctx.channel().attr(LoginHandler.UID_ATTRIBUTE_KEY);
-        if (!Objects.isNull(uidAttr)) {
-            String uid = uidAttr.get();
-            WebSocketUser.remove(uid);
+        Attribute<UserTokenDTO> attr = ctx.channel().attr(AttributeKey.valueOf(Constants.USER_ATTRIBUTE_KEY));
+        if (!Objects.isNull(attr)) {
+            Long uid = attr.get().getId();
+            WebSocketUser.remove(uid.toString());
             log.debug("用户: {} 下线", uid);
         }
     }
