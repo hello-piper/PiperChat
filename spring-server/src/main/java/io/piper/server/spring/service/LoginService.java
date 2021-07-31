@@ -97,6 +97,7 @@ public class LoginService {
         tokenDTO.setId(user.getId());
         tokenDTO.setNickname(user.getNickname());
         tokenDTO.setAvatar(user.getAvatar());
+        tokenDTO.setEmail(user.getEmail());
         tokenDTO.setPhone(user.getPhone());
         tokenDTO.setClientType(clientType);
         tokenDTO.setIsAdmin(false);

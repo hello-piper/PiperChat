@@ -27,6 +27,8 @@ public class UserTokenDTO implements Serializable {
 
     private String avatar;
 
+    private String email;
+
     private String phone;
 
     private String clientType;
