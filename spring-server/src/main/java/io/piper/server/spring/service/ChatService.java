@@ -44,6 +44,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Log4j2
 @Service
@@ -89,6 +90,8 @@ public class ChatService {
     }
 
     public boolean chat(Msg msg) {
+        log.debug("chat msg:{}", msg);
+
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
         String to = msg.getTo();
@@ -96,10 +99,12 @@ public class ChatService {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         UserTokenDTO loginUser = LoginUserHolder.get();
-        long now = System.currentTimeMillis();
         long msgId = IdUtil.getSnowflake(0, 0).nextId();
+        long now = System.currentTimeMillis();
+        msg.setFrom(loginUser.getId().toString());
         msg.setTimestamp(now);
         msg.setId(msgId);
+
         ImMessage message = new ImMessage();
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
@@ -108,7 +113,9 @@ public class ChatService {
         message.setTo(to);
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
+        message.setExtra(Objects.isNull(msg.getExtra()) ? "" : JSONUtil.toJsonStr(msg.getExtra()));
         imMessageMapperExt.insert(message);
+
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);
         return true;
     }

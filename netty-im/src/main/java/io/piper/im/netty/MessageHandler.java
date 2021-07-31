@@ -52,7 +52,8 @@ public class MessageHandler extends AbstractMessageHandler {
             case CHATROOM:
                 List<Channel> channels = WebSocketUser.getGroupChannels(msg.getTo());
                 if (channels != null) {
-                    channels.forEach(v -> v.writeAndFlush(new TextWebSocketFrame(msg.toString())));
+                    TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
+                    channels.forEach(v -> v.writeAndFlush(frame));
                 }
                 break;
             default:
