@@ -25,11 +25,11 @@ import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.entity.ImUser;
 import io.piper.common.util.RedisDS;
+import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.UserDAO;
 import io.piper.server.web.repository.impl.UserDAOJdbc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Strings;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
@@ -64,7 +64,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void login(HttpServletRequest req, String uid, String pwd, String clientType) {
-        if (Strings.isBlank(uid) || Strings.isBlank(pwd)) {
+        if (StringUtil.isAnyEmpty(uid, pwd)) {
             throw IMException.build(IMErrorEnum.USER_NOT_FOUND);
         }
 

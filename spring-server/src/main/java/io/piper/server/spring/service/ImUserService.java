@@ -14,9 +14,13 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.exception.IMErrorEnum;
+import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.ImUserPageDTO;
@@ -49,18 +53,43 @@ public class ImUserService {
     }
 
     public boolean add(ImUserDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getEmail(), dto.getNickname(), dto.getPhone())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImUser user = new ImUser();
+        BeanUtil.copyProperties(dto, user);
+        user.setId(IdUtil.getSnowflake(0, 0).nextId());
+        user.setCreateUid(userTokenDTO.getId());
+        user.setCreateTime(System.currentTimeMillis());
+        imUserMapper.insertSelective(user);
+        return true;
     }
 
     public boolean update(ImUserDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getEmail(), dto.getNickname(), dto.getPhone())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImUser user = imUserMapper.selectByPrimaryKey(dto.getId());
+        BeanUtil.copyProperties(dto, user);
+        imUserMapper.updateByPrimaryKeySelective(user);
+        return true;
     }
 
     public boolean delete(Long id, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        imUserMapper.deleteByPrimaryKey(id);
+        return true;
     }
 
     public ImUserDTO detail(Long id) {
-        return null;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImUser user = imUserMapper.selectByPrimaryKey(id);
+        ImUserDTO dto = new ImUserDTO();
+        BeanUtil.copyProperties(user, dto);
+        return dto;
     }
 }

@@ -16,8 +16,8 @@ package io.piper.server.spring.service;
 import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.netty.util.internal.StringUtil;
 import io.piper.common.util.LoginUserHolder;
+import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.FriendSearchDTO;
@@ -53,7 +53,7 @@ public class UserService {
     public PageVO<ImUserDTO> friends(FriendSearchDTO searchDTO) {
         Page<Object> page = PageHelper.startPage(searchDTO.getPageNum(), searchDTO.getPageSize());
         ImUserExample example = new ImUserExample();
-        if (!StringUtil.isNullOrEmpty(searchDTO.getNickname())) {
+        if (StringUtil.isNotEmpty(searchDTO.getNickname())) {
             example.createCriteria().andNicknameLike(searchDTO.getNickname());
         }
         List<ImUser> imGroups = imUserMapper.selectByExample(example);

@@ -13,7 +13,6 @@
  */
 package io.piper.common.task;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
 import io.piper.common.WebSocketUser;
 import io.piper.common.constant.Constants;
@@ -27,11 +26,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 网关机定时任务
+ * ImServerTask
  *
  * @author piper
  */
@@ -51,7 +49,7 @@ public class ImServerTask {
 
     public static void start(String... clazz) {
         try {
-            if (null != clazz && !CollectionUtil.isEmpty(Arrays.asList(clazz))) {
+            if (null != clazz) {
                 for (String clz : clazz) {
                     Class.forName(clz);
                 }

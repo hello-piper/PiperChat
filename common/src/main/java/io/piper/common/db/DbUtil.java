@@ -13,11 +13,11 @@
  */
 package io.piper.common.db;
 
-import cn.hutool.core.util.ObjectUtil;
+import io.piper.common.pojo.config.DbProperties;
+import io.piper.common.util.StringUtil;
+import io.piper.common.util.YamlUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import io.piper.common.pojo.config.DbProperties;
-import io.piper.common.util.YamlUtil;
 
 import java.sql.*;
 
@@ -34,7 +34,7 @@ public class DbUtil {
     static {
         try {
             config = YamlUtil.getConfig("db", DbProperties.class);
-            if (ObjectUtil.hasEmpty(config, config.getDriver(), config.getUrl(), config.getUsername(), config.getPassword())) {
+            if (StringUtil.isAnyEmpty(config, config.getDriver(), config.getUrl(), config.getUsername(), config.getPassword())) {
                 log.error("init DB error, has empty config.");
             } else {
                 Class.forName(config.getDriver());

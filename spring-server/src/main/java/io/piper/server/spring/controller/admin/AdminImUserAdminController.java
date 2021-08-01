@@ -53,13 +53,13 @@ public class AdminImUserAdminController {
 
     @DeleteMapping("/delete")
     @ApiOperation("管理员管理 删除")
-    public IMResult<Boolean> delete(@RequestHeader("token") String token, @RequestParam Long id) {
-        return IMResult.ok(imUserAdminService.delete(id, LoginUserHolder.get()));
+    public IMResult<Boolean> delete(@RequestHeader("token") String token, @RequestParam Long uid) {
+        return IMResult.ok(imUserAdminService.delete(uid, LoginUserHolder.get()));
     }
 
     @GetMapping("/detail")
     @ApiOperation("管理员管理 详情")
-    public IMResult<ImUserAdminDTO> detail(@RequestHeader("token") String token, @RequestParam Long id) {
-        return IMResult.ok(imUserAdminService.detail(id));
+    public IMResult<ImUserAdminDTO> detail(@RequestHeader("token") String token, @RequestParam Long uid) {
+        return IMResult.ok(imUserAdminService.detail(uid));
     }
 }

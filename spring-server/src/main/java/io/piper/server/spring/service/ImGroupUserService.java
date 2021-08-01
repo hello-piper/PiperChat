@@ -14,9 +14,13 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.exception.IMErrorEnum;
+import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImGroupUserDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.ImGroupUserPageDTO;
@@ -49,18 +53,43 @@ public class ImGroupUserService {
     }
 
     public boolean add(ImGroupUserDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getUid(), dto.getGroupId())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImGroupUser groupUser = new ImGroupUser();
+        BeanUtil.copyProperties(dto, groupUser);
+        groupUser.setId(IdUtil.getSnowflake(0, 0).nextId());
+        groupUser.setCreateUid(userTokenDTO.getId());
+        groupUser.setCreateTime(System.currentTimeMillis());
+        imGroupUserMapper.insertSelective(groupUser);
+        return true;
     }
 
     public boolean update(ImGroupUserDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getId(), dto.getUid(), dto.getGroupId())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImGroupUser groupUser = imGroupUserMapper.selectByPrimaryKey(dto.getId());
+        BeanUtil.copyProperties(dto, groupUser);
+        imGroupUserMapper.updateByPrimaryKeySelective(groupUser);
+        return true;
     }
 
     public boolean delete(Long id, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        imGroupUserMapper.deleteByPrimaryKey(id);
+        return true;
     }
 
     public ImGroupUserDTO detail(Long id) {
-        return null;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImGroupUser groupUser = imGroupUserMapper.selectByPrimaryKey(id);
+        ImGroupUserDTO dto = new ImGroupUserDTO();
+        BeanUtil.copyProperties(groupUser, dto);
+        return dto;
     }
 }

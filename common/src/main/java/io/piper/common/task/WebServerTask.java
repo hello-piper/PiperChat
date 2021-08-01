@@ -14,7 +14,6 @@
 package io.piper.common.task;
 
 import cn.hutool.json.JSONUtil;
-import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
 import io.piper.common.load_banlance.AddressLoadBalanceHandler;
 import io.piper.common.load_banlance.IAddressLoadBalance;
@@ -28,7 +27,7 @@ import redis.clients.jedis.JedisPubSub;
 import java.util.Map;
 
 /**
- * 服务端定时任务
+ * WebServerTask
  *
  * @author piper
  */
@@ -40,9 +39,9 @@ public class WebServerTask {
         // 订阅 消息通道
         new Thread(() -> {
             Jedis jedis = RedisDS.getJedis();
-            Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
-            if (!Collections.isEmpty(imServerMap)) {
-                for (String info : imServerMap.values()) {
+            Map<String, String> serverMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
+            if (serverMap != null && !serverMap.isEmpty()) {
+                for (String info : serverMap.values()) {
                     ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(info, AddressInfo.class));
                 }
             }
@@ -50,13 +49,13 @@ public class WebServerTask {
                 @Override
                 public void onMessage(String channel, String message) {
                     log.debug("receiveMessage >>> channel:{} message:{}", channel, message);
-                    if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
+                    if (Constants.CHANNEL_IM_RENEW.equals(channel)) {
                         ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
-                    } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {
+                    } else if (Constants.CHANNEL_IM_SHUTDOWN.equals(channel)) {
                         ADDRESS_HANDLER.removeAddress(JSONUtil.toBean(message, AddressInfo.class));
                     }
                 }
             }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);
-        }, "web-server-task-thread").start();
+        }, "server-task-thread").start();
     }
 }

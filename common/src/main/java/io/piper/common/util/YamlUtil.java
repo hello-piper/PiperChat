@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * yml文件读取工具
+ * YamlUtil
  *
  * @author piper
  */
@@ -37,7 +37,7 @@ public class YamlUtil {
     static {
         LOADED_CONFIG = new Yaml().load(ClassLoader.getSystemResourceAsStream("application.yml"));
         String profile = getProfile();
-        if (!Objects.isNull(profile)) {
+        if (StringUtil.isNotEmpty(profile)) {
             LinkedHashMap<String, Object> profileMap =
                     new Yaml().load(ClassLoader.getSystemResourceAsStream("application-" + profile + ".yml"));
             LOADED_CONFIG.putAll(profileMap);

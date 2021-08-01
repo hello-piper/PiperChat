@@ -14,7 +14,6 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
@@ -28,6 +27,7 @@ import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.LoginUserHolder;
+import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImMessageDTO;
 import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
 import io.piper.server.spring.pojo.entity.ImMessage;
@@ -82,7 +82,7 @@ public class ChatService {
                     }
                 }
             }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);
-        }, "spring-server-task-thread").start();
+        }, "server-task-thread").start();
     }
 
     public AddressInfo getAddress() {
@@ -95,7 +95,7 @@ public class ChatService {
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
         String to = msg.getTo();
-        if (ObjectUtil.hasNull(msgTypeEnum, chatTypeEnum, to)) {
+        if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, to)) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         UserTokenDTO loginUser = LoginUserHolder.get();
@@ -121,6 +121,7 @@ public class ChatService {
     }
 
     public List<ImMessageDTO> chatRecord(MsgSearchDTO searchDTO) {
-        return imMessageMapperExt.selectMessage(searchDTO.getLastMsgId(), LoginUserHolder.get().getId().toString(), searchDTO.getTo(), searchDTO.getTotal());
+        return imMessageMapperExt.selectMessage(searchDTO.getLastMsgId(),
+                LoginUserHolder.get().getId().toString(), searchDTO.getTo(), searchDTO.getTotal());
     }
 }

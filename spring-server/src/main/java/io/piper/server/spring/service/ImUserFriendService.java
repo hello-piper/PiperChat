@@ -14,9 +14,13 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.exception.IMErrorEnum;
+import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserFriendDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.ImUserFriendPageDTO;
@@ -49,18 +53,42 @@ public class ImUserFriendService {
     }
 
     public boolean add(ImUserFriendDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getUid(), dto.getFriendId())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImUserFriend userFriend = new ImUserFriend();
+        BeanUtil.copyProperties(dto, userFriend);
+        userFriend.setId(IdUtil.getSnowflake(0, 0).nextId());
+        userFriend.setCreateTime(System.currentTimeMillis());
+        imUserFriendMapper.insertSelective(userFriend);
+        return true;
     }
 
     public boolean update(ImUserFriendDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getUid(), dto.getFriendId())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImUserFriend userFriend = imUserFriendMapper.selectByPrimaryKey(dto.getId());
+        BeanUtil.copyProperties(dto, userFriend);
+        imUserFriendMapper.updateByPrimaryKeySelective(userFriend);
+        return true;
     }
 
     public boolean delete(Long id, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        imUserFriendMapper.deleteByPrimaryKey(id);
+        return true;
     }
 
     public ImUserFriendDTO detail(Long id) {
-        return null;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImUserFriend userFriend = imUserFriendMapper.selectByPrimaryKey(id);
+        ImUserFriendDTO dto = new ImUserFriendDTO();
+        BeanUtil.copyProperties(userFriend, dto);
+        return dto;
     }
 }

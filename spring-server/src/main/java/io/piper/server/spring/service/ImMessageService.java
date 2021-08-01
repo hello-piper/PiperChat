@@ -14,9 +14,13 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.exception.IMErrorEnum;
+import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImMessageDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
@@ -49,18 +53,42 @@ public class ImMessageService {
     }
 
     public boolean add(ImMessageDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getChatType(), dto.getMsgType(), dto.getTo())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImMessage message = new ImMessage();
+        BeanUtil.copyProperties(dto, message);
+        message.setId(IdUtil.getSnowflake(0, 0).nextId());
+        message.setCreateTime(System.currentTimeMillis());
+        imMessageMapper.insertSelective(message);
+        return true;
     }
 
     public boolean update(ImMessageDTO dto, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isAnyEmpty(dto.getChatType(), dto.getMsgType(), dto.getTo())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImMessage message = imMessageMapper.selectByPrimaryKey(dto.getId());
+        BeanUtil.copyProperties(dto, message);
+        imMessageMapper.updateByPrimaryKeySelective(message);
+        return true;
     }
 
     public boolean delete(Long id, UserTokenDTO userTokenDTO) {
-        return false;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        imMessageMapper.deleteByPrimaryKey(id);
+        return true;
     }
 
     public ImMessageDTO detail(Long id) {
-        return null;
+        if (StringUtil.isEmpty(id)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImMessage message = imMessageMapper.selectByPrimaryKey(id);
+        ImMessageDTO dto = new ImMessageDTO();
+        BeanUtil.copyProperties(message, dto);
+        return dto;
     }
 }

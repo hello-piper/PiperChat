@@ -13,8 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.DigestUtil;
@@ -22,6 +20,7 @@ import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.LoginDTO;
 import io.piper.server.spring.dto.LoginVO;
@@ -30,10 +29,11 @@ import io.piper.server.spring.pojo.entity.ImUserAdmin;
 import io.piper.server.spring.pojo.entity.ImUserExample;
 import io.piper.server.spring.pojo.mapper.ImUserAdminMapper;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
-import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -61,7 +61,7 @@ public class LoginService {
         String email = dto.getEmail();
         String pwd = dto.getPwd();
         String clientType = req.getHeader("clientType");
-        if (Strings.isBlank(email) || Strings.isBlank(pwd)) {
+        if (StringUtil.isAnyEmpty(dto.getEmail(), dto.getPwd())) {
             throw IMException.build(IMErrorEnum.USER_NOT_FOUND);
         }
 
@@ -69,7 +69,7 @@ public class LoginService {
         ImUserExample userExample = new ImUserExample();
         userExample.createCriteria().andEmailEqualTo(email);
         List<ImUser> imUsers = imUserMapper.selectByExample(userExample);
-        if (CollectionUtil.isEmpty(imUsers)) {
+        if (CollectionUtils.isEmpty(imUsers)) {
             // register
             user = new ImUser();
             user.setId(IdUtil.getSnowflake(0, 0).nextId());
@@ -111,7 +111,9 @@ public class LoginService {
 
         LoginVO loginVO = new LoginVO();
         loginVO.setToken(token);
-        loginVO.setUser(BeanUtil.toBean(user, ImUserDTO.class));
+        ImUserDTO userDTO = new ImUserDTO();
+        BeanUtils.copyProperties(user, userDTO);
+        loginVO.setUser(userDTO);
         return loginVO;
     }
 

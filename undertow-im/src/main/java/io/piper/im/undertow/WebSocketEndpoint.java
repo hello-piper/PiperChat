@@ -21,6 +21,7 @@ import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.RedisDS;
+import io.piper.common.util.StringUtil;
 import io.piper.im.undertow.coder.JsonDecode;
 import io.piper.im.undertow.coder.JsonEncode;
 import org.apache.logging.log4j.LogManager;
@@ -37,12 +38,12 @@ public class WebSocketEndpoint {
 
     @OnOpen
     public void onOpen(Session session, @PathParam("token") String token) throws IOException {
-        if (token == null || token.length() == 0) {
+        if (StringUtil.isEmpty(token)) {
             session.close();
             throw IMException.build(IMErrorEnum.INVALID_TOKEN);
         }
         String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
-        if (tokenDTOStr == null || tokenDTOStr.length() == 0) {
+        if (StringUtil.isEmpty(tokenDTOStr)) {
             session.close();
             throw IMException.build(IMErrorEnum.INVALID_TOKEN);
         }

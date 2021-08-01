@@ -14,12 +14,15 @@
 package io.piper.server.web;
 
 import cn.hutool.core.io.IoUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import io.piper.common.exception.IMException;
 import io.piper.common.exception.IMResult;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 /**
@@ -31,14 +34,14 @@ public class ErrorFilter implements Filter {
     private static final Logger log = LogManager.getLogger(ErrorFilter.class);
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException {
         try {
             filterChain.doFilter(req, resp);
         } catch (IMException e) {
-            e.printStackTrace();
+            log.error("业务异常", e);
             IoUtil.writeUtf8(resp.getOutputStream(), true, IMResult.error(e));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("服务器错误", e);
             IoUtil.writeUtf8(resp.getOutputStream(), true, IMResult.error(e.getMessage()));
         }
     }

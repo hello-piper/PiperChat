@@ -18,6 +18,7 @@ import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.util.LoginUserHolder;
+import io.piper.common.util.StringUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -36,7 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");
-        if (Objects.isNull(token)) {
+        if (StringUtil.isEmpty(token)) {
             throw new IMException(IMErrorEnum.INVALID_TOKEN);
         }
         UserTokenDTO tokenDTO = (UserTokenDTO) redisTemplate.opsForValue().get(Constants.USER_TOKEN + token);

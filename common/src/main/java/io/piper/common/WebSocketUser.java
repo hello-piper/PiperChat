@@ -13,13 +13,15 @@
  */
 package io.piper.common;
 
+import io.piper.common.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 用户信息保持
+ * WebSocketUser
  *
  * @author piper
  */
@@ -59,7 +61,7 @@ public class WebSocketUser {
     }
 
     public static void removeGroupChannel(String uid, Object channel) {
-        if (channel == null || uid == null) {
+        if (StringUtil.isAnyEmpty(uid, channel)) {
             return;
         }
         List<Object> channels = CHANNEL_BY_GROUP_MAP.get(uid);
