@@ -33,7 +33,7 @@ public class AdminImUserFriendController {
     @Resource
     private ImUserFriendService imUserFriendService;
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     @ApiOperation("好友管理 分页")
     public IMResult<PageVO<ImUserFriendDTO>> page(@RequestHeader("token") String token, @RequestBody ImUserFriendPageDTO pageDTO) {
         return IMResult.ok(imUserFriendService.page(pageDTO));
