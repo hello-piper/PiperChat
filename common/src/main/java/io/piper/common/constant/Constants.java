@@ -15,11 +15,11 @@ package io.piper.common.constant;
 
 public interface Constants {
     String USER_ATTRIBUTE_KEY = "current-user";
+    String IM_WORK_ID = "im:work-id";
     String IM_SERVER_HASH = "im-server-hash";
     String CHANNEL_IM_MESSAGE = "im:message";
     String CHANNEL_IM_RENEW = "im:renew";
     String CHANNEL_IM_SHUTDOWN = "im:shutdown";
-    String CHANNEL_IM_WORK_ID = "im:work-id";
     String USER_TOKEN = "user:token:";
     String USER_TOKEN_CLIENT = "user:token-client:";
 }

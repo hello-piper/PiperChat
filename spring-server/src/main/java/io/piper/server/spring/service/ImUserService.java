@@ -14,12 +14,13 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.PageVO;
@@ -28,6 +29,7 @@ import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.entity.ImUserExample;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ import java.util.List;
 
 @Service
 public class ImUserService {
+
+    @Resource
+    private JedisPool jedisPool;
 
     @Resource
     private ImUserMapper imUserMapper;
@@ -58,7 +63,8 @@ public class ImUserService {
         }
         ImUser user = new ImUser();
         BeanUtil.copyProperties(dto, user);
-        user.setId(IdUtil.getSnowflake(0, 0).nextId());
+        Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
+        user.setId(snowflake.nextId());
         user.setCreateUid(userTokenDTO.getId());
         user.setCreateTime(System.currentTimeMillis());
         imUserMapper.insertSelective(user);

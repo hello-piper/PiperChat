@@ -20,6 +20,7 @@ import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.LoginDTO;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -55,6 +57,9 @@ public class LoginService {
     private ImUserAdminMapper imUserAdminMapper;
 
     @Resource
+    private JedisPool jedisPool;
+
+    @Resource
     private RedisTemplate redisTemplate;
 
     public LoginVO login(HttpServletRequest req, LoginDTO dto) {
@@ -72,7 +77,8 @@ public class LoginService {
         if (CollectionUtils.isEmpty(imUsers)) {
             // register
             user = new ImUser();
-            user.setId(IdUtil.getSnowflake(0, 0).nextId());
+            Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
+            user.setId(snowflake.nextId());
             user.setEmail(email);
             user.setNickname("萌爆的小鹬" + RandomUtil.randomNumbers(3));
             user.setAvatar("https://profile.csdnimg.cn/6/C/F/1_gy325416");

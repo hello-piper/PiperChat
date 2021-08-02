@@ -14,12 +14,13 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImGroupDTO;
 import io.piper.server.spring.dto.PageVO;
@@ -28,6 +29,7 @@ import io.piper.server.spring.pojo.entity.ImGroup;
 import io.piper.server.spring.pojo.entity.ImGroupExample;
 import io.piper.server.spring.pojo.mapper.ImGroupMapper;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ import java.util.List;
 
 @Service
 public class ImGroupService {
+
+    @Resource
+    private JedisPool jedisPool;
 
     @Resource
     private ImGroupMapper imGroupMapper;
@@ -58,7 +63,8 @@ public class ImGroupService {
         }
         ImGroup group = new ImGroup();
         BeanUtil.copyProperties(dto, group);
-        group.setId(IdUtil.getSnowflake(0, 0).nextId());
+        Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
+        group.setId(snowflake.nextId());
         group.setCreateUid(userTokenDTO.getId());
         group.setCreateTime(System.currentTimeMillis());
         imGroupMapper.insertSelective(group);

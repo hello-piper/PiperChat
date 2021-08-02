@@ -14,12 +14,13 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserFriendDTO;
 import io.piper.server.spring.dto.PageVO;
@@ -28,6 +29,7 @@ import io.piper.server.spring.pojo.entity.ImUserFriend;
 import io.piper.server.spring.pojo.entity.ImUserFriendExample;
 import io.piper.server.spring.pojo.mapper.ImUserFriendMapper;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ import java.util.List;
 
 @Service
 public class ImUserFriendService {
+
+    @Resource
+    private JedisPool jedisPool;
 
     @Resource
     private ImUserFriendMapper imUserFriendMapper;
@@ -56,9 +61,10 @@ public class ImUserFriendService {
         if (StringUtil.isAnyEmpty(dto.getUid(), dto.getFriendId())) {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
+        Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
         ImUserFriend userFriend = new ImUserFriend();
         BeanUtil.copyProperties(dto, userFriend);
-        userFriend.setId(IdUtil.getSnowflake(0, 0).nextId());
+        userFriend.setId(snowflake.nextId());
         userFriend.setCreateTime(System.currentTimeMillis());
         imUserFriendMapper.insertSelective(userFriend);
         return true;

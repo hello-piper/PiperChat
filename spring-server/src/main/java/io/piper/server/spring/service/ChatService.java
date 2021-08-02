@@ -13,7 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
@@ -27,6 +26,7 @@ import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.LoginUserHolder;
+import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImMessageDTO;
 import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
@@ -99,7 +99,8 @@ public class ChatService {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         UserTokenDTO loginUser = LoginUserHolder.get();
-        long msgId = IdUtil.getSnowflake(0, 0).nextId();
+        Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
+        long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
         msg.setFrom(loginUser.getId().toString());
         msg.setTimestamp(now);

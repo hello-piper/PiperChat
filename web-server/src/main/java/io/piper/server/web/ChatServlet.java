@@ -15,7 +15,6 @@ package io.piper.server.web;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import io.piper.common.constant.Constants;
 import io.piper.common.enums.ChatTypeEnum;
@@ -27,6 +26,7 @@ import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.entity.ImMessage;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.RedisDS;
+import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.MessageDAO;
 import io.piper.server.web.repository.impl.MessageDAOImpl;
@@ -46,6 +46,7 @@ import java.util.Objects;
 public class ChatServlet extends HttpServlet {
     private static final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
     private static final MessageDAO messageDAO = Singleton.get(MessageDAOImpl.class);
+    private static final Snowflake snowflake = Snowflake.getSnowflake(RedisDS.getJedis(), Constants.IM_WORK_ID);
 
     /**
      * 前端获取可用服务地址
@@ -70,7 +71,7 @@ public class ChatServlet extends HttpServlet {
         if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, from, to)) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
-        long msgId = IdUtil.getSnowflake(0, 0).nextId();
+        long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
         msg.setId(msgId);
         msg.setTimestamp(now);
