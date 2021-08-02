@@ -33,7 +33,7 @@ public class AdminImMessageController {
     @Resource
     private ImMessageService imMessageService;
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     @ApiOperation("聊天消息管理 分页")
     public IMResult<PageVO<ImMessageDTO>> page(@RequestHeader("token") String token, @RequestBody ImMessagePageDTO pageDTO) {
         return IMResult.ok(imMessageService.page(pageDTO));

@@ -33,7 +33,7 @@ public class AdminImGroupUserController {
     @Resource
     private ImGroupUserService imGroupUserService;
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     @ApiOperation("群组成员管理 分页")
     public IMResult<PageVO<ImGroupUserDTO>> page(@RequestHeader("token") String token, @RequestBody ImGroupUserPageDTO pageDTO) {
         return IMResult.ok(imGroupUserService.page(pageDTO));

@@ -39,7 +39,7 @@ public class UserController {
         return IMResult.ok(userService.userInfo(uid));
     }
 
-    @GetMapping("friends")
+    @PostMapping("friends")
     @ApiOperation("好友列表")
     public IMResult<PageVO<ImUserDTO>> friends(@RequestBody FriendSearchDTO searchDTO) {
         return IMResult.ok(userService.friends(searchDTO));
