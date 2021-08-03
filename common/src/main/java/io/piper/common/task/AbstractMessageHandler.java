@@ -34,7 +34,7 @@ public abstract class AbstractMessageHandler {
         new Thread(() -> RedisDS.getJedis().subscribe(new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
-                log.debug("receiveMessage >>> channel:{} message:{}", channel, message);
+                log.debug("onMessage >>> {} {}", channel, message);
                 handler(JSONUtil.toBean(message, Msg.class));
             }
         }, Constants.CHANNEL_IM_MESSAGE), "message-handler-thread").start();

@@ -14,7 +14,6 @@
 package io.piper.server.spring.service;
 
 import cn.hutool.json.JSONUtil;
-import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
@@ -33,17 +32,11 @@ import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
 import io.piper.server.spring.pojo.entity.ImMessage;
 import io.piper.server.spring.pojo.mapper.ImMessageMapperExt;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPubSub;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Log4j2
@@ -53,37 +46,13 @@ public class ChatService {
     @Resource
     private ImMessageMapperExt imMessageMapperExt;
 
-    @Autowired
-    private JedisPool jedisPool;
+    @Resource
+    private Snowflake snowflake;
 
     @Resource
     private RedisTemplate redisTemplate;
 
-    private static final IAddressLoadBalance ADDRESS_HANDLER = new AddressLoadBalanceHandler();
-
-    @PostConstruct
-    public void init() {
-        new Thread(() -> {
-            Jedis jedis = jedisPool.getResource();
-            Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
-            if (!Collections.isEmpty(imServerMap)) {
-                for (String info : imServerMap.values()) {
-                    ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(info, AddressInfo.class));
-                }
-            }
-            jedis.subscribe(new JedisPubSub() {
-                @Override
-                public void onMessage(String channel, String message) {
-                    log.debug("receiveMessage >>> channel:{} message:{}", channel, message);
-                    if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
-                        ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
-                    } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {
-                        ADDRESS_HANDLER.removeAddress(JSONUtil.toBean(message, AddressInfo.class));
-                    }
-                }
-            }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);
-        }, "server-task-thread").start();
-    }
+    public static final IAddressLoadBalance ADDRESS_HANDLER = new AddressLoadBalanceHandler();
 
     public AddressInfo getAddress() {
         return ADDRESS_HANDLER.getAddressByWeight();
@@ -99,7 +68,6 @@ public class ChatService {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         UserTokenDTO loginUser = LoginUserHolder.get();
-        Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
         long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
         msg.setFrom(loginUser.getId().toString());

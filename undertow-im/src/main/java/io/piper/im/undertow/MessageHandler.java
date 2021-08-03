@@ -53,8 +53,6 @@ public class MessageHandler extends AbstractMessageHandler {
                     channels.forEach(v -> v.getAsyncRemote().sendObject(msg));
                 }
                 break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + chatTypeEnum);
         }
     }
 }

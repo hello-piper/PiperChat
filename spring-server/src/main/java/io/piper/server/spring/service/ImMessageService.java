@@ -16,7 +16,6 @@ package io.piper.server.spring.service;
 import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
@@ -29,7 +28,6 @@ import io.piper.server.spring.pojo.entity.ImMessage;
 import io.piper.server.spring.pojo.entity.ImMessageExample;
 import io.piper.server.spring.pojo.mapper.ImMessageMapper;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ import java.util.List;
 public class ImMessageService {
 
     @Resource
-    private JedisPool jedisPool;
+    private Snowflake snowflake;
 
     @Resource
     private ImMessageMapper imMessageMapper;
@@ -61,7 +59,6 @@ public class ImMessageService {
         if (StringUtil.isAnyEmpty(dto.getChatType(), dto.getMsgType(), dto.getTo())) {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
-        Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
         ImMessage message = new ImMessage();
         BeanUtil.copyProperties(dto, message);
         message.setId(snowflake.nextId());

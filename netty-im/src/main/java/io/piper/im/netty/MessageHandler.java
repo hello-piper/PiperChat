@@ -56,8 +56,6 @@ public class MessageHandler extends AbstractMessageHandler {
                     channels.forEach(v -> v.writeAndFlush(frame));
                 }
                 break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + chatTypeEnum);
         }
     }
 }

@@ -16,7 +16,6 @@ package io.piper.server.spring.service;
 import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
@@ -29,7 +28,6 @@ import io.piper.server.spring.pojo.entity.ImUserFriend;
 import io.piper.server.spring.pojo.entity.ImUserFriendExample;
 import io.piper.server.spring.pojo.mapper.ImUserFriendMapper;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ import java.util.List;
 public class ImUserFriendService {
 
     @Resource
-    private JedisPool jedisPool;
+    private Snowflake snowflake;
 
     @Resource
     private ImUserFriendMapper imUserFriendMapper;
@@ -61,7 +59,6 @@ public class ImUserFriendService {
         if (StringUtil.isAnyEmpty(dto.getUid(), dto.getFriendId())) {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
-        Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
         ImUserFriend userFriend = new ImUserFriend();
         BeanUtil.copyProperties(dto, userFriend);
         userFriend.setId(snowflake.nextId());

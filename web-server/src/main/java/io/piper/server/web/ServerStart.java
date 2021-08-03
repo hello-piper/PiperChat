@@ -13,15 +13,15 @@
  */
 package io.piper.server.web;
 
+import io.piper.common.pojo.config.ServerProperties;
+import io.piper.common.task.WebServerTask;
+import io.piper.common.util.YamlUtil;
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainer;
-import io.piper.common.pojo.config.ServerProperties;
-import io.piper.common.task.WebServerTask;
-import io.piper.common.util.YamlUtil;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContextEvent;
@@ -40,7 +40,7 @@ public class ServerStart {
     public static void main(final String[] args) throws ServletException {
         final PathHandler root = new PathHandler();
         final ServletContainer container = ServletContainer.Factory.newInstance();
-        ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
+        final ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
 
         DeploymentInfo build = new DeploymentInfo()
                 .setClassLoader(ServerStart.class.getClassLoader())

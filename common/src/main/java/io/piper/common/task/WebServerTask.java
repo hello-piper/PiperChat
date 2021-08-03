@@ -48,7 +48,7 @@ public class WebServerTask {
             jedis.subscribe(new JedisPubSub() {
                 @Override
                 public void onMessage(String channel, String message) {
-                    log.debug("receiveMessage >>> channel:{} message:{}", channel, message);
+                    log.debug("onMessage >>> {} {}", channel, message);
                     if (Constants.CHANNEL_IM_RENEW.equals(channel)) {
                         ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
                     } else if (Constants.CHANNEL_IM_SHUTDOWN.equals(channel)) {

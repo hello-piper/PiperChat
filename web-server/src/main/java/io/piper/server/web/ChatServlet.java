@@ -25,6 +25,7 @@ import io.piper.common.load_banlance.AddressLoadBalanceHandler;
 import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.entity.ImMessage;
 import io.piper.common.pojo.message.Msg;
+import io.piper.common.util.IdUtil;
 import io.piper.common.util.RedisDS;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
@@ -46,7 +47,7 @@ import java.util.Objects;
 public class ChatServlet extends HttpServlet {
     private static final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
     private static final MessageDAO messageDAO = Singleton.get(MessageDAOImpl.class);
-    private static final Snowflake snowflake = Snowflake.getSnowflake(RedisDS.getJedis(), Constants.IM_WORK_ID);
+    private static final Snowflake snowflake = IdUtil.getSnowflake(Constants.IM_WORK_ID);
 
     /**
      * 前端获取可用服务地址

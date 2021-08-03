@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -57,7 +56,7 @@ public class LoginService {
     private ImUserAdminMapper imUserAdminMapper;
 
     @Resource
-    private JedisPool jedisPool;
+    private Snowflake snowflake;
 
     @Resource
     private RedisTemplate redisTemplate;
@@ -77,7 +76,6 @@ public class LoginService {
         if (CollectionUtils.isEmpty(imUsers)) {
             // register
             user = new ImUser();
-            Snowflake snowflake = Snowflake.getSnowflake(jedisPool.getResource(), Constants.IM_WORK_ID);
             user.setId(snowflake.nextId());
             user.setEmail(email);
             user.setNickname("萌爆的小鹬" + RandomUtil.randomNumbers(3));

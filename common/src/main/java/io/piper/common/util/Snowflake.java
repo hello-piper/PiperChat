@@ -2,12 +2,9 @@ package io.piper.common.util;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
-import redis.clients.jedis.Jedis;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Twitter的Snowflake 算法<br>
@@ -34,12 +31,12 @@ public class Snowflake implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final long twepoch;
-    private static final long workerIdBits = 5L;
-    // 最大支持机器节点数0~31，一共32个
+    private static final long workerIdBits = 8L;
+    // 最大支持机器节点数0~255，一共256个
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     private static final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-    private static final long dataCenterIdBits = 5L;
-    // 最大支持数据中心节点数0~31，一共32个
+    private static final long dataCenterIdBits = 2L;
+    // 最大支持数据中心节点数0~3，一共4个
     @SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
     private static final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
     // 序列号12位
@@ -59,18 +56,6 @@ public class Snowflake implements Serializable {
     private final boolean useSystemClock;
     private long sequence = 0L;
     private long lastTimestamp = -1L;
-
-    private static final Map<String, Snowflake> snowflakeMap = new HashMap<>();
-
-    public static Snowflake getSnowflake(Jedis jedis, String key) {
-        if (snowflakeMap.containsKey(key)) {
-            return snowflakeMap.get(key);
-        }
-        Long workerId = (Long) jedis.eval("for i=0," + maxWorkerId + " do if redis.call('sadd'," + key + ",i) == 1 then return i end end");
-        Snowflake snowflake = new Snowflake(workerId, 0);
-        snowflakeMap.put(key, snowflake);
-        return snowflake;
-    }
 
     /**
      * 构造
@@ -116,6 +101,10 @@ public class Snowflake implements Serializable {
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
         this.useSystemClock = isUseSystemClock;
+    }
+
+    public static long getMaxWorkerId() {
+        return maxWorkerId;
     }
 
     /**
@@ -178,15 +167,6 @@ public class Snowflake implements Serializable {
         lastTimestamp = timestamp;
 
         return ((timestamp - twepoch) << timestampLeftShift) | (dataCenterId << dataCenterIdShift) | (workerId << workerIdShift) | sequence;
-    }
-
-    /**
-     * 下一个ID（字符串形式）
-     *
-     * @return ID 字符串形式
-     */
-    public String nextIdStr() {
-        return Long.toString(nextId());
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------ Private method start
