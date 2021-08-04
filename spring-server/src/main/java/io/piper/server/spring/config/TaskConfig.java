@@ -48,7 +48,7 @@ public class TaskConfig {
             jedis.subscribe(new JedisPubSub() {
                 @Override
                 public void onMessage(String channel, String message) {
-                    log.info("onMessage >>> {} {}", channel, message);
+                    log.debug("onMessage >>> {} {}", channel, message);
                     if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
                         ChatService.ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
                     } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {
