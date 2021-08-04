@@ -13,13 +13,13 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.IdUtil;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;

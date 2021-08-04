@@ -15,7 +15,6 @@ package io.piper.server.web;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -24,6 +23,7 @@ import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.entity.ImUser;
+import io.piper.common.util.IdUtil;
 import io.piper.common.util.RedisDS;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.UserDAO;
@@ -52,6 +52,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         String body = IoUtil.read(req.getReader());
         log.info("login body:{}", body);
         JSONObject reqBody = JSONUtil.parseObj(body);
@@ -84,7 +85,6 @@ public class LoginServlet extends HttpServlet {
         tokenDTO.setClientType(clientType);
 
         String token = IdUtil.fastSimpleUUID();
-
         Jedis jedis = RedisDS.getJedis();
         jedis.set(Constants.USER_TOKEN + token, JSONUtil.toJsonStr(tokenDTO), SetParams.setParams().ex(43200L));
         jedis.close();

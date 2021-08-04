@@ -49,4 +49,8 @@ public class IdUtil {
             return snowflake;
         }
     }
+
+    public static String fastSimpleUUID() {
+        return UUID.randomUUID(false).toString(true);
+    }
 }
