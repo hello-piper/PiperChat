@@ -16,6 +16,11 @@ package io.piper.common.util;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+/**
+ * LRUCache
+ *
+ * @author piper
+ */
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
     private static final long serialVersionUID = 1L;
     private final int capacity;

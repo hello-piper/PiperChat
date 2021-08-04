@@ -13,7 +13,13 @@
  */
 package io.piper.common.util;
 
+/**
+ * StringUtil
+ *
+ * @author piper
+ */
 public final class StringUtil {
+    public static final String EMPTY = "";
 
     public static boolean isAnyEmpty(Object... objects) {
         if (objects == null) {
@@ -32,7 +38,7 @@ public final class StringUtil {
     }
 
     public static boolean isEmpty(Object str) {
-        return str == null || "".equals(str);
+        return str == null || EMPTY.equals(str);
     }
 
 }

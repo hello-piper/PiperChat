@@ -15,7 +15,12 @@ package io.piper.common.util;
 
 import io.piper.common.pojo.dto.UserTokenDTO;
 
-public class LoginUserHolder {
+/**
+ * LoginUserHolder
+ *
+ * @author piper
+ */
+public final class LoginUserHolder {
     private static final ThreadLocal<UserTokenDTO> holder = new ThreadLocal<>();
 
     public static void put(UserTokenDTO dto) {

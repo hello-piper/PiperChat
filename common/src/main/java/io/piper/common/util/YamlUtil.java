@@ -30,7 +30,7 @@ import java.util.Objects;
  *
  * @author piper
  */
-public class YamlUtil {
+public final class YamlUtil {
 
     private static final LinkedHashMap<String, Object> LOADED_CONFIG;
 

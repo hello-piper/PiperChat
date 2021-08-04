@@ -27,7 +27,7 @@ import java.util.Date;
  *
  * @author piper
  */
-public class Snowflake implements Serializable {
+public final class Snowflake implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final long twepoch;

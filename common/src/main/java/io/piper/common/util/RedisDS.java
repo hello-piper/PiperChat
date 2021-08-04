@@ -18,6 +18,11 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+/**
+ * RedisDS
+ *
+ * @author piper
+ */
 public class RedisDS {
     private static final JedisPool JEDIS_POOL;
 

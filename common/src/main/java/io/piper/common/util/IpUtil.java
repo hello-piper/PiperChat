@@ -23,11 +23,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * IP工具类
+ * IpUtil
  *
  * @author piper
  */
-public class IpUtil {
+public final class IpUtil {
     /**
      * 获取访问者的ip地址
      * 注：要外网访问才能获取到外网地址，如果你在局域网甚至本机上访问，获得的是内网或者本机的ip

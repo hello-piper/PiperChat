@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author piper
  */
-public class IdUtil {
+public final class IdUtil {
     private static final Logger log = LogManager.getLogger(IdUtil.class);
     private static final Map<String, Object> MAP = new HashMap<>();
 
