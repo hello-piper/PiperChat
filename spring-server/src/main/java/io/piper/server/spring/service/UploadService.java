@@ -24,9 +24,15 @@ import java.io.IOException;
 public class UploadService {
 
     public String upload(MultipartFile file) {
-        String path = "/tmp/" + IdUtil.fastSimpleUUID();
+        String originalFilename = file.getOriginalFilename();
+        String type = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+        String path = "/file/" + IdUtil.fastSimpleUUID() + "." + type;
         try {
-            file.transferTo(new File(path));
+            File fil = new File(path);
+            if (fil.exists()) {
+                fil.delete();
+            }
+            file.transferTo(fil);
         } catch (IOException e) {
             e.printStackTrace();
         }

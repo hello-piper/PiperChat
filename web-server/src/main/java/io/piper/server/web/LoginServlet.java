@@ -52,7 +52,6 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
         String body = IoUtil.read(req.getReader());
         log.info("login body:{}", body);
         JSONObject reqBody = JSONUtil.parseObj(body);
