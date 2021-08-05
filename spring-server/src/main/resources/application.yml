@@ -6,6 +6,11 @@ server:
 spring:
   profiles:
     active: ${profile}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 35MB
 
 logging:
   config: classpath:log4j2.xml

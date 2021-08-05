@@ -28,11 +28,7 @@ public class UploadService {
         String type = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         String path = "/file/" + IdUtil.fastSimpleUUID() + "." + type;
         try {
-            File fil = new File(path);
-            if (fil.exists()) {
-                fil.delete();
-            }
-            file.transferTo(fil);
+            file.transferTo(new File(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
