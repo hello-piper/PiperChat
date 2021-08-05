@@ -13,25 +13,68 @@
  */
 package io.piper.server.spring.service;
 
+import cn.hutool.core.io.IoUtil;
+import io.piper.common.exception.IMErrorEnum;
+import io.piper.common.exception.IMException;
+import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.util.IdUtil;
+import io.piper.common.util.IpUtil;
+import io.piper.common.util.YamlUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Service
 public class UploadService {
 
+    private String ip;
+    private Integer port;
+
+    @PostConstruct
+    public void init() {
+        ip = IpUtil.getIpVo().getIp();
+        port = YamlUtil.getConfig("server", ServerProperties.class).getPort();
+    }
+
     public String upload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         String type = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-        String path = "/file/" + IdUtil.fastSimpleUUID() + "." + type;
+        String name = "/file/" + IdUtil.fastSimpleUUID() + "." + type;
+        FileOutputStream localFile = null;
         try {
-            file.transferTo(new File(path));
+            localFile = new FileOutputStream(name);
+            IoUtil.copy(file.getInputStream(), localFile);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            IoUtil.close(localFile);
         }
-        return path;
+        return ip + ":" + port + name;
+    }
+
+    public void download(HttpServletResponse response, String name) {
+        boolean startsWith = name.startsWith("/file/");
+        if (!startsWith) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        File file = new File(name);
+        if (!file.exists()) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(name);
+            IoUtil.copy(fis, response.getOutputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IoUtil.close(fis);
+        }
     }
 }

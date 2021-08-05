@@ -17,24 +17,30 @@ import io.piper.common.exception.IMResult;
 import io.piper.server.spring.service.UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
-@Api(tags = "上传文件接口")
+@Api(tags = "文件接口")
 @RestController
-@RequestMapping("/upload")
-public class UploadController {
+@RequestMapping
+public class FileController {
 
     @Resource
     private UploadService uploadService;
 
-    @PostMapping
-    @ApiOperation("上传")
+    @PostMapping("/upload")
+    @ApiOperation("上传文件")
     public IMResult<String> upload(MultipartFile file) {
         return IMResult.ok(uploadService.upload(file));
+    }
+
+    @GetMapping("/download")
+    @ApiOperation("下载文件")
+    public IMResult<Void> download(HttpServletResponse response, @RequestParam("name") String name) {
+        uploadService.download(response, name);
+        return IMResult.ok();
     }
 }
