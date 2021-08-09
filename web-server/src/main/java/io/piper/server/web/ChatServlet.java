@@ -91,5 +91,7 @@ public class ChatServlet extends HttpServlet {
         Jedis jedis = RedisDS.getJedis();
         jedis.publish(Constants.CHANNEL_IM_MESSAGE, chatMsg);
         jedis.close();
+
+        IoUtil.writeUtf8(resp.getOutputStream(), true, msg);
     }
 }

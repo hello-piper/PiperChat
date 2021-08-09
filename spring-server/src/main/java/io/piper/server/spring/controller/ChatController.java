@@ -42,7 +42,7 @@ public class ChatController {
 
     @PostMapping("send")
     @ApiOperation("发消息")
-    public IMResult<Boolean> chat(@RequestBody Msg msg) {
+    public IMResult<Msg> chat(@RequestBody Msg msg) {
         return IMResult.ok(chatService.chat(msg));
     }
 

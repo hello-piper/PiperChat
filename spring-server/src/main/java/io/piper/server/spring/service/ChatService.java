@@ -58,7 +58,7 @@ public class ChatService {
         return ADDRESS_HANDLER.getAddressByWeight();
     }
 
-    public boolean chat(Msg msg) {
+    public Msg chat(Msg msg) {
         log.debug("chat msg:{}", msg);
 
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
@@ -86,7 +86,7 @@ public class ChatService {
         imMessageMapperExt.insert(message);
 
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);
-        return true;
+        return msg;
     }
 
     public List<ImMessageDTO> chatRecord(MsgSearchDTO searchDTO) {
