@@ -14,6 +14,7 @@
 package io.piper.common.pojo.message;
 
 import cn.hutool.json.JSONUtil;
+import io.piper.common.enums.CmdTypeEnum;
 import lombok.Data;
 import org.msgpack.annotation.Message;
 
@@ -46,6 +47,10 @@ public class NotifyMsgBody implements Serializable {
     public NotifyMsgBody(String type, Map<String, String> params) {
         this.type = type;
         this.params = params;
+    }
+
+    public CmdTypeEnum getCmdTypeEnum() {
+        return CmdTypeEnum.valueOf(this.getType());
     }
 
     @Override

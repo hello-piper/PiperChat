@@ -52,19 +52,19 @@ public class WebSocketUser {
 
     // group
 
-    public static void addGroupChannel(String uid, Object channel) {
-        CHANNEL_BY_GROUP_MAP.computeIfAbsent(uid, v -> new ArrayList<>()).add(channel);
+    public static void addGroupChannel(String groupId, Object channel) {
+        CHANNEL_BY_GROUP_MAP.computeIfAbsent(groupId, v -> new ArrayList<>()).add(channel);
     }
 
-    public static <T> List<T> getGroupChannels(String uid) {
-        return (List<T>) CHANNEL_BY_GROUP_MAP.get(uid);
+    public static <T> List<T> getGroupChannels(String groupId) {
+        return (List<T>) CHANNEL_BY_GROUP_MAP.get(groupId);
     }
 
-    public static void removeGroupChannel(String uid, Object channel) {
-        if (StringUtil.isAnyEmpty(uid, channel)) {
+    public static void removeGroupChannel(String groupId, Object channel) {
+        if (StringUtil.isAnyEmpty(groupId, channel)) {
             return;
         }
-        List<Object> channels = CHANNEL_BY_GROUP_MAP.get(uid);
+        List<Object> channels = CHANNEL_BY_GROUP_MAP.get(groupId);
         if (channels == null || channels.isEmpty()) {
             return;
         }
