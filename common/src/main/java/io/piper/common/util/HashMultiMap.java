@@ -22,10 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author piper
  */
 public final class HashMultiMap<K, V> {
-    private static final long serialVersionUID = 0L;
+    private final Map<K, Set<V>> map;
+    private final int expectedValuesPerKey;
     private static final int DEFAULT_VALUES_PER_KEY = 2;
-    private int expectedValuesPerKey;
-    private Map<K, Set<V>> map = null;
 
     public static <K, V> HashMultiMap<K, V> create() {
         return new HashMultiMap();

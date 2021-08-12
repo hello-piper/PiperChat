@@ -32,7 +32,6 @@ import java.util.Set;
  * MessageHandler
  *
  * @author piper
- * @date 2021-01-24 20:04
  */
 public class MessageHandler extends AbstractMessageHandler {
     private static final Logger log = LogManager.getLogger(MessageHandler.class);
@@ -65,20 +64,27 @@ public class MessageHandler extends AbstractMessageHandler {
         if (CmdTypeEnum.SUB_ROOM.type.equals(cmdMsgBody.getType())) {
             if (null != cmdMsgBody.getParams()) {
                 String roomId = cmdMsgBody.getParams().get("roomId");
-                if (StringUtil.isNotEmpty(roomId)) {
-                    if (null == currentChannel) {
-                        currentChannel = WebSocketUser.get(msg.getFrom());
-                    }
-                    WebSocketUser.putRoomChannel(Long.valueOf(roomId), currentChannel);
+                if (StringUtil.isEmpty(roomId)) {
+                    return;
+                }
+                Long lRoomId = Long.valueOf(roomId);
+                if (null != currentChannel) {
+                    WebSocketUser.putRoomChannel(lRoomId, currentChannel);
+                    return;
+                }
+                Set<Channel> channels = WebSocketUser.get(msg.getFrom());
+                if (null != channels) {
+                    channels.forEach(ch -> WebSocketUser.putRoomChannel(lRoomId, ch));
                 }
             }
         }
     }
 
     private void singleHandler(Msg msg, Channel currentChannel) {
-        Channel channel = WebSocketUser.get(msg.getTo());
-        if (channel != null) {
-            channel.writeAndFlush(new TextWebSocketFrame(msg.toString()));
+        Set<Channel> channels = WebSocketUser.get(msg.getTo());
+        if (channels != null) {
+            TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
+            channels.forEach(ch -> ch.writeAndFlush(frame));
         }
     }
 
@@ -86,7 +92,7 @@ public class MessageHandler extends AbstractMessageHandler {
         Set<Channel> channels = WebSocketUser.getRoomChannels(Long.valueOf(msg.getTo()));
         if (channels != null) {
             TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
-            channels.forEach(v -> v.writeAndFlush(frame));
+            channels.forEach(ch -> ch.writeAndFlush(frame));
         }
     }
 

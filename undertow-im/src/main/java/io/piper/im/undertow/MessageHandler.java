@@ -63,27 +63,33 @@ public class MessageHandler extends AbstractMessageHandler {
         if (CmdTypeEnum.SUB_ROOM.type.equals(cmdMsgBody.getType())) {
             if (null != cmdMsgBody.getParams()) {
                 String roomId = cmdMsgBody.getParams().get("roomId");
-                if (StringUtil.isNotEmpty(roomId)) {
-                    if (null == currentSession) {
-                        currentSession = WebSocketUser.get(msg.getFrom());
-                    }
-                    WebSocketUser.putRoomChannel(Long.valueOf(roomId), currentSession);
+                if (StringUtil.isEmpty(roomId)) {
+                    return;
+                }
+                Long lRoomId = Long.valueOf(roomId);
+                if (null != currentSession) {
+                    WebSocketUser.putRoomChannel(lRoomId, currentSession);
+                    return;
+                }
+                Set<Session> sessions = WebSocketUser.get(msg.getFrom());
+                if (null != sessions) {
+                    sessions.forEach(s -> WebSocketUser.putRoomChannel(lRoomId, s));
                 }
             }
         }
     }
 
     private void singleHandler(Msg msg, Session currentSession) {
-        Session channel = WebSocketUser.get(msg.getTo());
-        if (channel != null) {
-            channel.getAsyncRemote().sendObject(msg);
+        Set<Session> sessions = WebSocketUser.get(msg.getTo());
+        if (sessions != null) {
+            sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
         }
     }
 
     private void chatRoomHandler(Msg msg, Session currentSession) {
         Set<Session> sessions = WebSocketUser.getRoomChannels(Long.valueOf(msg.getTo()));
         if (sessions != null) {
-            sessions.forEach(v -> v.getAsyncRemote().sendObject(msg));
+            sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
         }
     }
 

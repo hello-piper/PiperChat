@@ -21,7 +21,7 @@ import java.util.Map.Entry;
  *
  * @author piper
  */
-public class LRUCache<K, V> extends LinkedHashMap<K, V> {
+public final class LRUCache<K, V> extends LinkedHashMap<K, V> {
     private static final long serialVersionUID = 1L;
     private final int capacity;
 
