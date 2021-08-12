@@ -13,6 +13,8 @@
  */
 package io.piper.common;
 
+import io.piper.common.util.HashMultiMap;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author piper
  */
 public class WebSocketUser {
-    private static final Map<String, Object> CHANNEL_MAP = new ConcurrentHashMap<>();
-    private static final Map<Long, Set<Object>> CHANNEL_ROOM_MAP = new ConcurrentHashMap<>();
+    private static final HashMultiMap<String, Object> CHANNEL_MAP = HashMultiMap.createCont(100000);
+    private static final Map<Long, Set<Object>> CHANNEL_ROOM_MAP = new ConcurrentHashMap<>(100000);
 
     // peer to peer
 
@@ -33,12 +35,12 @@ public class WebSocketUser {
         CHANNEL_MAP.put(uid, channel);
     }
 
-    public static <T> T get(String uid) {
-        return (T) CHANNEL_MAP.get(uid);
+    public static <T> Set<T> get(String uid) {
+        return (Set<T>) CHANNEL_MAP.get(uid);
     }
 
     public static void remove(String uid) {
-        CHANNEL_MAP.remove(uid);
+        CHANNEL_MAP.removeAll(uid);
     }
 
     public static Integer onlineNum() {

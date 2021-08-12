@@ -14,7 +14,6 @@
 package io.piper.server.spring.config;
 
 import cn.hutool.json.JSONUtil;
-import io.jsonwebtoken.lang.Collections;
 import io.piper.common.constant.Constants;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.server.spring.service.ChatService;
@@ -40,7 +39,7 @@ public class TaskConfig {
         new Thread(() -> {
             Jedis jedis = jedisPool.getResource();
             Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
-            if (!Collections.isEmpty(imServerMap)) {
+            if (imServerMap != null && !imServerMap.isEmpty()) {
                 for (String info : imServerMap.values()) {
                     ChatService.ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(info, AddressInfo.class));
                 }
