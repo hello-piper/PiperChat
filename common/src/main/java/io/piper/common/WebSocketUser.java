@@ -13,8 +13,6 @@
  */
 package io.piper.common;
 
-import io.piper.common.util.StringUtil;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WebSocketUser {
     private static final Map<String, Object> CHANNEL_MAP = new ConcurrentHashMap<>();
-    private static final Map<Long, Set<Object>> CHANNEL_BY_GROUP_MAP = new ConcurrentHashMap<>();
+    private static final Map<Long, Set<Object>> CHANNEL_ROOM_MAP = new ConcurrentHashMap<>();
 
     // peer to peer
 
@@ -40,9 +38,6 @@ public class WebSocketUser {
     }
 
     public static void remove(String uid) {
-        if (uid == null) {
-            return;
-        }
         CHANNEL_MAP.remove(uid);
     }
 
@@ -53,22 +48,25 @@ public class WebSocketUser {
     // chatRoom
 
     public static void putRoomChannel(Long roomId, Object channel) {
-        CHANNEL_BY_GROUP_MAP.computeIfAbsent(roomId, v -> new HashSet<>()).add(channel);
+        CHANNEL_ROOM_MAP.computeIfAbsent(roomId, v -> new HashSet<>()).add(channel);
     }
 
     public static <T> Set<T> getRoomChannels(Long roomId) {
-        return (Set<T>) CHANNEL_BY_GROUP_MAP.get(roomId);
+        return (Set<T>) CHANNEL_ROOM_MAP.get(roomId);
+    }
+
+    public static void removeRoomChannel(Object channel) {
+        CHANNEL_ROOM_MAP.values().forEach(channels -> {
+            if (channels != null) {
+                channels.remove(channel);
+            }
+        });
     }
 
     public static void removeRoomChannel(Long roomId, Object channel) {
-        if (StringUtil.isAnyEmpty(roomId, channel)) {
-            return;
+        Set<Object> channels = CHANNEL_ROOM_MAP.get(roomId);
+        if (channels != null) {
+            channels.remove(channel);
         }
-        Set<Object> channels = CHANNEL_BY_GROUP_MAP.get(roomId);
-        if (channels == null || channels.isEmpty()) {
-            return;
-        }
-        channels.remove(channel);
     }
-
 }

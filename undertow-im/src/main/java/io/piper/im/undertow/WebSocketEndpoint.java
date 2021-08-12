@@ -63,7 +63,10 @@ public class WebSocketEndpoint {
 
     @OnClose
     public void onClose(Session session) {
-        WebSocketUser.remove(session.getId());
+        UserTokenDTO tokenDTO = (UserTokenDTO) session.getUserProperties().get(Constants.USER_ATTRIBUTE_KEY);
+        WebSocketUser.remove(tokenDTO.getId().toString());
+        WebSocketUser.removeRoomChannel(session);
+        log.debug("用户: {} 下线", tokenDTO.getId());
     }
 
     @OnError

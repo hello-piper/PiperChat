@@ -89,6 +89,15 @@ public class ChatService {
         return msg;
     }
 
+    public void subRoom(Msg msg) {
+        log.debug("subRoom msg:{}", msg);
+        if (StringUtil.isAnyEmpty(msg.getMsgTypeEnum(), msg.getCmdMsgBody())) {
+            throw IMException.build(IMErrorEnum.PARAM_ERROR);
+        }
+        msg.setFrom(LoginUserHolder.get().getId().toString());
+        redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);
+    }
+
     public List<ImMessageDTO> chatRecord(MsgSearchDTO searchDTO) {
         return imMessageMapperExt.selectMessage(searchDTO.getLastMsgId(),
                 LoginUserHolder.get().getId().toString(), searchDTO.getTo(), searchDTO.getTotal());

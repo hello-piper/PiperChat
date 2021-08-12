@@ -53,7 +53,7 @@ public class MessageHandler extends AbstractMessageHandler {
         } else if (ChatTypeEnum.GROUP.type.equals(msg.getChatType())) {
             this.groupHandler(msg, currentChannel);
         } else {
-            throw new UnsupportedOperationException("Type not found");
+            throw new UnsupportedOperationException("type not found");
         }
     }
 
@@ -66,6 +66,9 @@ public class MessageHandler extends AbstractMessageHandler {
             if (null != cmdMsgBody.getParams()) {
                 String roomId = cmdMsgBody.getParams().get("roomId");
                 if (StringUtil.isNotEmpty(roomId)) {
+                    if (null == currentChannel) {
+                        currentChannel = WebSocketUser.get(msg.getFrom());
+                    }
                     WebSocketUser.putRoomChannel(Long.valueOf(roomId), currentChannel);
                 }
             }

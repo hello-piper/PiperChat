@@ -46,6 +46,13 @@ public class ChatController {
         return IMResult.ok(chatService.chat(msg));
     }
 
+    @PostMapping("sub-room")
+    @ApiOperation("订阅直播间")
+    public IMResult<Void> subRoom(@RequestBody Msg msg) {
+        chatService.subRoom(msg);
+        return IMResult.ok();
+    }
+
     @PostMapping("records")
     @ApiOperation("聊天记录")
     public IMResult<List<ImMessageDTO>> chatRecord(@RequestBody MsgSearchDTO searchDTO) {
