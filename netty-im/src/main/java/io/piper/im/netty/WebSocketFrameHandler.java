@@ -50,9 +50,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
-        // ping and pong frames already handled
         if (frame != null) {
-            MessageHandler.INSTANCE.handler(JSONUtil.toBean(frame.text(), Msg.class));
+            MessageHandler.INSTANCE.handler(JSONUtil.toBean(frame.text(), Msg.class), ctx.channel());
         } else {
             throw new UnsupportedOperationException("frame is null");
         }

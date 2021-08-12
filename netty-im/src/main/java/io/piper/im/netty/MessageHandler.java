@@ -17,13 +17,16 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.piper.common.WebSocketUser;
 import io.piper.common.enums.ChatTypeEnum;
+import io.piper.common.enums.CmdTypeEnum;
+import io.piper.common.enums.MsgTypeEnum;
+import io.piper.common.pojo.message.CmdMsgBody;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.task.AbstractMessageHandler;
+import io.piper.common.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 /**
  * MessageHandler
@@ -37,25 +40,54 @@ public class MessageHandler extends AbstractMessageHandler {
 
     @Override
     public void handler(Msg msg) {
-        ChatTypeEnum chatTypeEnum = ChatTypeEnum.valueOf(msg.getChatType());
-        if (Objects.isNull(chatTypeEnum)) {
-            throw new UnsupportedOperationException("不支持的类型");
+        this.handler(msg, null);
+    }
+
+    public void handler(Msg msg, Channel currentChannel) {
+        if (MsgTypeEnum.CMD.type.equals(msg.getMsgType())) {
+            this.cmdHandler(msg, currentChannel);
+        } else if (ChatTypeEnum.SINGLE.type.equals(msg.getChatType())) {
+            this.singleHandler(msg, currentChannel);
+        } else if (ChatTypeEnum.CHATROOM.type.equals(msg.getChatType())) {
+            this.chatRoomHandler(msg, currentChannel);
+        } else if (ChatTypeEnum.GROUP.type.equals(msg.getChatType())) {
+            this.groupHandler(msg, currentChannel);
+        } else {
+            throw new UnsupportedOperationException("Type not found");
         }
-        switch (chatTypeEnum) {
-            case SINGLE:
-                Channel channel = WebSocketUser.get(msg.getTo());
-                if (channel != null) {
-                    channel.writeAndFlush(new TextWebSocketFrame(msg.toString()));
-                }
-                break;
-            case GROUP:
-            case CHATROOM:
-                List<Channel> channels = WebSocketUser.getGroupChannels(msg.getTo());
-                if (channels != null) {
-                    TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
-                    channels.forEach(v -> v.writeAndFlush(frame));
-                }
-                break;
+    }
+
+    private void cmdHandler(Msg msg, Channel currentChannel) {
+        CmdMsgBody cmdMsgBody = msg.getCmdMsgBody();
+        if (null == cmdMsgBody || null == cmdMsgBody.getType()) {
+            return;
         }
+        if (CmdTypeEnum.SUB_ROOM.type.equals(cmdMsgBody.getType())) {
+            if (null != cmdMsgBody.getParams()) {
+                String roomId = cmdMsgBody.getParams().get("roomId");
+                if (StringUtil.isNotEmpty(roomId)) {
+                    WebSocketUser.putRoomChannel(Long.valueOf(roomId), currentChannel);
+                }
+            }
+        }
+    }
+
+    private void singleHandler(Msg msg, Channel currentChannel) {
+        Channel channel = WebSocketUser.get(msg.getTo());
+        if (channel != null) {
+            channel.writeAndFlush(new TextWebSocketFrame(msg.toString()));
+        }
+    }
+
+    private void chatRoomHandler(Msg msg, Channel currentChannel) {
+        Set<Channel> channels = WebSocketUser.getRoomChannels(Long.valueOf(msg.getTo()));
+        if (channels != null) {
+            TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
+            channels.forEach(v -> v.writeAndFlush(frame));
+        }
+    }
+
+    private void groupHandler(Msg msg, Channel currentChannel) {
+        // todo
     }
 }

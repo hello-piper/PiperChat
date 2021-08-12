@@ -34,7 +34,7 @@ public class CmdMsgBody implements Serializable {
     /**
      * 通知类型
      */
-    private String type;
+    private Byte type;
 
     /**
      * 参数
@@ -44,7 +44,7 @@ public class CmdMsgBody implements Serializable {
     public CmdMsgBody() {
     }
 
-    public CmdMsgBody(String type, Map<String, String> params) {
+    public CmdMsgBody(Byte type, Map<String, String> params) {
         this.type = type;
         this.params = params;
     }

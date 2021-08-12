@@ -16,11 +16,11 @@ package io.piper.im.undertow;
 import cn.hutool.json.JSONUtil;
 import io.piper.common.WebSocketUser;
 import io.piper.common.constant.Constants;
+import io.piper.common.db.RedisDS;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
-import io.piper.common.db.RedisDS;
 import io.piper.common.util.StringUtil;
 import io.piper.im.undertow.coder.JsonDecode;
 import io.piper.im.undertow.coder.JsonEncode;
@@ -58,7 +58,7 @@ public class WebSocketEndpoint {
     @OnMessage
     public void message(Msg msg, Session session) {
         log.debug("来自客户端的消息 {}", msg);
-        MessageHandler.INSTANCE.handler(msg);
+        MessageHandler.INSTANCE.handler(msg, session);
     }
 
     @OnClose

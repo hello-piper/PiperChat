@@ -147,7 +147,7 @@ public class Msg implements Serializable {
         return msg;
     }
 
-    public static Msg createNotifyMsg(String type, Map<String, String> params) {
+    public static Msg createNotifyMsg(Byte type, Map<String, String> params) {
         Msg msg = new Msg();
         msg.setMsgType(MsgTypeEnum.CMD.type);
         msg.setCmdMsgBody(new CmdMsgBody(type, params));
