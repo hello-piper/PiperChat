@@ -24,7 +24,7 @@ import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.entity.ImUser;
 import io.piper.common.util.IdUtil;
-import io.piper.common.util.RedisDS;
+import io.piper.common.db.RedisDS;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.UserDAO;
 import io.piper.server.web.repository.impl.UserDAOJdbc;

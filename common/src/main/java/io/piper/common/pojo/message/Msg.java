@@ -63,9 +63,9 @@ public class Msg implements Serializable {
     private Long timestamp;
 
     /**
-     * 文本消息内容
+     * 消息标题/文本消息内容
      */
-    private String text;
+    private String title;
 
     /**
      * 图片消息内容
@@ -95,7 +95,7 @@ public class Msg implements Serializable {
     /**
      * 信令消息内容
      */
-    private NotifyMsgBody notifyMsgBody;
+    private CmdMsgBody cmdMsgBody;
 
     /**
      * 附加属性
@@ -108,7 +108,7 @@ public class Msg implements Serializable {
     public static Msg createTextMsg(String text) {
         Msg msg = new Msg();
         msg.setMsgType(MsgTypeEnum.TEXT.type);
-        msg.setText(text);
+        msg.setTitle(text);
         return msg;
     }
 
@@ -149,8 +149,8 @@ public class Msg implements Serializable {
 
     public static Msg createNotifyMsg(String type, Map<String, String> params) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.NOTIFY.type);
-        msg.setNotifyMsgBody(new NotifyMsgBody(type, params));
+        msg.setMsgType(MsgTypeEnum.CMD.type);
+        msg.setCmdMsgBody(new CmdMsgBody(type, params));
         return msg;
     }
 
@@ -166,7 +166,7 @@ public class Msg implements Serializable {
         MsgTypeEnum msgTypeEnum = this.getMsgTypeEnum();
         switch (msgTypeEnum) {
             case TEXT:
-                return this.text;
+                return this.title;
             case IMAGE:
                 return JSONUtil.toJsonStr(this.imageMsgBody);
             case VOICE:
@@ -177,8 +177,8 @@ public class Msg implements Serializable {
                 return JSONUtil.toJsonStr(this.fileMsgBody);
             case LOCATION:
                 return JSONUtil.toJsonStr(this.locationMsgBody);
-            case NOTIFY:
-                return JSONUtil.toJsonStr(this.notifyMsgBody);
+            case CMD:
+                return JSONUtil.toJsonStr(this.cmdMsgBody);
             default:
                 return null;
         }

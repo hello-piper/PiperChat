@@ -26,7 +26,7 @@ import io.piper.common.constant.Constants;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.util.RedisDS;
+import io.piper.common.db.RedisDS;
 import io.piper.common.util.StringUtil;
 
 /**

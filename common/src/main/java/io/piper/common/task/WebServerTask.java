@@ -18,7 +18,7 @@ import io.piper.common.constant.Constants;
 import io.piper.common.load_banlance.AddressLoadBalanceHandler;
 import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.config.AddressInfo;
-import io.piper.common.util.RedisDS;
+import io.piper.common.db.RedisDS;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;

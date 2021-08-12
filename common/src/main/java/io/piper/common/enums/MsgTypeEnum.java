@@ -33,8 +33,8 @@ public enum MsgTypeEnum {
     FILE((byte) 4),
     // 地理位置信息
     LOCATION((byte) 5),
-    // 通知
-    NOTIFY((byte) 6);
+    // 信令
+    CMD((byte) 6);
 
     public Byte type;
 

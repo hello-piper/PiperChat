@@ -13,6 +13,7 @@
  */
 package io.piper.common.util;
 
+import io.piper.common.db.RedisDS;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

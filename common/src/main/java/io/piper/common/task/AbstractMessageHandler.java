@@ -16,7 +16,7 @@ package io.piper.common.task;
 import cn.hutool.json.JSONUtil;
 import io.piper.common.constant.Constants;
 import io.piper.common.pojo.message.Msg;
-import io.piper.common.util.RedisDS;
+import io.piper.common.db.RedisDS;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.JedisPubSub;

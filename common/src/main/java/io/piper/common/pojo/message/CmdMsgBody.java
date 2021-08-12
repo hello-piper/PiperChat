@@ -22,13 +22,13 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * 通知消息
+ * 信令消息
  *
  * @author piper
  */
 @Data
 @Message
-public class NotifyMsgBody implements Serializable {
+public class CmdMsgBody implements Serializable {
     private static final long serialVersionUID = 1;
 
     /**
@@ -41,10 +41,10 @@ public class NotifyMsgBody implements Serializable {
      */
     private Map<String, String> params;
 
-    public NotifyMsgBody() {
+    public CmdMsgBody() {
     }
 
-    public NotifyMsgBody(String type, Map<String, String> params) {
+    public CmdMsgBody(String type, Map<String, String> params) {
         this.type = type;
         this.params = params;
     }

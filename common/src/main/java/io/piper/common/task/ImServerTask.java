@@ -19,7 +19,7 @@ import io.piper.common.constant.Constants;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.util.IpUtil;
-import io.piper.common.util.RedisDS;
+import io.piper.common.db.RedisDS;
 import io.piper.common.util.ThreadUtil;
 import io.piper.common.util.YamlUtil;
 import org.apache.logging.log4j.LogManager;

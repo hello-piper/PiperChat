@@ -26,7 +26,7 @@ import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.entity.ImMessage;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.IdUtil;
-import io.piper.common.util.RedisDS;
+import io.piper.common.db.RedisDS;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.MessageDAO;

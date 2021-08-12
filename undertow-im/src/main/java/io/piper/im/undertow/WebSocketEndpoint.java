@@ -20,7 +20,7 @@ import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
-import io.piper.common.util.RedisDS;
+import io.piper.common.db.RedisDS;
 import io.piper.common.util.StringUtil;
 import io.piper.im.undertow.coder.JsonDecode;
 import io.piper.im.undertow.coder.JsonEncode;
