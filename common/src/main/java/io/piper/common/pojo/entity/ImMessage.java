@@ -9,9 +9,9 @@ public class ImMessage implements Serializable {
 
     private Byte msgType;
 
-    private String from;
+    private Long from;
 
-    private String to;
+    private Long to;
 
     private String body;
 
@@ -45,20 +45,20 @@ public class ImMessage implements Serializable {
         this.msgType = msgType;
     }
 
-    public String getFrom() {
+    public Long getFrom() {
         return from;
     }
 
-    public void setFrom(String from) {
-        this.from = from == null ? null : from.trim();
+    public void setFrom(Long from) {
+        this.from = from;
     }
 
-    public String getTo() {
+    public Long getTo() {
         return to;
     }
 
-    public void setTo(String to) {
-        this.to = to == null ? null : to.trim();
+    public void setTo(Long to) {
+        this.to = to;
     }
 
     public String getBody() {

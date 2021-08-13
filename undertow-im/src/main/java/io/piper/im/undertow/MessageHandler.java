@@ -87,7 +87,7 @@ public class MessageHandler extends AbstractMessageHandler {
     }
 
     private void chatRoomHandler(Msg msg, Session currentSession) {
-        Set<Session> sessions = WebSocketUser.getRoomChannels(Long.valueOf(msg.getTo()));
+        Set<Session> sessions = WebSocketUser.getRoomChannels(msg.getTo());
         if (sessions != null) {
             sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
         }

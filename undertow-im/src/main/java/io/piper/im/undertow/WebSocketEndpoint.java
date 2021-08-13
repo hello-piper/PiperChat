@@ -48,7 +48,7 @@ public class WebSocketEndpoint {
             throw IMException.build(IMErrorEnum.INVALID_TOKEN);
         }
         UserTokenDTO tokenDTO = JSONUtil.toBean(tokenDTOStr, UserTokenDTO.class);
-        String uid = tokenDTO.getId().toString();
+        Long uid = tokenDTO.getId();
         WebSocketUser.put(uid, session);
         session.setMaxIdleTimeout(30000);
         session.getUserProperties().put(Constants.USER_ATTRIBUTE_KEY, tokenDTO);
@@ -64,7 +64,7 @@ public class WebSocketEndpoint {
     @OnClose
     public void onClose(Session session) {
         UserTokenDTO tokenDTO = (UserTokenDTO) session.getUserProperties().get(Constants.USER_ATTRIBUTE_KEY);
-        WebSocketUser.remove(tokenDTO.getId().toString());
+        WebSocketUser.remove(tokenDTO.getId(), session);
         WebSocketUser.removeRoomChannel(session);
         log.debug("用户: {} 下线", tokenDTO.getId());
     }

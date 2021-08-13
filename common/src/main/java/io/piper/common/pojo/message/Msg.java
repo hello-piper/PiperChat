@@ -50,12 +50,12 @@ public class Msg implements Serializable {
     /**
      * 发送者id
      */
-    private String from;
+    private Long from;
 
     /**
      * 接收者id/群id/聊天室id
      */
-    private String to;
+    private Long to;
 
     /**
      * 消息发送的时间

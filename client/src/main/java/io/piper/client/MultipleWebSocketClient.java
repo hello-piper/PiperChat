@@ -49,7 +49,7 @@ public class MultipleWebSocketClient {
     static {
         msg.setMsgType(MsgTypeEnum.TEXT.type);
         msg.setChatType(ChatTypeEnum.SINGLE.type);
-        msg.setTo("0");
+        msg.setTo(0L);
     }
 
     public static void main(String[] args) throws Exception {

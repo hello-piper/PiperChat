@@ -27,8 +27,8 @@ public class AppTest {
     public void testProtostuff() {
         Msg msg = Msg.createTextMsg("hello protostuff");
         msg.setChatType(ChatTypeEnum.SINGLE.type);
-        msg.setFrom("1");
-        msg.setTo("2");
+        msg.setFrom(0L);
+        msg.setTo(1L);
 
         Schema<Msg> schema = RuntimeSchema.getSchema(Msg.class);
 

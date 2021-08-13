@@ -67,8 +67,8 @@ public class ChatServlet extends HttpServlet {
         Msg msg = JSONUtil.toBean(chatMsg, Msg.class);
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
-        String from = msg.getFrom();
-        String to = msg.getTo();
+        Long from = msg.getFrom();
+        Long to = msg.getTo();
         if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, from, to)) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
@@ -82,7 +82,6 @@ public class ChatServlet extends HttpServlet {
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
         message.setFrom(from);
-        message.setTo(to);
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
         message.setExtra(Objects.isNull(msg.getExtra()) ? "" : JSONUtil.toJsonStr(msg.getExtra()));

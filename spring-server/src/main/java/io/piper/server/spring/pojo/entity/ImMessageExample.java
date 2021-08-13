@@ -294,62 +294,52 @@ public class ImMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andFromEqualTo(String value) {
+        public Criteria andFromEqualTo(Long value) {
             addCriterion("`from` =", value, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromNotEqualTo(String value) {
+        public Criteria andFromNotEqualTo(Long value) {
             addCriterion("`from` <>", value, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromGreaterThan(String value) {
+        public Criteria andFromGreaterThan(Long value) {
             addCriterion("`from` >", value, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromGreaterThanOrEqualTo(String value) {
+        public Criteria andFromGreaterThanOrEqualTo(Long value) {
             addCriterion("`from` >=", value, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromLessThan(String value) {
+        public Criteria andFromLessThan(Long value) {
             addCriterion("`from` <", value, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromLessThanOrEqualTo(String value) {
+        public Criteria andFromLessThanOrEqualTo(Long value) {
             addCriterion("`from` <=", value, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromLike(String value) {
-            addCriterion("`from` like", value, "from");
-            return (Criteria) this;
-        }
-
-        public Criteria andFromNotLike(String value) {
-            addCriterion("`from` not like", value, "from");
-            return (Criteria) this;
-        }
-
-        public Criteria andFromIn(List<String> values) {
+        public Criteria andFromIn(List<Long> values) {
             addCriterion("`from` in", values, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromNotIn(List<String> values) {
+        public Criteria andFromNotIn(List<Long> values) {
             addCriterion("`from` not in", values, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromBetween(String value1, String value2) {
+        public Criteria andFromBetween(Long value1, Long value2) {
             addCriterion("`from` between", value1, value2, "from");
             return (Criteria) this;
         }
 
-        public Criteria andFromNotBetween(String value1, String value2) {
+        public Criteria andFromNotBetween(Long value1, Long value2) {
             addCriterion("`from` not between", value1, value2, "from");
             return (Criteria) this;
         }
@@ -364,62 +354,52 @@ public class ImMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andToEqualTo(String value) {
+        public Criteria andToEqualTo(Long value) {
             addCriterion("`to` =", value, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToNotEqualTo(String value) {
+        public Criteria andToNotEqualTo(Long value) {
             addCriterion("`to` <>", value, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToGreaterThan(String value) {
+        public Criteria andToGreaterThan(Long value) {
             addCriterion("`to` >", value, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToGreaterThanOrEqualTo(String value) {
+        public Criteria andToGreaterThanOrEqualTo(Long value) {
             addCriterion("`to` >=", value, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToLessThan(String value) {
+        public Criteria andToLessThan(Long value) {
             addCriterion("`to` <", value, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToLessThanOrEqualTo(String value) {
+        public Criteria andToLessThanOrEqualTo(Long value) {
             addCriterion("`to` <=", value, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToLike(String value) {
-            addCriterion("`to` like", value, "to");
-            return (Criteria) this;
-        }
-
-        public Criteria andToNotLike(String value) {
-            addCriterion("`to` not like", value, "to");
-            return (Criteria) this;
-        }
-
-        public Criteria andToIn(List<String> values) {
+        public Criteria andToIn(List<Long> values) {
             addCriterion("`to` in", values, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToNotIn(List<String> values) {
+        public Criteria andToNotIn(List<Long> values) {
             addCriterion("`to` not in", values, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToBetween(String value1, String value2) {
+        public Criteria andToBetween(Long value1, Long value2) {
             addCriterion("`to` between", value1, value2, "to");
             return (Criteria) this;
         }
 
-        public Criteria andToNotBetween(String value1, String value2) {
+        public Criteria andToNotBetween(Long value1, Long value2) {
             addCriterion("`to` not between", value1, value2, "to");
             return (Criteria) this;
         }

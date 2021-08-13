@@ -43,7 +43,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSo
         Attribute<UserTokenDTO> attr = ctx.channel().attr(AttributeKey.valueOf(Constants.USER_ATTRIBUTE_KEY));
         if (!Objects.isNull(attr)) {
             Long uid = attr.get().getId();
-            WebSocketUser.remove(uid.toString());
+            WebSocketUser.remove(uid, ctx.channel());
             WebSocketUser.removeRoomChannel(ctx.channel());
             log.debug("用户: {} 下线", uid);
         }

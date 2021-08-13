@@ -15,10 +15,7 @@ package io.piper.common;
 
 import io.piper.common.util.HashMultiMap;
 
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * WebSocketUser
@@ -26,31 +23,31 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author piper
  */
 public class WebSocketUser {
-    private static final HashMultiMap<String, Object> CHANNEL_MAP = HashMultiMap.createCont(100000);
-    private static final Map<Long, Set<Object>> CHANNEL_ROOM_MAP = new ConcurrentHashMap<>(100000);
+    private static final HashMultiMap<Long, Object> CHANNEL_MAP = HashMultiMap.createCont(100000);
+    private static final HashMultiMap<Long, Object> CHANNEL_ROOM_MAP = HashMultiMap.createCont(100000);
 
-    // peer to peer
+    // single
 
-    public static void put(String uid, Object channel) {
+    public static void put(Long uid, Object channel) {
         CHANNEL_MAP.put(uid, channel);
     }
 
-    public static <T> Set<T> get(String uid) {
+    public static <T> Set<T> get(Long uid) {
         return (Set<T>) CHANNEL_MAP.get(uid);
     }
 
-    public static void remove(String uid) {
-        CHANNEL_MAP.removeAll(uid);
+    public static void remove(Long uid, Object channel) {
+        CHANNEL_MAP.remove(uid, channel);
     }
 
     public static Integer onlineNum() {
-        return CHANNEL_MAP.size();
+        return CHANNEL_MAP.valueSize();
     }
 
     // chatRoom
 
     public static void putRoomChannel(Long roomId, Object channel) {
-        CHANNEL_ROOM_MAP.computeIfAbsent(roomId, v -> new HashSet<>()).add(channel);
+        CHANNEL_ROOM_MAP.put(roomId, channel);
     }
 
     public static <T> Set<T> getRoomChannels(Long roomId) {
@@ -58,17 +55,22 @@ public class WebSocketUser {
     }
 
     public static void removeRoomChannel(Object channel) {
-        CHANNEL_ROOM_MAP.values().forEach(channels -> {
-            if (channels != null) {
-                channels.remove(channel);
-            }
-        });
+        CHANNEL_ROOM_MAP.removeValue(channel);
     }
 
     public static void removeRoomChannel(Long roomId, Object channel) {
-        Set<Object> channels = CHANNEL_ROOM_MAP.get(roomId);
-        if (channels != null) {
-            channels.remove(channel);
+        CHANNEL_ROOM_MAP.remove(roomId, channel);
+    }
+
+    public static int roomNum() {
+        return CHANNEL_MAP.keySize();
+    }
+
+    public static int roomUserNum(Long roomId) {
+        Set<Object> set = CHANNEL_ROOM_MAP.get(roomId);
+        if (set != null) {
+            return set.size();
         }
+        return 0;
     }
 }

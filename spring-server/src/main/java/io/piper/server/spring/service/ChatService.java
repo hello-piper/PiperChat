@@ -63,14 +63,14 @@ public class ChatService {
 
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
-        String to = msg.getTo();
+        Long to = msg.getTo();
         if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, to)) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         UserTokenDTO loginUser = LoginUserHolder.get();
         long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
-        msg.setFrom(loginUser.getId().toString());
+        msg.setFrom(loginUser.getId());
         msg.setTimestamp(now);
         msg.setId(msgId);
 
@@ -78,7 +78,7 @@ public class ChatService {
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
-        message.setFrom(loginUser.getId().toString());
+        message.setFrom(loginUser.getId());
         message.setTo(to);
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
@@ -94,7 +94,7 @@ public class ChatService {
         if (StringUtil.isAnyEmpty(msg.getMsgTypeEnum(), msg.getCmdMsgBody())) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
-        msg.setFrom(LoginUserHolder.get().getId().toString());
+        msg.setFrom(LoginUserHolder.get().getId());
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);
     }
 

@@ -15,6 +15,7 @@ package io.piper.common.util;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * HashMultiMap
@@ -25,25 +26,26 @@ public final class HashMultiMap<K, V> {
     private final Map<K, Set<V>> map;
     private final int expectedValuesPerKey;
     private static final int DEFAULT_VALUES_PER_KEY = 2;
+    private final AtomicInteger valueSize = new AtomicInteger(0);
 
     public static <K, V> HashMultiMap<K, V> create() {
-        return new HashMultiMap();
+        return new HashMultiMap<>();
     }
 
     public static <K, V> HashMultiMap<K, V> create(int expectedKeys) {
-        return new HashMultiMap(expectedKeys, DEFAULT_VALUES_PER_KEY);
+        return new HashMultiMap<>(expectedKeys, DEFAULT_VALUES_PER_KEY);
     }
 
     public static <K, V> HashMultiMap<K, V> create(int expectedKeys, int expectedValuesPerKey) {
-        return new HashMultiMap(expectedKeys, expectedValuesPerKey);
+        return new HashMultiMap<>(expectedKeys, expectedValuesPerKey);
     }
 
     public static <K, V> HashMultiMap<K, V> createCont(int expectedKey) {
-        return new HashMultiMap(expectedKey, DEFAULT_VALUES_PER_KEY, true);
+        return new HashMultiMap<>(expectedKey, DEFAULT_VALUES_PER_KEY, true);
     }
 
     public static <K, V> HashMultiMap<K, V> createCont(int expectedKeys, int expectedValuesPerKey) {
-        return new HashMultiMap(expectedKeys, expectedValuesPerKey, true);
+        return new HashMultiMap<>(expectedKeys, expectedValuesPerKey, true);
     }
 
     private HashMultiMap() {
@@ -66,19 +68,41 @@ public final class HashMultiMap<K, V> {
 
     public boolean put(K key, V value) {
         map.computeIfAbsent(key, v -> new HashSet<>(expectedValuesPerKey)).add(value);
-        Set<V> vs = map.get(key);
-        if (null != vs) {
-            vs.add(value);
-        } else {
-            HashSet<V> newSet = new HashSet<>(expectedValuesPerKey);
-            newSet.add(value);
-            map.put(key, newSet);
-        }
+        valueSize.getAndIncrement();
         return true;
     }
 
     public Set<V> get(K k) {
         return map.get(k);
+    }
+
+    public boolean remove(K key, V value) {
+        Set<V> set = map.get(key);
+        boolean isRemove = set != null && set.remove(value);
+        if (isRemove) {
+            valueSize.decrementAndGet();
+        }
+        return isRemove;
+    }
+
+    public Set<V> removeKey(K key) {
+        Set<V> vs = map.get(key);
+        if (null != vs) {
+            map.remove(key);
+            valueSize.getAndAdd(-vs.size());
+            return vs;
+        }
+        return null;
+    }
+
+    public boolean removeValue(V value) {
+        for (Set<V> set : map.values()) {
+            if (set.remove(value)) {
+                valueSize.decrementAndGet();
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean containsKey(K key) {
@@ -100,23 +124,11 @@ public final class HashMultiMap<K, V> {
         return collection != null && collection.contains(value);
     }
 
-    public boolean remove(K key, V value) {
-        Set<V> collection = map.get(key);
-        return collection != null && collection.remove(value);
-    }
-
-    public Set<V> removeAll(K key) {
-        Set<V> vs = map.get(key);
-        if (null != vs) {
-            vs.clear();
-            map.remove(key);
-            return vs;
-        }
-        return null;
-    }
-
-    public int size() {
+    public int keySize() {
         return map.size();
     }
 
+    public int valueSize() {
+        return this.valueSize.get();
+    }
 }

@@ -23,10 +23,10 @@ import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.WebSocketUser;
 import io.piper.common.constant.Constants;
+import io.piper.common.db.RedisDS;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.db.RedisDS;
 import io.piper.common.util.StringUtil;
 
 /**
@@ -52,7 +52,7 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
                 throw IMException.build(IMErrorEnum.INVALID_TOKEN);
             }
             UserTokenDTO tokenDTO = JSONUtil.toBean(tokenDTOStr, UserTokenDTO.class);
-            String uid = tokenDTO.getId().toString();
+            Long uid = tokenDTO.getId();
             WebSocketUser.put(uid, ctx.channel());
             ctx.channel().attr(AttributeKey.valueOf(Constants.USER_ATTRIBUTE_KEY)).set(tokenDTO);
             log.debug("用户：{} 上线", uid);
