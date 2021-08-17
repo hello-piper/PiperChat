@@ -16,7 +16,7 @@ package io.piper.common.pojo.config;
 import lombok.Data;
 
 /**
- * 数据库配置
+ * DbProperties
  *
  * @author piper
  */

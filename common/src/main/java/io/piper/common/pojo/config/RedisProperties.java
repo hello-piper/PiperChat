@@ -16,7 +16,7 @@ package io.piper.common.pojo.config;
 import lombok.Data;
 
 /**
- * Redis配置
+ * RedisProperties
  *
  * @author piper
  */

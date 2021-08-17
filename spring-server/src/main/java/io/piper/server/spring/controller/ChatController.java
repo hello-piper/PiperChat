@@ -16,6 +16,7 @@ package io.piper.server.spring.controller;
 import io.piper.common.exception.IMResult;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.message.Msg;
+import io.piper.server.spring.dto.ActiveContactVO;
 import io.piper.server.spring.dto.ImMessageDTO;
 import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
 import io.piper.server.spring.service.ChatService;
@@ -24,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 @Api(tags = "聊天接口")
@@ -53,9 +55,15 @@ public class ChatController {
         return IMResult.ok();
     }
 
-    @PostMapping("records")
-    @ApiOperation("聊天记录")
+    @PostMapping("chat-records")
+    @ApiOperation("获取单个会话的聊天记录")
     public IMResult<List<ImMessageDTO>> chatRecord(@RequestBody MsgSearchDTO searchDTO) {
         return IMResult.ok(chatService.chatRecord(searchDTO));
+    }
+
+    @GetMapping("active-contacts")
+    @ApiOperation("获取会话记录")
+    public IMResult<Collection<ActiveContactVO>> activeContacts() {
+        return IMResult.ok(chatService.activeContacts());
     }
 }

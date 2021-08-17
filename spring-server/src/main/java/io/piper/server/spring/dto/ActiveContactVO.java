@@ -18,33 +18,33 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
-@ApiModel("ImMessageDTO")
-public class ImMessageDTO implements Serializable {
+@ApiModel("ActiveContactVO")
+public class ActiveContactVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("id")
-    private Long id;
+    @ApiModelProperty("uid/groupId")
+    private Long to;
+
+    @ApiModelProperty("name")
+    private String name;
+
+    @ApiModelProperty("avatar")
+    private String avatar;
 
     @ApiModelProperty("chatType")
     private Byte chatType;
 
-    @ApiModelProperty("msgType")
-    private Byte msgType;
+    @ApiModelProperty("messageList")
+    private List<ImMessageDTO> messageList;
 
-    @ApiModelProperty("from")
-    private Long from;
-
-    @ApiModelProperty("to")
-    private Long to;
-
-    @ApiModelProperty("body")
-    private String body;
-
-    @ApiModelProperty("extra")
-    private String extra;
-
-    @ApiModelProperty("createTime")
-    private Long createTime;
+    public void addMessageDTO(ImMessageDTO dto) {
+        if (this.messageList == null) {
+            this.messageList = new ArrayList<>();
+        }
+        this.messageList.add(dto);
+    }
 }

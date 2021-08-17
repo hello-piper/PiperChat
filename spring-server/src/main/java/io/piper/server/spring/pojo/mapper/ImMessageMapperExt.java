@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface ImMessageMapperExt extends ImMessageMapper {
 
-    List<ImMessageDTO> selectMessage(@Param("lastMsgId") Long lastMsgId, @Param("from") String from, @Param("to") String to, @Param("total") Integer total);
+    List<ImMessageDTO> selectMessage(@Param("lastMsgId") Long lastMsgId, @Param("from") Long from, @Param("to") Long to, @Param("total") Integer total);
+
+    List<ImMessageDTO> activeContacts();
 }

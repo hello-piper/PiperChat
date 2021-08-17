@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 服务器地址
+ * AddressInfo
  *
  * @author piper
  */

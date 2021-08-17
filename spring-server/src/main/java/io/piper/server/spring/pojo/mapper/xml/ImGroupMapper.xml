@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="io.piper.server.spring.pojo.entity.ImGroup">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="placard" jdbcType="VARCHAR" property="placard" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_uid" jdbcType="BIGINT" property="createUid" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`, placard, `status`, create_uid, create_time
+    id, `name`, avatar, placard, `status`, create_uid, create_time
   </sql>
   <select id="selectByExample" parameterType="io.piper.server.spring.pojo.entity.ImGroupExample" resultMap="BaseResultMap">
     select
@@ -102,12 +103,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImGroup">
-    insert into im_group (id, `name`, placard, 
-      `status`, create_uid, create_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{placard,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{createUid,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT}
-      )
+    insert into im_group (id, `name`, avatar, 
+      placard, `status`, create_uid, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{placard,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createUid,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImGroup">
     insert into im_group
@@ -117,6 +118,9 @@
       </if>
       <if test="name != null">
         `name`,
+      </if>
+      <if test="avatar != null">
+        avatar,
       </if>
       <if test="placard != null">
         placard,
@@ -137,6 +141,9 @@
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
       </if>
       <if test="placard != null">
         #{placard,jdbcType=VARCHAR},
@@ -167,6 +174,9 @@
       <if test="record.name != null">
         `name` = #{record.name,jdbcType=VARCHAR},
       </if>
+      <if test="record.avatar != null">
+        avatar = #{record.avatar,jdbcType=VARCHAR},
+      </if>
       <if test="record.placard != null">
         placard = #{record.placard,jdbcType=VARCHAR},
       </if>
@@ -188,6 +198,7 @@
     update im_group
     set id = #{record.id,jdbcType=BIGINT},
       `name` = #{record.name,jdbcType=VARCHAR},
+      avatar = #{record.avatar,jdbcType=VARCHAR},
       placard = #{record.placard,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=INTEGER},
       create_uid = #{record.createUid,jdbcType=BIGINT},
@@ -201,6 +212,9 @@
     <set>
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
       </if>
       <if test="placard != null">
         placard = #{placard,jdbcType=VARCHAR},
@@ -220,6 +234,7 @@
   <update id="updateByPrimaryKey" parameterType="io.piper.server.spring.pojo.entity.ImGroup">
     update im_group
     set `name` = #{name,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
       placard = #{placard,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=INTEGER},
       create_uid = #{createUid,jdbcType=BIGINT},

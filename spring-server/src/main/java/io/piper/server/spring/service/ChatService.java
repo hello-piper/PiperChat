@@ -27,30 +27,41 @@ import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.LoginUserHolder;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
+import io.piper.server.spring.dto.ActiveContactVO;
 import io.piper.server.spring.dto.ImMessageDTO;
 import io.piper.server.spring.dto.page_dto.MsgSearchDTO;
+import io.piper.server.spring.pojo.entity.ImGroup;
 import io.piper.server.spring.pojo.entity.ImMessage;
+import io.piper.server.spring.pojo.entity.ImUser;
+import io.piper.server.spring.pojo.mapper.ImGroupMapper;
 import io.piper.server.spring.pojo.mapper.ImMessageMapperExt;
+import io.piper.server.spring.pojo.mapper.ImUserMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Log4j2
 @Service
 public class ChatService {
 
     @Resource
-    private ImMessageMapperExt imMessageMapperExt;
-
-    @Resource
     private Snowflake snowflake;
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private ImMessageMapperExt imMessageMapperExt;
+
+    @Resource
+    private ImUserMapper imUserMapper;
+
+    @Resource
+    private ImGroupMapper imGroupMapper;
 
     public static final IAddressLoadBalance ADDRESS_HANDLER = new AddressLoadBalanceHandler();
 
@@ -98,8 +109,48 @@ public class ChatService {
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);
     }
 
-    public List<ImMessageDTO> chatRecord(MsgSearchDTO searchDTO) {
-        return imMessageMapperExt.selectMessage(searchDTO.getLastMsgId(),
-                LoginUserHolder.get().getId().toString(), searchDTO.getTo(), searchDTO.getTotal());
+    public List<ImMessageDTO> chatRecord(MsgSearchDTO dto) {
+        return imMessageMapperExt.selectMessage(dto.getLastMsgId(), LoginUserHolder.get().getId(), dto.getTo(), dto.getTotal());
+    }
+
+    public Collection<ActiveContactVO> activeContacts() {
+        List<ImMessageDTO> imMessages = imMessageMapperExt.activeContacts();
+        if (CollectionUtils.isEmpty(imMessages)) {
+            return Collections.emptyList();
+        }
+        Map<String, ActiveContactVO> map = new LinkedHashMap<>();
+        for (ImMessageDTO dto : imMessages) {
+            Long to = dto.getTo();
+            Byte chatType = dto.getChatType();
+            String key = chatType + "-" + to;
+            ActiveContactVO vo = map.get(key);
+            if (vo == null) {
+                vo = new ActiveContactVO();
+                vo.setTo(to);
+                vo.setChatType(chatType);
+                fillToInfo(vo);
+                map.put(key, vo);
+            }
+            vo.addMessageDTO(dto);
+        }
+        return map.values();
+    }
+
+    private void fillToInfo(ActiveContactVO vo) {
+        Long to = vo.getTo();
+        Byte chatType = vo.getChatType();
+        if (ChatTypeEnum.SINGLE.type.equals(chatType)) {
+            ImUser imUser = imUserMapper.selectByPrimaryKey(to);
+            if (!Objects.isNull(imUser)) {
+                vo.setName(imUser.getNickname());
+                vo.setAvatar(imUser.getAvatar());
+            }
+        } else if (ChatTypeEnum.GROUP.type.equals(chatType)) {
+            ImGroup imGroup = imGroupMapper.selectByPrimaryKey(to);
+            if (!Objects.isNull(imGroup)) {
+                vo.setName(imGroup.getName());
+                vo.setAvatar(imGroup.getAvatar());
+            }
+        }
     }
 }

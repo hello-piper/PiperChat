@@ -7,6 +7,8 @@ public class ImGroup implements Serializable {
 
     private String name;
 
+    private String avatar;
+
     private String placard;
 
     private Integer status;
@@ -31,6 +33,14 @@ public class ImGroup implements Serializable {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar == null ? null : avatar.trim();
     }
 
     public String getPlacard() {
@@ -73,6 +83,7 @@ public class ImGroup implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
+        sb.append(", avatar=").append(avatar);
         sb.append(", placard=").append(placard);
         sb.append(", status=").append(status);
         sb.append(", createUid=").append(createUid);

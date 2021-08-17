@@ -16,7 +16,7 @@ package io.piper.common.pojo.config;
 import java.io.Serializable;
 
 /**
- * 服务器配置
+ * ServerProperties
  *
  * @author piper
  */

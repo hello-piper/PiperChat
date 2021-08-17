@@ -10,4 +10,14 @@
         AND ( ( `from` = #{from} AND `to` = #{to} ) OR ( `from` = #{to} AND `to` = #{from} ) )
         LIMIT #{total}
     </select>
+
+    <select id="activeContacts" resultType="io.piper.server.spring.dto.ImMessageDTO">
+        SELECT
+        id, chat_type chatType, msg_type msgType, `from`, `to`, body, extra, create_time createTime
+        FROM
+        im_message
+        ORDER BY
+        create_time DESC
+        LIMIT 100
+    </select>
 </mapper>

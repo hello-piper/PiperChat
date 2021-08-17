@@ -52,7 +52,8 @@ CREATE TABLE `im_message`  (
 DROP TABLE IF EXISTS `im_group`;
 CREATE TABLE `im_group`  (
   `id` bigint(20) NOT NULL,
-  `name` varchar(255)  NOT NULL DEFAULT '',
+  `name` varchar(16)  NOT NULL DEFAULT '',
+  `avatar` varchar(255)  NULL DEFAULT '',
   `placard` varchar(255)  NULL DEFAULT '',
   `status` int(1) NULL DEFAULT 0,
   `create_uid` bigint(20) NULL DEFAULT NULL,
