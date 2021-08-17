@@ -21,6 +21,7 @@ import io.piper.common.pojo.message.CmdMsgBody;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.task.AbstractMessageHandler;
 import io.piper.common.util.StringUtil;
+import io.piper.common.util.ThreadUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,18 +42,48 @@ public class MessageHandler extends AbstractMessageHandler {
         this.handler(msg, null);
     }
 
+    /**
+     * msg process
+     */
     public void handler(Msg msg, Session currentSession) {
+        ThreadUtil.LISTENING_POOL.execute(() -> {
+            if (ChatTypeEnum.SINGLE.type.equals(msg.getChatType())) {
+                this.singleHandler(msg, currentSession);
+            } else if (ChatTypeEnum.CHATROOM.type.equals(msg.getChatType())) {
+                this.chatRoomHandler(msg, currentSession);
+            } else if (ChatTypeEnum.GROUP.type.equals(msg.getChatType())) {
+                this.groupHandler(msg, currentSession);
+            } else {
+                throw new UnsupportedOperationException("type not found");
+            }
+        });
+    }
+
+    private void singleHandler(Msg msg, Session currentSession) {
+        Set<Session> sessions = WebSocketUser.get(msg.getTo());
+        if (sessions != null) {
+            sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
+        }
         if (MsgTypeEnum.CMD.type.equals(msg.getMsgType())) {
             this.cmdHandler(msg, currentSession);
-        } else if (ChatTypeEnum.SINGLE.type.equals(msg.getChatType())) {
-            this.singleHandler(msg, currentSession);
-        } else if (ChatTypeEnum.CHATROOM.type.equals(msg.getChatType())) {
-            this.chatRoomHandler(msg, currentSession);
-        } else if (ChatTypeEnum.GROUP.type.equals(msg.getChatType())) {
-            this.groupHandler(msg, currentSession);
-        } else {
-            throw new UnsupportedOperationException("type not found");
         }
+    }
+
+    private void chatRoomHandler(Msg msg, Session currentSession) {
+        Set<Session> sessions = WebSocketUser.getRoomChannels(msg.getTo());
+        if (sessions != null) {
+            sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
+        }
+        if (MsgTypeEnum.CMD.type.equals(msg.getMsgType())) {
+            this.cmdHandler(msg, currentSession);
+        }
+    }
+
+    private void groupHandler(Msg msg, Session currentSession) {
+        if (MsgTypeEnum.CMD.type.equals(msg.getMsgType())) {
+            this.cmdHandler(msg, currentSession);
+        }
+        // todo
     }
 
     private void cmdHandler(Msg msg, Session currentSession) {
@@ -77,23 +108,5 @@ public class MessageHandler extends AbstractMessageHandler {
                 }
             }
         }
-    }
-
-    private void singleHandler(Msg msg, Session currentSession) {
-        Set<Session> sessions = WebSocketUser.get(msg.getTo());
-        if (sessions != null) {
-            sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
-        }
-    }
-
-    private void chatRoomHandler(Msg msg, Session currentSession) {
-        Set<Session> sessions = WebSocketUser.getRoomChannels(msg.getTo());
-        if (sessions != null) {
-            sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
-        }
-    }
-
-    private void groupHandler(Msg msg, Session currentSession) {
-        // todo
     }
 }

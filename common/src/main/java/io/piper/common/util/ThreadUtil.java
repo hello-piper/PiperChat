@@ -13,8 +13,10 @@
  */
 package io.piper.common.util;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
+import java.util.concurrent.*;
 
 /**
  * ThreadUtil
@@ -22,5 +24,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * @author piper
  */
 public final class ThreadUtil {
-    public static final ScheduledExecutorService SCHEDULE_POOL = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
+    public static final int cores = Runtime.getRuntime().availableProcessors();
+    public static final ScheduledExecutorService SCHEDULE_POOL = new ScheduledThreadPoolExecutor(cores);
+    public static final ThreadPoolExecutor THREAD_POOL = new ThreadPoolExecutor(cores, cores * 10,
+            0L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(10000), new DefaultThreadFactory());
+    public static final ListeningExecutorService LISTENING_POOL = MoreExecutors.listeningDecorator(THREAD_POOL);
 }
