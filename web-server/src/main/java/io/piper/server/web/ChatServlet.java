@@ -75,7 +75,7 @@ public class ChatServlet extends HttpServlet {
         long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
         msg.setId(msgId);
-        msg.setTimestamp(now);
+        msg.setServerTime(now);
 
         ImMessage message = new ImMessage();
         message.setId(msgId);

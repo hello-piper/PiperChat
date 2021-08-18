@@ -16,7 +16,7 @@ package io.piper.common.enums;
 import java.util.Arrays;
 
 /**
- * 聊天类型枚举
+ * 会话类型枚举
  *
  * @author piper
  */

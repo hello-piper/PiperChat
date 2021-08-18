@@ -82,7 +82,7 @@ public class ChatService {
         long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
         msg.setFrom(loginUser.getId());
-        msg.setTimestamp(now);
+        msg.setServerTime(now);
         msg.setId(msgId);
 
         ImMessage message = new ImMessage();

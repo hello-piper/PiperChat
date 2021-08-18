@@ -32,7 +32,7 @@ public class VoiceMsgBody implements Serializable {
     /**
      * 语言地址
      */
-    private String voiceUrl;
+    private String url;
 
     /**
      * 语言时长(s)
@@ -47,8 +47,8 @@ public class VoiceMsgBody implements Serializable {
     public VoiceMsgBody() {
     }
 
-    public VoiceMsgBody(String voiceUrl, Integer length, Long size) {
-        this.voiceUrl = voiceUrl;
+    public VoiceMsgBody(String url, Integer length, Long size) {
+        this.url = url;
         this.length = length;
         this.size = size;
     }

@@ -38,12 +38,12 @@ public class Msg implements Serializable {
     private Long id;
 
     /**
-     * 消息类型
+     * 会话类型
      */
     private Byte chatType;
 
     /**
-     * 消息内容类型
+     * 消息类型
      */
     private Byte msgType;
 
@@ -53,14 +53,24 @@ public class Msg implements Serializable {
     private Long from;
 
     /**
+     * 发送者昵称
+     */
+    private String fromNickname;
+
+    /**
      * 接收者id/群id/聊天室id
      */
     private Long to;
 
     /**
-     * 消息发送的时间
+     * 消息发送时间
      */
-    private Long timestamp;
+    private Long sendTime;
+
+    /**
+     * 服务器时间
+     */
+    private Long serverTime;
 
     /**
      * 消息标题/文本消息内容

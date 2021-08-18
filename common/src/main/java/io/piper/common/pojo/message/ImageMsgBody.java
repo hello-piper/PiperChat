@@ -47,22 +47,16 @@ public class ImageMsgBody implements Serializable {
     /**
      * 图片地址
      */
-    private String imgUrl;
-
-    /**
-     * 图片缩略图地址
-     */
-    private String thumbnailUrl;
+    private String url;
 
     public ImageMsgBody() {
     }
 
-    public ImageMsgBody(Double width, Double height, Long size, String imgUrl, String thumbnailUrl) {
+    public ImageMsgBody(Double width, Double height, Long size, String url, String thumbnailUrl) {
         this.width = width;
         this.height = height;
         this.size = size;
-        this.imgUrl = imgUrl;
-        this.thumbnailUrl = thumbnailUrl;
+        this.url = url;
     }
 
     @Override

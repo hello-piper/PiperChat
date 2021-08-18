@@ -31,7 +31,7 @@ public enum MsgTypeEnum {
     VIDEO((byte) 3),
     // 文件
     FILE((byte) 4),
-    // 地理位置信息
+    // 地理位置
     LOCATION((byte) 5),
     // 信令
     CMD((byte) 6);

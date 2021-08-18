@@ -37,7 +37,7 @@ public class FileMsgBody implements Serializable {
     /**
      * 文件地址
      */
-    private String fileUrl;
+    private String url;
 
     /**
      * 文件大小(kb)
@@ -47,9 +47,9 @@ public class FileMsgBody implements Serializable {
     public FileMsgBody() {
     }
 
-    public FileMsgBody(String fileName, String fileUrl, Long size) {
+    public FileMsgBody(String fileName, String url, Long size) {
         this.fileName = fileName;
-        this.fileUrl = fileUrl;
+        this.url = url;
         this.size = size;
     }
 

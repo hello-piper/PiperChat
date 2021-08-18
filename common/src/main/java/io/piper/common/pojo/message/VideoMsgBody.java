@@ -37,7 +37,7 @@ public class VideoMsgBody implements Serializable {
     /**
      * 视频地址
      */
-    private String videoUrl;
+    private String url;
 
     /**
      * 视频时长(s)
@@ -52,9 +52,9 @@ public class VideoMsgBody implements Serializable {
     public VideoMsgBody() {
     }
 
-    public VideoMsgBody(String videoName, String videoUrl, Integer length, Long size) {
+    public VideoMsgBody(String videoName, String url, Integer length, Long size) {
         this.videoName = videoName;
-        this.videoUrl = videoUrl;
+        this.url = url;
         this.length = length;
         this.size = size;
     }
