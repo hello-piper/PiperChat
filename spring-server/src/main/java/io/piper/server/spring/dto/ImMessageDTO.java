@@ -33,6 +33,9 @@ public class ImMessageDTO implements Serializable {
     @ApiModelProperty("msgType")
     private Byte msgType;
 
+    @ApiModelProperty("conversationId")
+    private String conversationId;
+
     @ApiModelProperty("from")
     private Long from;
 

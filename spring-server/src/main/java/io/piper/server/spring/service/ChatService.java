@@ -111,7 +111,7 @@ public class ChatService {
     }
 
     public List<ImMessageDTO> chatRecord(MsgSearchDTO dto) {
-        return imMessageMapperExt.selectMessage(dto.getLastMsgId(), LoginUserHolder.get().getId(), dto.getTo(), dto.getTotal());
+        return imMessageMapperExt.selectMessage(dto.getLastMsgId(), dto.getConversationId(), dto.getTotal());
     }
 
     public Collection<ActiveContactVO> activeContacts() {
@@ -121,16 +121,14 @@ public class ChatService {
         }
         Map<String, ActiveContactVO> map = new LinkedHashMap<>();
         for (ImMessageDTO dto : imMessages) {
-            Long to = dto.getTo();
-            Byte chatType = dto.getChatType();
-            String key = chatType + "-" + to;
-            ActiveContactVO vo = map.get(key);
+            String conversationId = dto.getConversationId();
+            ActiveContactVO vo = map.get(conversationId);
             if (vo == null) {
                 vo = new ActiveContactVO();
-                vo.setTo(to);
-                vo.setChatType(chatType);
-                fillToInfo(vo);
-                map.put(key, vo);
+                vo.setTo(dto.getTo());
+                vo.setChatType(dto.getChatType());
+                this.fillToInfo(vo);
+                map.put(conversationId, vo);
             }
             vo.addMessageDTO(dto);
         }

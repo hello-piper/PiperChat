@@ -200,17 +200,15 @@ public class Msg implements Serializable {
     }
 
     public String getAndSetConversation() {
-        String conversationId = this.getConversation();
+        String conversationId = getConversation(this.chatType, this.from, this.to);
         this.setConversationId(conversationId);
         return conversationId;
     }
 
-    public String getConversation() {
-        if (!ChatTypeEnum.SINGLE.type.equals(this.getChatType())) {
+    public static String getConversation(Byte chatType, Long from, Long to) {
+        if (!ChatTypeEnum.SINGLE.type.equals(chatType)) {
             return to.toString();
         }
-        Long from = this.getFrom();
-        Long to = this.getTo();
         if (from < to) {
             return from + ":" + to;
         }

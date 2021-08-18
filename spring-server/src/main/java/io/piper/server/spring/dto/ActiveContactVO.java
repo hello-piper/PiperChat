@@ -26,6 +26,9 @@ import java.util.List;
 public class ActiveContactVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("会话id")
+    private String conversationId;
+
     @ApiModelProperty("uid/groupId")
     private Long to;
 

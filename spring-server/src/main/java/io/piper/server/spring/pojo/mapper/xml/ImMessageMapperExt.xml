@@ -6,14 +6,14 @@
         SELECT
         id, chat_type chatType, msg_type msgType, `from`, `to`, body, extra, create_time createTime
         FROM im_message
-        WHERE id &gt; #{lastMsgId}
-        AND ( ( `from` = #{from} AND `to` = #{to} ) OR ( `from` = #{to} AND `to` = #{from} ) )
+        WHERE conversation_id = #{conversationId}
+        AND id &gt; #{lastMsgId}
         LIMIT #{total}
     </select>
 
     <select id="activeContacts" resultType="io.piper.server.spring.dto.ImMessageDTO">
         SELECT
-        id, chat_type chatType, msg_type msgType, `from`, `to`, body, extra, create_time createTime
+        id, chat_type chatType, msg_type msgType, conversation_id, `from`, `to`, body, extra, create_time createTime
         FROM
         im_message
         ORDER BY

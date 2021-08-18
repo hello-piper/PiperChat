@@ -27,8 +27,8 @@ public class MsgSearchDTO implements Serializable {
     @ApiModelProperty("最后一条消息ID")
     private Long lastMsgId = 0L;
 
-    @ApiModelProperty("接收人ID")
-    private Long to;
+    @ApiModelProperty("会话id")
+    private String conversationId;
 
     @ApiModelProperty("需要条数")
     private Integer total = 10;
