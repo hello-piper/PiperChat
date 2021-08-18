@@ -43,6 +43,7 @@ CREATE TABLE `im_message`  (
   `msg_type` tinyint(2) NULL DEFAULT NULL,
   `from` bigint(20) NULL DEFAULT NULL,
   `to` bigint(20) NULL DEFAULT NULL,
+  `conversation_id` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `extra` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `create_time` bigint(20) NULL DEFAULT NULL,
@@ -74,3 +75,6 @@ CREATE TABLE `im_group_user`  (
 
 INSERT INTO `im_user` (`id`, `nickname`, `avatar`, `phone`, `email`, `age`, `gender`, `password`, `salt`, `status`, `create_uid`, `create_time`)
 VALUES (0, 'piper', 'https://profile.csdnimg.cn/6/C/F/1_gy325416', '18900000000', '0@piper.io', '0', '0', '86b9af2197534fce1dc9c5fa0d37e9e7', 'vs3nz', '0', 0, '0');
+
+INSERT INTO `im_user` (`id`, `nickname`, `avatar`, `phone`, `email`, `age`, `gender`, `password`, `salt`, `status`, `create_uid`, `create_time`)
+VALUES (1, 'piper1', 'https://profile.csdnimg.cn/6/C/F/1_gy325416', '18900000000', '1@piper.io', '0', '0', '86b9af2197534fce1dc9c5fa0d37e9e7', 'vs3nz', '0', 0, '0');

@@ -89,6 +89,7 @@ public class ChatService {
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
+        message.setConversationId(msg.getAndSetConversation());
         message.setFrom(loginUser.getId());
         message.setTo(to);
         message.setBody(msg.getBodyStr());

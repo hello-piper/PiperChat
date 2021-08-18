@@ -13,6 +13,8 @@ public class ImMessage implements Serializable {
 
     private Long to;
 
+    private String conversationId;
+
     private String body;
 
     private String extra;
@@ -61,6 +63,14 @@ public class ImMessage implements Serializable {
         this.to = to;
     }
 
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId == null ? null : conversationId.trim();
+    }
+
     public String getBody() {
         return body;
     }
@@ -96,6 +106,7 @@ public class ImMessage implements Serializable {
         sb.append(", msgType=").append(msgType);
         sb.append(", from=").append(from);
         sb.append(", to=").append(to);
+        sb.append(", conversationId=").append(conversationId);
         sb.append(", body=").append(body);
         sb.append(", extra=").append(extra);
         sb.append(", createTime=").append(createTime);

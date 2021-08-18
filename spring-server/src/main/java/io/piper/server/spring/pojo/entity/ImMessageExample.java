@@ -404,6 +404,76 @@ public class ImMessageExample {
             return (Criteria) this;
         }
 
+        public Criteria andConversationIdIsNull() {
+            addCriterion("conversation_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdIsNotNull() {
+            addCriterion("conversation_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdEqualTo(String value) {
+            addCriterion("conversation_id =", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdNotEqualTo(String value) {
+            addCriterion("conversation_id <>", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdGreaterThan(String value) {
+            addCriterion("conversation_id >", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdGreaterThanOrEqualTo(String value) {
+            addCriterion("conversation_id >=", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdLessThan(String value) {
+            addCriterion("conversation_id <", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdLessThanOrEqualTo(String value) {
+            addCriterion("conversation_id <=", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdLike(String value) {
+            addCriterion("conversation_id like", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdNotLike(String value) {
+            addCriterion("conversation_id not like", value, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdIn(List<String> values) {
+            addCriterion("conversation_id in", values, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdNotIn(List<String> values) {
+            addCriterion("conversation_id not in", values, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdBetween(String value1, String value2) {
+            addCriterion("conversation_id between", value1, value2, "conversationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andConversationIdNotBetween(String value1, String value2) {
+            addCriterion("conversation_id not between", value1, value2, "conversationId");
+            return (Criteria) this;
+        }
+
         public Criteria andBodyIsNull() {
             addCriterion("body is null");
             return (Criteria) this;

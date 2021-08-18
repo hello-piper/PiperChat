@@ -7,6 +7,7 @@
     <result column="msg_type" jdbcType="TINYINT" property="msgType" />
     <result column="from" jdbcType="BIGINT" property="from" />
     <result column="to" jdbcType="BIGINT" property="to" />
+    <result column="conversation_id" jdbcType="VARCHAR" property="conversationId" />
     <result column="body" jdbcType="VARCHAR" property="body" />
     <result column="extra" jdbcType="VARCHAR" property="extra" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, chat_type, msg_type, `from`, `to`, body, extra, create_time
+    id, chat_type, msg_type, `from`, `to`, conversation_id, body, extra, create_time
   </sql>
   <select id="selectByExample" parameterType="io.piper.server.spring.pojo.entity.ImMessageExample" resultMap="BaseResultMap">
     select
@@ -105,11 +106,13 @@
   </delete>
   <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImMessage">
     insert into im_message (id, chat_type, msg_type, 
-      `from`, `to`, body, extra, 
-      create_time)
+      `from`, `to`, conversation_id, 
+      body, extra, create_time
+      )
     values (#{id,jdbcType=BIGINT}, #{chatType,jdbcType=TINYINT}, #{msgType,jdbcType=TINYINT}, 
-      #{from,jdbcType=BIGINT}, #{to,jdbcType=BIGINT}, #{body,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=BIGINT})
+      #{from,jdbcType=BIGINT}, #{to,jdbcType=BIGINT}, #{conversationId,jdbcType=VARCHAR}, 
+      #{body,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImMessage">
     insert into im_message
@@ -128,6 +131,9 @@
       </if>
       <if test="to != null">
         `to`,
+      </if>
+      <if test="conversationId != null">
+        conversation_id,
       </if>
       <if test="body != null">
         body,
@@ -154,6 +160,9 @@
       </if>
       <if test="to != null">
         #{to,jdbcType=BIGINT},
+      </if>
+      <if test="conversationId != null">
+        #{conversationId,jdbcType=VARCHAR},
       </if>
       <if test="body != null">
         #{body,jdbcType=VARCHAR},
@@ -190,6 +199,9 @@
       <if test="record.to != null">
         `to` = #{record.to,jdbcType=BIGINT},
       </if>
+      <if test="record.conversationId != null">
+        conversation_id = #{record.conversationId,jdbcType=VARCHAR},
+      </if>
       <if test="record.body != null">
         body = #{record.body,jdbcType=VARCHAR},
       </if>
@@ -211,6 +223,7 @@
       msg_type = #{record.msgType,jdbcType=TINYINT},
       `from` = #{record.from,jdbcType=BIGINT},
       `to` = #{record.to,jdbcType=BIGINT},
+      conversation_id = #{record.conversationId,jdbcType=VARCHAR},
       body = #{record.body,jdbcType=VARCHAR},
       extra = #{record.extra,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT}
@@ -233,6 +246,9 @@
       <if test="to != null">
         `to` = #{to,jdbcType=BIGINT},
       </if>
+      <if test="conversationId != null">
+        conversation_id = #{conversationId,jdbcType=VARCHAR},
+      </if>
       <if test="body != null">
         body = #{body,jdbcType=VARCHAR},
       </if>
@@ -251,6 +267,7 @@
       msg_type = #{msgType,jdbcType=TINYINT},
       `from` = #{from,jdbcType=BIGINT},
       `to` = #{to,jdbcType=BIGINT},
+      conversation_id = #{conversationId,jdbcType=VARCHAR},
       body = #{body,jdbcType=VARCHAR},
       extra = #{extra,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT}

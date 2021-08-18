@@ -81,7 +81,9 @@ public class ChatServlet extends HttpServlet {
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
+        message.setConversationId(msg.getAndSetConversation());
         message.setFrom(from);
+        message.setTo(to);
         message.setBody(msg.getBodyStr());
         message.setCreateTime(now);
         message.setExtra(Objects.isNull(msg.getExtra()) ? "" : JSONUtil.toJsonStr(msg.getExtra()));

@@ -48,6 +48,11 @@ public class Msg implements Serializable {
     private Byte msgType;
 
     /**
+     * 会话id
+     */
+    private String conversationId;
+
+    /**
      * 发送者id
      */
     private Long from;
@@ -192,6 +197,24 @@ public class Msg implements Serializable {
             default:
                 return null;
         }
+    }
+
+    public String getAndSetConversation() {
+        String conversationId = this.getConversation();
+        this.setConversationId(conversationId);
+        return conversationId;
+    }
+
+    public String getConversation() {
+        if (!ChatTypeEnum.SINGLE.type.equals(this.getChatType())) {
+            return to.toString();
+        }
+        Long from = this.getFrom();
+        Long to = this.getTo();
+        if (from < to) {
+            return from + ":" + to;
+        }
+        return to + ":" + from;
     }
 
     @Override
