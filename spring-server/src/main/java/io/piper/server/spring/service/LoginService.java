@@ -22,6 +22,7 @@ import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.util.IdUtil;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
+import io.piper.common.util.VerifyCode;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.LoginDTO;
 import io.piper.server.spring.dto.LoginVO;
@@ -38,7 +39,11 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -62,11 +67,17 @@ public class LoginService {
     private RedisTemplate redisTemplate;
 
     public LoginVO login(HttpServletRequest req, LoginDTO dto) {
+        String code = dto.getVerifyCode();
+        String oldCode = this.getCodeByCookie(req, "verifyCode");
+        if (StringUtil.isAnyEmpty(code, oldCode) || !code.equalsIgnoreCase(oldCode)) {
+            throw IMException.build(IMErrorEnum.INVALID_VERIFY_CODE);
+        }
+
         String email = dto.getEmail();
         String pwd = dto.getPwd();
         String clientType = req.getHeader("clientType");
-        if (StringUtil.isAnyEmpty(dto.getEmail(), dto.getPwd())) {
-            throw IMException.build(IMErrorEnum.USER_NOT_FOUND);
+        if (StringUtil.isAnyEmpty(email, pwd)) {
+            throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
 
         ImUser user;
@@ -127,5 +138,26 @@ public class LoginService {
         } catch (ServletException e) {
             throw IMException.build(IMErrorEnum.SERVER_ERROR);
         }
+    }
+
+    public void verifyCode(HttpServletRequest req, HttpServletResponse resp) {
+        VerifyCode verifyCode = new VerifyCode();
+        BufferedImage image = verifyCode.getImage();
+        resp.addCookie(new Cookie("verifyCode", verifyCode.getText()));
+        try {
+            verifyCode.output(image, resp.getOutputStream());
+        } catch (IOException e) {
+            throw IMException.build(IMErrorEnum.SERVER_ERROR);
+        }
+    }
+
+    private String getCodeByCookie(HttpServletRequest req, String name) {
+        Cookie[] cookies = req.getCookies();
+        for (Cookie cookie : cookies) {
+            if (Objects.equals(name, cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
     }
 }

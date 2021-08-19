@@ -21,17 +21,17 @@ import java.io.OutputStream;
 import java.util.Random;
 
 /**
- * VerifyCodeUtil
+ * VerifyCode
  *
  * @author piper
  */
-public final class VerifyCodeUtil {
-    private int width = 100;
-    private int height = 30;
-    private String[] fontNames = {"宋体", "楷体", "隶书", "微软雅黑"};
-    private Color bgColor = new Color(255, 255, 255);
-    private Random random = new Random();
-    private String codes = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+public final class VerifyCode {
+    private final int width = 100;
+    private final int height = 30;
+    private final String[] fontNames = {"宋体", "楷体", "隶书", "微软雅黑"};
+    private final Color bgColor = new Color(255, 255, 255);
+    private final Random random = new Random();
+    private final String codes = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private String text;
 
     private Color randomColor() {
@@ -95,7 +95,7 @@ public final class VerifyCodeUtil {
         return text;
     }
 
-    public static void output(BufferedImage image, OutputStream out) throws IOException {
+    public void output(BufferedImage image, OutputStream out) throws IOException {
         ImageIO.write(image, "JPEG", out);
     }
 }

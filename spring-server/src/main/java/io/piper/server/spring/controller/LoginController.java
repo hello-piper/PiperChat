@@ -23,22 +23,28 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@Api(tags = "登录接口")
+@Api(tags = "登录相关接口")
 @RestController
-@RequestMapping("/login")
 public class LoginController {
 
     @Resource
     private LoginService loginService;
 
-    @PostMapping
+    @GetMapping("/verify-code")
+    @ApiOperation("获取图片验证码")
+    public void verifyCode(HttpServletRequest req, HttpServletResponse resp) {
+        loginService.verifyCode(req, resp);
+    }
+
+    @PostMapping("/login")
     @ApiOperation("登录/注册")
     public IMResult<LoginVO> login(HttpServletRequest req, @RequestBody LoginDTO dto) {
         return IMResult.ok(loginService.login(req, dto));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/logout")
     @ApiOperation("退出登录")
     public void logout(HttpServletRequest req) {
         loginService.logout(req);

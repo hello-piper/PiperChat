@@ -27,4 +27,7 @@ public class LoginDTO implements Serializable {
 
     @ApiModelProperty("密码")
     private String pwd;
+
+    @ApiModelProperty("图片验证码")
+    private String verifyCode;
 }
