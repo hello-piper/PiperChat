@@ -16,11 +16,14 @@ package io.piper.server.spring.service;
 import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.util.Snowflake;
+import io.piper.common.pojo.message.Msg;
+import io.piper.common.util.LoginUserHolder;
 import io.piper.common.util.StringUtil;
+import io.piper.server.spring.dto.AddFriendDTO;
 import io.piper.server.spring.dto.ImUserFriendDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.ImUserFriendPageDTO;
@@ -35,9 +38,6 @@ import java.util.List;
 
 @Service
 public class ImUserFriendService {
-
-    @Resource
-    private Snowflake snowflake;
 
     @Resource
     private ImUserFriendMapper imUserFriendMapper;
@@ -61,7 +61,7 @@ public class ImUserFriendService {
         }
         ImUserFriend userFriend = new ImUserFriend();
         BeanUtil.copyProperties(dto, userFriend);
-        userFriend.setId(snowflake.nextId());
+        userFriend.setId(Msg.getConversation(ChatTypeEnum.SINGLE.type, dto.getUid(), dto.getFriendId()));
         userFriend.setCreateTime(System.currentTimeMillis());
         imUserFriendMapper.insertSelective(userFriend);
         return true;
@@ -93,5 +93,21 @@ public class ImUserFriendService {
         ImUserFriendDTO dto = new ImUserFriendDTO();
         BeanUtil.copyProperties(userFriend, dto);
         return dto;
+    }
+
+    public Boolean addFriend(AddFriendDTO dto) {
+        UserTokenDTO loginUser = LoginUserHolder.get();
+        if (StringUtil.isAnyEmpty(dto, dto.getFriendId(), loginUser)) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        ImUserFriend friend = new ImUserFriend();
+        friend.setId(Msg.getConversation(ChatTypeEnum.SINGLE.type, loginUser.getId(), dto.getFriendId()));
+        friend.setUid(loginUser.getId());
+        friend.setFriendId(dto.getFriendId());
+        friend.setReqMsg(dto.getReqMsg());
+        friend.setCreateTime(System.currentTimeMillis());
+        friend.setStatus(0);
+        imUserFriendMapper.insertSelective(friend);
+        return true;
     }
 }
