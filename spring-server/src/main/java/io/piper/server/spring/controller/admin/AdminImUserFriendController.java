@@ -53,13 +53,13 @@ public class AdminImUserFriendController {
 
     @DeleteMapping("/delete")
     @ApiOperation("好友管理 删除")
-    public IMResult<Boolean> delete(@RequestHeader("token") String token, @RequestParam Long id) {
+    public IMResult<Boolean> delete(@RequestHeader("token") String token, @RequestParam String id) {
         return IMResult.ok(imUserFriendService.delete(id, LoginUserHolder.get()));
     }
 
     @GetMapping("/detail")
     @ApiOperation("好友管理 详情")
-    public IMResult<ImUserFriendDTO> detail(@RequestHeader("token") String token, @RequestParam Long id) {
+    public IMResult<ImUserFriendDTO> detail(@RequestHeader("token") String token, @RequestParam String id) {
         return IMResult.ok(imUserFriendService.detail(id));
     }
 }

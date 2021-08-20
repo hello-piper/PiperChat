@@ -14,7 +14,7 @@
 package io.piper.common.exception;
 
 /**
- * 异常接口
+ * IMBaseError
  *
  * @author piper
  */

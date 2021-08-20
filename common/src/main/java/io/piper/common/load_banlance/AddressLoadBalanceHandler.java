@@ -18,6 +18,11 @@ import io.piper.common.pojo.config.AddressInfo;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * AddressLoadBalanceHandler
+ *
+ * @author piper
+ */
 public class AddressLoadBalanceHandler implements IAddressLoadBalance {
 
     @Override

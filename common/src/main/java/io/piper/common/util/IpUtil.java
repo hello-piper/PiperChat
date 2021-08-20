@@ -16,7 +16,7 @@ package io.piper.common.util;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import io.piper.common.pojo.config.IpVO;
+import io.piper.common.pojo.config.IpInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
@@ -71,7 +71,7 @@ public final class IpUtil {
     /**
      * 调用太平洋网络IP地址查询Web接口（http://whois.pconline.com.cn/），返回ip、地理位置
      */
-    public static IpVO getIpVo(String ip) {
+    public static IpInfo getIpVo(String ip) {
         //查本机
         String url = "http://whois.pconline.com.cn/ipJson.jsp?json=true";
         //查指定ip
@@ -79,14 +79,14 @@ public final class IpUtil {
             url = "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip;
         }
         String read = HttpUtil.get(url, Charset.forName("GBK"));
-        return JSONUtil.toBean(read, IpVO.class);
+        return JSONUtil.toBean(read, IpInfo.class);
     }
 
     /**
      * 调用IP地址查询接口（https://ip.dianduidian.com），返回ip、地理位置
      */
-    public static IpVO getIpVo() {
+    public static IpInfo getIpVo() {
         String read = HttpUtil.get("https://ip.dianduidian.com", StandardCharsets.UTF_8);
-        return JSONUtil.toBean(read, IpVO.class);
+        return JSONUtil.toBean(read, IpInfo.class);
     }
 }

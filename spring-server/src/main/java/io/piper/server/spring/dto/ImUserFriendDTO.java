@@ -25,7 +25,7 @@ public class ImUserFriendDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("id")
-    private Long id;
+    private String id;
 
     @ApiModelProperty("uid")
     private Long uid;

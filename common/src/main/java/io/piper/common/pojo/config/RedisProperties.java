@@ -22,12 +22,20 @@ import lombok.Data;
  */
 @Data
 public class RedisProperties {
+
     private String host;
+
     private int port;
+
     private String password;
+
     private Integer timeout;
+
     private int maxActive;
+
     private long maxWait;
+
     private int maxIdle;
+
     private int minIdle;
 }

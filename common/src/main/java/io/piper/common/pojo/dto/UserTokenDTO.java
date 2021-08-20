@@ -15,11 +15,13 @@ package io.piper.common.pojo.dto;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
+/**
+ * UserTokenDTO
+ *
+ * @author piper
+ */
 @Data
-public class UserTokenDTO implements Serializable {
-    private static final long serialVersionUID = 1;
+public class UserTokenDTO {
 
     private Long id;
 

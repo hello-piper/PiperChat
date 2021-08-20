@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.piper.server.spring.pojo.mapper.ImUserFriendMapper">
   <resultMap id="BaseResultMap" type="io.piper.server.spring.pojo.entity.ImUserFriend">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="uid" jdbcType="BIGINT" property="uid" />
     <result column="friend_id" jdbcType="BIGINT" property="friendId" />
     <result column="alias" jdbcType="VARCHAR" property="alias" />
@@ -86,15 +86,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from im_user_friend
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from im_user_friend
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="io.piper.server.spring.pojo.entity.ImUserFriendExample">
     delete from im_user_friend
@@ -106,7 +106,7 @@
     insert into im_user_friend (id, `uid`, friend_id, 
       `alias`, `status`, req_msg, 
       create_time)
-    values (#{id,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{friendId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=VARCHAR}, #{uid,jdbcType=BIGINT}, #{friendId,jdbcType=BIGINT}, 
       #{alias,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{reqMsg,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=BIGINT})
   </insert>
@@ -137,7 +137,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="uid != null">
         #{uid,jdbcType=BIGINT},
@@ -169,7 +169,7 @@
     update im_user_friend
     <set>
       <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
+        id = #{record.id,jdbcType=VARCHAR},
       </if>
       <if test="record.uid != null">
         `uid` = #{record.uid,jdbcType=BIGINT},
@@ -196,7 +196,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update im_user_friend
-    set id = #{record.id,jdbcType=BIGINT},
+    set id = #{record.id,jdbcType=VARCHAR},
       `uid` = #{record.uid,jdbcType=BIGINT},
       friend_id = #{record.friendId,jdbcType=BIGINT},
       `alias` = #{record.alias,jdbcType=VARCHAR},
@@ -229,7 +229,7 @@
         create_time = #{createTime,jdbcType=BIGINT},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="io.piper.server.spring.pojo.entity.ImUserFriend">
     update im_user_friend
@@ -239,6 +239,6 @@
       `status` = #{status,jdbcType=INTEGER},
       req_msg = #{reqMsg,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

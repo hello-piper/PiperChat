@@ -16,7 +16,7 @@ package io.piper.common.exception;
 import cn.hutool.json.JSONUtil;
 
 /**
- * rest返回
+ * IMResult
  *
  * @author piper
  */

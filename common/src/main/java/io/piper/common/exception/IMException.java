@@ -14,7 +14,7 @@
 package io.piper.common.exception;
 
 /**
- * 封装异常
+ * IMException
  *
  * @author piper
  */

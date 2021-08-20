@@ -13,7 +13,6 @@
  */
 package io.piper.common.pojo.config;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -21,8 +20,7 @@ import java.util.Objects;
  *
  * @author piper
  */
-public class AddressInfo implements Serializable {
-    private static final long serialVersionUID = 1;
+public class AddressInfo {
 
     private Boolean ssl = false;
 

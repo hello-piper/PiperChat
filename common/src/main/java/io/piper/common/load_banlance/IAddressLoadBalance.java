@@ -15,15 +15,21 @@ package io.piper.common.load_banlance;
 
 import io.piper.common.pojo.config.AddressInfo;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * IAddressLoadBalance
+ *
+ * @author piper
+ */
 public interface IAddressLoadBalance {
 
     /**
      * 地址信息集合
      */
-    ConcurrentHashMap<String, AddressInfo> IM_SERVER_MAP = new ConcurrentHashMap<>();
+    Map<String, AddressInfo> IM_SERVER_MAP = new ConcurrentHashMap<>();
 
     /**
      * 根据权重进行分布

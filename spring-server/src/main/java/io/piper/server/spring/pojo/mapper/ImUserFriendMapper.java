@@ -10,7 +10,7 @@ public interface ImUserFriendMapper {
 
     int deleteByExample(ImUserFriendExample example);
 
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(String id);
 
     int insert(ImUserFriend record);
 
@@ -18,7 +18,7 @@ public interface ImUserFriendMapper {
 
     List<ImUserFriend> selectByExample(ImUserFriendExample example);
 
-    ImUserFriend selectByPrimaryKey(Long id);
+    ImUserFriend selectByPrimaryKey(String id);
 
     int updateByExampleSelective(@Param("record") ImUserFriend record, @Param("example") ImUserFriendExample example);
 

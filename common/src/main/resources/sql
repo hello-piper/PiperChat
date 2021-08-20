@@ -26,7 +26,7 @@ CREATE TABLE `im_user_admin`  (
 
 DROP TABLE IF EXISTS `im_user_friend`;
 CREATE TABLE `im_user_friend`  (
-  `id` bigint(20) NOT NULL,
+  `id` varchar(41) NOT NULL,
   `uid` bigint(20) NOT NULL,
   `friend_id` bigint(20) NOT NULL,
   `alias` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
@@ -43,7 +43,7 @@ CREATE TABLE `im_message`  (
   `msg_type` tinyint(2) NULL DEFAULT NULL,
   `from` bigint(20) NULL DEFAULT NULL,
   `to` bigint(20) NULL DEFAULT NULL,
-  `conversation_id` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `conversation_id` varchar(41) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `extra` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `create_time` bigint(20) NULL DEFAULT NULL,

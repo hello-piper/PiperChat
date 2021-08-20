@@ -14,7 +14,7 @@
 package io.piper.common.exception;
 
 /**
- * 异常枚举
+ * IMErrorEnum
  *
  * @author piper
  */

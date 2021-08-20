@@ -77,7 +77,7 @@ public class ImUserFriendService {
         return true;
     }
 
-    public boolean delete(Long id, UserTokenDTO userTokenDTO) {
+    public boolean delete(String id, UserTokenDTO userTokenDTO) {
         if (StringUtil.isEmpty(id)) {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
@@ -85,7 +85,7 @@ public class ImUserFriendService {
         return true;
     }
 
-    public ImUserFriendDTO detail(Long id) {
+    public ImUserFriendDTO detail(String id) {
         if (StringUtil.isEmpty(id)) {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }

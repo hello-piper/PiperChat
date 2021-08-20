@@ -14,12 +14,9 @@
 package io.piper.common.load_banlance;
 
 /**
- * 权重和连接数对应关系
- * 权重5 online<3W
- * 权重4 3w<online<5w
- * 权重3 5w<online<7w
- * 权重2 7w<online<9w
- * 权重1 online>9w
+ * WeightOnlineConfig
+ *
+ * @author piper
  */
 public class WeightOnlineConfig {
 
