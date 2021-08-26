@@ -50,7 +50,7 @@ public class ChatController {
 
     @PostMapping("sub-room")
     @ApiOperation("订阅直播间")
-    public IMResult<Void> subRoom(@RequestBody Msg msg) {
+    public IMResult<Void> subRoom(@RequestBody Msg msg ) {
         chatService.subRoom(msg);
         return IMResult.ok();
     }
