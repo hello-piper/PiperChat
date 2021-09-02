@@ -13,7 +13,7 @@
 
     <select id="activeContacts" resultType="io.piper.server.spring.dto.ImMessageDTO">
         SELECT
-        id, chat_type chatType, msg_type msgType, conversation_id, `from`, `to`, body, extra, create_time createTime
+        id, chat_type chatType, msg_type msgType, conversation_id conversationId, `from`, `to`, body, extra, create_time createTime
         FROM
         im_message
         ORDER BY

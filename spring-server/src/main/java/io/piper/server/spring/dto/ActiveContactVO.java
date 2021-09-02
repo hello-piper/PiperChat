@@ -30,7 +30,7 @@ public class ActiveContactVO implements Serializable {
     private String conversationId;
 
     @ApiModelProperty("uid/groupId")
-    private Long to;
+    private Long id;
 
     @ApiModelProperty("name")
     private String name;

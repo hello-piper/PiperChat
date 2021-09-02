@@ -153,6 +153,9 @@ public class LoginService {
 
     private String getCodeByCookie(HttpServletRequest req, String name) {
         Cookie[] cookies = req.getCookies();
+        if (null == cookies) {
+            return null;
+        }
         for (Cookie cookie : cookies) {
             if (Objects.equals(name, cookie.getName())) {
                 return cookie.getValue();

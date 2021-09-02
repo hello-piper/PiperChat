@@ -125,8 +125,9 @@ public class ChatService {
             ActiveContactVO vo = map.get(conversationId);
             if (vo == null) {
                 vo = new ActiveContactVO();
-                vo.setTo(dto.getTo());
+                vo.setId(dto.getTo());
                 vo.setChatType(dto.getChatType());
+                vo.setConversationId(conversationId);
                 this.fillToInfo(vo);
                 map.put(conversationId, vo);
             }
@@ -136,16 +137,16 @@ public class ChatService {
     }
 
     private void fillToInfo(ActiveContactVO vo) {
-        Long to = vo.getTo();
+        Long id = vo.getId();
         Byte chatType = vo.getChatType();
         if (ChatTypeEnum.SINGLE.type.equals(chatType)) {
-            ImUser imUser = imUserMapper.selectByPrimaryKey(to);
+            ImUser imUser = imUserMapper.selectByPrimaryKey(id);
             if (!Objects.isNull(imUser)) {
                 vo.setName(imUser.getNickname());
                 vo.setAvatar(imUser.getAvatar());
             }
         } else if (ChatTypeEnum.GROUP.type.equals(chatType)) {
-            ImGroup imGroup = imGroupMapper.selectByPrimaryKey(to);
+            ImGroup imGroup = imGroupMapper.selectByPrimaryKey(id);
             if (!Objects.isNull(imGroup)) {
                 vo.setName(imGroup.getName());
                 vo.setAvatar(imGroup.getAvatar());
