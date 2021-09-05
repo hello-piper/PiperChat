@@ -20,10 +20,10 @@ package io.piper.common.exception;
  */
 public enum IMErrorEnum implements IMBaseError {
     SERVER_ERROR(1000, "服务器错误"),
-    PARAM_ERROR(1001, "参数错误"),
-    USER_NOT_FOUND(1002, "用户找不到"),
-    INVALID_PWD(1003, "密码不正确"),
-    INVALID_TOKEN(1004, "登录失效"),
+    INVALID_TOKEN(1001, "登录失效"),
+    PARAM_ERROR(1002, "参数错误"),
+    USER_NOT_FOUND(1003, "用户找不到"),
+    INVALID_PWD(1004, "密码不正确"),
     INVALID_VERIFY_CODE(1005, "验证码不正确"),
     ;
 
