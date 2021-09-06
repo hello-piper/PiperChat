@@ -62,7 +62,7 @@ public class ImMessageService {
         ImMessage message = new ImMessage();
         BeanUtil.copyProperties(dto, message);
         message.setId(snowflake.nextId());
-        message.setCreateTime(System.currentTimeMillis());
+        message.setServerTime(System.currentTimeMillis());
         imMessageMapper.insertSelective(message);
         return true;
     }

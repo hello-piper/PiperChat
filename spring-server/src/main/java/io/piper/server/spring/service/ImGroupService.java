@@ -19,14 +19,18 @@ import com.github.pagehelper.PageHelper;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.util.LoginUserHolder;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImGroupDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.ImGroupPageDTO;
+import io.piper.server.spring.dto.param.CreateGroupParam;
 import io.piper.server.spring.pojo.entity.ImGroup;
 import io.piper.server.spring.pojo.entity.ImGroupExample;
+import io.piper.server.spring.pojo.entity.ImGroupUser;
 import io.piper.server.spring.pojo.mapper.ImGroupMapper;
+import io.piper.server.spring.pojo.mapper.ImGroupUserMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,6 +45,9 @@ public class ImGroupService {
 
     @Resource
     private ImGroupMapper imGroupMapper;
+
+    @Resource
+    private ImGroupUserMapper imGroupUserMapper;
 
     public PageVO<ImGroupDTO> page(ImGroupPageDTO pageDTO) {
         Page<Object> page = PageHelper.startPage(pageDTO.getPageNum(), pageDTO.getPageSize());
@@ -94,5 +101,31 @@ public class ImGroupService {
         ImGroupDTO dto = new ImGroupDTO();
         BeanUtil.copyProperties(group, dto);
         return dto;
+    }
+
+    public Boolean createGroup(CreateGroupParam param) {
+        if (StringUtil.isAnyEmpty(param, param.getName(), param.getMembers())) {
+            throw new IMException(IMErrorEnum.PARAM_ERROR);
+        }
+        Long curUid = LoginUserHolder.get().getId();
+        long groupId = snowflake.nextId();
+        long now = System.currentTimeMillis();
+        ImGroup group = new ImGroup();
+        group.setId(groupId);
+        group.setName(param.getName());
+        group.setCreateUid(curUid);
+        group.setCreateTime(now);
+        imGroupMapper.insertSelective(group);
+        param.getMembers().add(curUid);
+        for (Long uid : param.getMembers()) {
+            ImGroupUser groupUser = new ImGroupUser();
+            groupUser.setId(snowflake.nextId());
+            groupUser.setGroupId(groupId);
+            groupUser.setUid(uid);
+            groupUser.setCreateUid(curUid);
+            groupUser.setCreateTime(now);
+            imGroupUserMapper.insertSelective(groupUser);
+        }
+        return true;
     }
 }

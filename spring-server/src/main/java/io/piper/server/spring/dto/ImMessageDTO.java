@@ -33,21 +33,42 @@ public class ImMessageDTO implements Serializable {
     @ApiModelProperty("msgType")
     private Byte msgType;
 
-    @ApiModelProperty("conversationId")
-    private String conversationId;
-
     @ApiModelProperty("from")
     private Long from;
 
     @ApiModelProperty("to")
     private Long to;
 
-    @ApiModelProperty("body")
-    private String body;
+    @ApiModelProperty("conversationId")
+    private String conversationId;
+
+    @ApiModelProperty("sendTime")
+    private Long sendTime;
+
+    @ApiModelProperty("serverTime")
+    private Long serverTime;
+
+    @ApiModelProperty("title")
+    private String title;
+
+    @ApiModelProperty("imageMsgBody")
+    private String imageMsgBody;
+
+    @ApiModelProperty("voiceMsgBody")
+    private String voiceMsgBody;
+
+    @ApiModelProperty("videoMsgBody")
+    private String videoMsgBody;
+
+    @ApiModelProperty("fileMsgBody")
+    private String fileMsgBody;
+
+    @ApiModelProperty("locationMsgBody")
+    private String locationMsgBody;
+
+    @ApiModelProperty("cmdMsgBody")
+    private String cmdMsgBody;
 
     @ApiModelProperty("extra")
     private String extra;
-
-    @ApiModelProperty("createTime")
-    private Long createTime;
 }

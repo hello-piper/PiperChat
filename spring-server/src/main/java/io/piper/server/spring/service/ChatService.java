@@ -74,8 +74,7 @@ public class ChatService {
 
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
-        Long to = msg.getTo();
-        if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, to)) {
+        if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, msg.getFrom(), msg.getTo())) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         UserTokenDTO loginUser = LoginUserHolder.get();
@@ -90,11 +89,18 @@ public class ChatService {
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
         message.setConversationId(msg.getAndSetConversation());
-        message.setFrom(loginUser.getId());
-        message.setTo(to);
-        message.setBody(msg.getBodyStr());
-        message.setCreateTime(now);
-        message.setExtra(Objects.isNull(msg.getExtra()) ? "" : JSONUtil.toJsonStr(msg.getExtra()));
+        message.setFrom(msg.getFrom());
+        message.setTo(msg.getTo());
+        message.setSendTime(msg.getSendTime());
+        message.setServerTime(now);
+        message.setTitle(msg.getTitle());
+        message.setImageMsgBody(msg.getImageMsgBody() == null ? null : msg.getImageMsgBody().toString());
+        message.setVoiceMsgBody(msg.getVoiceMsgBody() == null ? null : msg.getVoiceMsgBody().toString());
+        message.setVideoMsgBody(msg.getVideoMsgBody() == null ? null : msg.getVideoMsgBody().toString());
+        message.setFileMsgBody(msg.getFileMsgBody() == null ? null : msg.getFileMsgBody().toString());
+        message.setLocationMsgBody(msg.getLocationMsgBody() == null ? null : msg.getLocationMsgBody().toString());
+        message.setCmdMsgBody(msg.getCmdMsgBody() == null ? null : msg.getCmdMsgBody().toString());
+        message.setExtra(msg.getExtra() == null ? null : JSONUtil.toJsonStr(msg.getExtra()));
         imMessageMapperExt.insert(message);
 
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);

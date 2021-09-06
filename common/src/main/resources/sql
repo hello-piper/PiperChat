@@ -44,9 +44,16 @@ CREATE TABLE `im_message`  (
   `from` bigint(20) NULL DEFAULT NULL,
   `to` bigint(20) NULL DEFAULT NULL,
   `conversation_id` varchar(41) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
-  `body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `send_time` bigint(20) NULL DEFAULT NULL,
+  `server_time` bigint(20) NULL DEFAULT NULL,
+  `title` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `image_msg_body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `voice_msg_body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `video_msg_body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `file_msg_body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `location_msg_body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
+  `cmd_msg_body` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
   `extra` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
-  `create_time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -79,5 +86,5 @@ VALUES (0, 'Piper', 'https://profile.csdnimg.cn/6/C/F/1_gy325416', '18900000000'
 INSERT INTO `im_user` (`id`, `nickname`, `avatar`, `phone`, `email`, `age`, `gender`, `password`, `salt`, `status`, `create_uid`, `create_time`)
 VALUES (1, 'Piper1', 'https://profile.csdnimg.cn/6/C/F/1_gy325416', '18900000000', '1@piper.io', '0', '0', '86b9af2197534fce1dc9c5fa0d37e9e7', 'vs3nz', '0', 0, 0);
 
-INSERT INTO `im_message`(`id`, `chat_type`, `msg_type`, `from`, `to`, `conversation_id`, `body`, `extra`, `create_time`)
-VALUES (0, 0, 0, 0, 1, '0:1', '你好', '', 0);
+INSERT INTO `im_message`(`id`, `chat_type`, `msg_type`, `from`, `to`, `conversation_id`, `title`, `server_time`)
+VALUES (0, 0, 0, 0, 1, '0:1', 'Hello', 1598976000000);

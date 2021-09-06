@@ -18,7 +18,7 @@
         <commentGenerator>
             <!-- 是否取消注释 -->
             <property name="suppressAllComments" value="true"/>
-            <!-- 是否生成注释代时间戳-->
+            <!-- 是否生成注释带时间戳-->
             <property name="suppressDate" value="false"/>
         </commentGenerator>
 

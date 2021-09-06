@@ -44,9 +44,16 @@ CREATE TABLE `im_message`  (
   `from` varchar(20) NULL DEFAULT '',
   `to` varchar(20) NULL DEFAULT '',
   `conversation_id` varchar(41) NULL DEFAULT '',
-  `body` varchar(1024) NULL DEFAULT '',
+  `send_time` bigint(20) NULL DEFAULT NULL,
+  `server_time` bigint(20) NULL DEFAULT NULL,
+  `title` varchar(1024) NULL DEFAULT '',
+  `image_msg_body` varchar(1024) NULL DEFAULT '',
+  `voice_msg_body` varchar(1024) NULL DEFAULT '',
+  `video_msg_body` varchar(1024) NULL DEFAULT '',
+  `file_msg_body` varchar(1024) NULL DEFAULT '',
+  `location_msg_body` varchar(1024) NULL DEFAULT '',
+  `cmd_msg_body` varchar(1024) NULL DEFAULT '',
   `extra` varchar(1024) NULL DEFAULT '',
-  `create_time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 

@@ -4,7 +4,10 @@
 
     <select id="selectMessage" resultType="io.piper.server.spring.dto.ImMessageDTO">
         SELECT
-        id, chat_type chatType, msg_type msgType, `from`, `to`, body, extra, create_time createTime
+        id, chat_type chatType, msg_type msgType, `from`, `to`, conversation_id conversationId, send_time sendTime,
+        server_time serverTime, title, image_msg_body imageMsgBody, voice_msg_body voiceMsgBody,
+        video_msg_body videoMsgBody, file_msg_body fileMsgBody, location_msg_body locationMsgBody,
+        cmd_msg_body cmdMsgBody, extra
         FROM im_message
         WHERE conversation_id = #{conversationId}
         AND id &gt; #{lastMsgId}
@@ -13,11 +16,14 @@
 
     <select id="activeContacts" resultType="io.piper.server.spring.dto.ImMessageDTO">
         SELECT
-        id, chat_type chatType, msg_type msgType, conversation_id conversationId, `from`, `to`, body, extra, create_time createTime
+        id, chat_type chatType, msg_type msgType, `from`, `to`, conversation_id conversationId, send_time sendTime,
+        server_time serverTime, title, image_msg_body imageMsgBody, voice_msg_body voiceMsgBody,
+        video_msg_body videoMsgBody, file_msg_body fileMsgBody, location_msg_body locationMsgBody,
+        cmd_msg_body cmdMsgBody, extra
         FROM
         im_message
         ORDER BY
-        create_time DESC
+        server_time DESC
         LIMIT 100
     </select>
 </mapper>

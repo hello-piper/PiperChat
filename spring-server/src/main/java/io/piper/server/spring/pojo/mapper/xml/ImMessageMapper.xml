@@ -8,9 +8,16 @@
     <result column="from" jdbcType="BIGINT" property="from" />
     <result column="to" jdbcType="BIGINT" property="to" />
     <result column="conversation_id" jdbcType="VARCHAR" property="conversationId" />
-    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="send_time" jdbcType="BIGINT" property="sendTime" />
+    <result column="server_time" jdbcType="BIGINT" property="serverTime" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="image_msg_body" jdbcType="VARCHAR" property="imageMsgBody" />
+    <result column="voice_msg_body" jdbcType="VARCHAR" property="voiceMsgBody" />
+    <result column="video_msg_body" jdbcType="VARCHAR" property="videoMsgBody" />
+    <result column="file_msg_body" jdbcType="VARCHAR" property="fileMsgBody" />
+    <result column="location_msg_body" jdbcType="VARCHAR" property="locationMsgBody" />
+    <result column="cmd_msg_body" jdbcType="VARCHAR" property="cmdMsgBody" />
     <result column="extra" jdbcType="VARCHAR" property="extra" />
-    <result column="create_time" jdbcType="BIGINT" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -71,7 +78,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, chat_type, msg_type, `from`, `to`, conversation_id, body, extra, create_time
+    id, chat_type, msg_type, `from`, `to`, conversation_id, send_time, server_time, title, 
+    image_msg_body, voice_msg_body, video_msg_body, file_msg_body, location_msg_body, 
+    cmd_msg_body, extra
   </sql>
   <select id="selectByExample" parameterType="io.piper.server.spring.pojo.entity.ImMessageExample" resultMap="BaseResultMap">
     select
@@ -107,12 +116,16 @@
   <insert id="insert" parameterType="io.piper.server.spring.pojo.entity.ImMessage">
     insert into im_message (id, chat_type, msg_type, 
       `from`, `to`, conversation_id, 
-      body, extra, create_time
-      )
+      send_time, server_time, title, 
+      image_msg_body, voice_msg_body, video_msg_body, 
+      file_msg_body, location_msg_body, cmd_msg_body, 
+      extra)
     values (#{id,jdbcType=BIGINT}, #{chatType,jdbcType=TINYINT}, #{msgType,jdbcType=TINYINT}, 
       #{from,jdbcType=BIGINT}, #{to,jdbcType=BIGINT}, #{conversationId,jdbcType=VARCHAR}, 
-      #{body,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
-      )
+      #{sendTime,jdbcType=BIGINT}, #{serverTime,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
+      #{imageMsgBody,jdbcType=VARCHAR}, #{voiceMsgBody,jdbcType=VARCHAR}, #{videoMsgBody,jdbcType=VARCHAR}, 
+      #{fileMsgBody,jdbcType=VARCHAR}, #{locationMsgBody,jdbcType=VARCHAR}, #{cmdMsgBody,jdbcType=VARCHAR}, 
+      #{extra,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.piper.server.spring.pojo.entity.ImMessage">
     insert into im_message
@@ -135,14 +148,35 @@
       <if test="conversationId != null">
         conversation_id,
       </if>
-      <if test="body != null">
-        body,
+      <if test="sendTime != null">
+        send_time,
+      </if>
+      <if test="serverTime != null">
+        server_time,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="imageMsgBody != null">
+        image_msg_body,
+      </if>
+      <if test="voiceMsgBody != null">
+        voice_msg_body,
+      </if>
+      <if test="videoMsgBody != null">
+        video_msg_body,
+      </if>
+      <if test="fileMsgBody != null">
+        file_msg_body,
+      </if>
+      <if test="locationMsgBody != null">
+        location_msg_body,
+      </if>
+      <if test="cmdMsgBody != null">
+        cmd_msg_body,
       </if>
       <if test="extra != null">
         extra,
-      </if>
-      <if test="createTime != null">
-        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -164,14 +198,35 @@
       <if test="conversationId != null">
         #{conversationId,jdbcType=VARCHAR},
       </if>
-      <if test="body != null">
-        #{body,jdbcType=VARCHAR},
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=BIGINT},
+      </if>
+      <if test="serverTime != null">
+        #{serverTime,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="imageMsgBody != null">
+        #{imageMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="voiceMsgBody != null">
+        #{voiceMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="videoMsgBody != null">
+        #{videoMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="fileMsgBody != null">
+        #{fileMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="locationMsgBody != null">
+        #{locationMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdMsgBody != null">
+        #{cmdMsgBody,jdbcType=VARCHAR},
       </if>
       <if test="extra != null">
         #{extra,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -202,14 +257,35 @@
       <if test="record.conversationId != null">
         conversation_id = #{record.conversationId,jdbcType=VARCHAR},
       </if>
-      <if test="record.body != null">
-        body = #{record.body,jdbcType=VARCHAR},
+      <if test="record.sendTime != null">
+        send_time = #{record.sendTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.serverTime != null">
+        server_time = #{record.serverTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imageMsgBody != null">
+        image_msg_body = #{record.imageMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="record.voiceMsgBody != null">
+        voice_msg_body = #{record.voiceMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="record.videoMsgBody != null">
+        video_msg_body = #{record.videoMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileMsgBody != null">
+        file_msg_body = #{record.fileMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="record.locationMsgBody != null">
+        location_msg_body = #{record.locationMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cmdMsgBody != null">
+        cmd_msg_body = #{record.cmdMsgBody,jdbcType=VARCHAR},
       </if>
       <if test="record.extra != null">
         extra = #{record.extra,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -224,9 +300,16 @@
       `from` = #{record.from,jdbcType=BIGINT},
       `to` = #{record.to,jdbcType=BIGINT},
       conversation_id = #{record.conversationId,jdbcType=VARCHAR},
-      body = #{record.body,jdbcType=VARCHAR},
-      extra = #{record.extra,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=BIGINT}
+      send_time = #{record.sendTime,jdbcType=BIGINT},
+      server_time = #{record.serverTime,jdbcType=BIGINT},
+      title = #{record.title,jdbcType=VARCHAR},
+      image_msg_body = #{record.imageMsgBody,jdbcType=VARCHAR},
+      voice_msg_body = #{record.voiceMsgBody,jdbcType=VARCHAR},
+      video_msg_body = #{record.videoMsgBody,jdbcType=VARCHAR},
+      file_msg_body = #{record.fileMsgBody,jdbcType=VARCHAR},
+      location_msg_body = #{record.locationMsgBody,jdbcType=VARCHAR},
+      cmd_msg_body = #{record.cmdMsgBody,jdbcType=VARCHAR},
+      extra = #{record.extra,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -249,14 +332,35 @@
       <if test="conversationId != null">
         conversation_id = #{conversationId,jdbcType=VARCHAR},
       </if>
-      <if test="body != null">
-        body = #{body,jdbcType=VARCHAR},
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=BIGINT},
+      </if>
+      <if test="serverTime != null">
+        server_time = #{serverTime,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="imageMsgBody != null">
+        image_msg_body = #{imageMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="voiceMsgBody != null">
+        voice_msg_body = #{voiceMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="videoMsgBody != null">
+        video_msg_body = #{videoMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="fileMsgBody != null">
+        file_msg_body = #{fileMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="locationMsgBody != null">
+        location_msg_body = #{locationMsgBody,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdMsgBody != null">
+        cmd_msg_body = #{cmdMsgBody,jdbcType=VARCHAR},
       </if>
       <if test="extra != null">
         extra = #{extra,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -268,9 +372,16 @@
       `from` = #{from,jdbcType=BIGINT},
       `to` = #{to,jdbcType=BIGINT},
       conversation_id = #{conversationId,jdbcType=VARCHAR},
-      body = #{body,jdbcType=VARCHAR},
-      extra = #{extra,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=BIGINT}
+      send_time = #{sendTime,jdbcType=BIGINT},
+      server_time = #{serverTime,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      image_msg_body = #{imageMsgBody,jdbcType=VARCHAR},
+      voice_msg_body = #{voiceMsgBody,jdbcType=VARCHAR},
+      video_msg_body = #{videoMsgBody,jdbcType=VARCHAR},
+      file_msg_body = #{fileMsgBody,jdbcType=VARCHAR},
+      location_msg_body = #{locationMsgBody,jdbcType=VARCHAR},
+      cmd_msg_body = #{cmdMsgBody,jdbcType=VARCHAR},
+      extra = #{extra,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

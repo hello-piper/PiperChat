@@ -17,6 +17,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.json.JSONUtil;
 import io.piper.common.constant.Constants;
+import io.piper.common.db.RedisDS;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import io.piper.common.exception.IMErrorEnum;
@@ -26,7 +27,6 @@ import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.entity.ImMessage;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.IdUtil;
-import io.piper.common.db.RedisDS;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.MessageDAO;
@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * ChatServlet
@@ -67,26 +66,31 @@ public class ChatServlet extends HttpServlet {
         Msg msg = JSONUtil.toBean(chatMsg, Msg.class);
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
-        Long from = msg.getFrom();
-        Long to = msg.getTo();
-        if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, from, to)) {
+        if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, msg.getFrom(), msg.getTo())) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
-        msg.setId(msgId);
         msg.setServerTime(now);
+        msg.setId(msgId);
 
         ImMessage message = new ImMessage();
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
         message.setConversationId(msg.getAndSetConversation());
-        message.setFrom(from);
-        message.setTo(to);
-        message.setBody(msg.getBodyStr());
-        message.setCreateTime(now);
-        message.setExtra(Objects.isNull(msg.getExtra()) ? "" : JSONUtil.toJsonStr(msg.getExtra()));
+        message.setFrom(msg.getFrom());
+        message.setTo(msg.getTo());
+        message.setSendTime(msg.getSendTime());
+        message.setServerTime(now);
+        message.setTitle(msg.getTitle());
+        message.setImageMsgBody(msg.getImageMsgBody() == null ? null : msg.getImageMsgBody().toString());
+        message.setVoiceMsgBody(msg.getVoiceMsgBody() == null ? null : msg.getVoiceMsgBody().toString());
+        message.setVideoMsgBody(msg.getVideoMsgBody() == null ? null : msg.getVideoMsgBody().toString());
+        message.setFileMsgBody(msg.getFileMsgBody() == null ? null : msg.getFileMsgBody().toString());
+        message.setLocationMsgBody(msg.getLocationMsgBody() == null ? null : msg.getLocationMsgBody().toString());
+        message.setCmdMsgBody(msg.getCmdMsgBody() == null ? null : msg.getCmdMsgBody().toString());
+        message.setExtra(msg.getExtra() == null ? null : JSONUtil.toJsonStr(msg.getExtra()));
         messageDAO.insert(message);
 
         Jedis jedis = RedisDS.getJedis();

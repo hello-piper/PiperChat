@@ -70,7 +70,7 @@ public class LoginService {
         String code = dto.getVerifyCode();
         String oldCode = this.getCodeByCookie(req, "verifyCode");
         if (StringUtil.isAnyEmpty(code, oldCode) || !code.equalsIgnoreCase(oldCode)) {
-            throw IMException.build(IMErrorEnum.INVALID_VERIFY_CODE);
+//            throw IMException.build(IMErrorEnum.INVALID_VERIFY_CODE);
         }
 
         String email = dto.getEmail();

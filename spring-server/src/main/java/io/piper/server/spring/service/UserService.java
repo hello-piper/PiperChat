@@ -16,6 +16,7 @@ package io.piper.server.spring.service;
 import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.LoginUserHolder;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;
@@ -51,16 +52,18 @@ public class UserService {
     }
 
     public PageVO<ImUserDTO> friends(FriendSearchDTO searchDTO) {
+        Long curUid = LoginUserHolder.get().getId();
         Page<Object> page = PageHelper.startPage(searchDTO.getPageNum(), searchDTO.getPageSize());
         ImUserExample example = new ImUserExample();
         if (StringUtil.isNotEmpty(searchDTO.getNickname())) {
             example.createCriteria().andNicknameLike(searchDTO.getNickname());
         }
-        List<ImUser> imGroups = imUserMapper.selectByExample(example);
+        List<ImUser> imUsers = imUserMapper.selectByExample(example);
         List<ImUserDTO> list = new ArrayList<>();
-        for (ImUser user : imGroups) {
+        for (ImUser user : imUsers) {
             ImUserDTO dto = new ImUserDTO();
             BeanUtil.copyProperties(user, dto);
+            dto.setConversationId(Msg.getConversation((byte) 0, curUid, user.getId()));
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
