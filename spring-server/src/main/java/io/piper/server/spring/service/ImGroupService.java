@@ -24,6 +24,7 @@ import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImGroupDTO;
 import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.GroupSearchDTO;
 import io.piper.server.spring.dto.page_dto.ImGroupPageDTO;
 import io.piper.server.spring.dto.param.CreateGroupParam;
 import io.piper.server.spring.pojo.entity.ImGroup;
@@ -127,5 +128,18 @@ public class ImGroupService {
             imGroupUserMapper.insertSelective(groupUser);
         }
         return true;
+    }
+
+    public PageVO<ImGroupDTO> myGroups(GroupSearchDTO searchDTO) {
+        Page<Object> page = PageHelper.startPage(searchDTO.getPageNum(), searchDTO.getPageSize());
+        ImGroupExample example = new ImGroupExample();
+        List<ImGroup> imGroups = imGroupMapper.selectByExample(example);
+        List<ImGroupDTO> list = new ArrayList<>();
+        for (ImGroup group : imGroups) {
+            ImGroupDTO dto = new ImGroupDTO();
+            BeanUtil.copyProperties(group, dto);
+            list.add(dto);
+        }
+        return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
     }
 }

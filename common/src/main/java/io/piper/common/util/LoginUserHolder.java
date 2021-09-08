@@ -31,6 +31,14 @@ public final class LoginUserHolder {
         return holder.get();
     }
 
+    public static Long getUid() {
+        UserTokenDTO tokenDTO = holder.get();
+        if (null == tokenDTO) {
+            return null;
+        }
+        return tokenDTO.getId();
+    }
+
     public static void remove() {
         holder.remove();
     }

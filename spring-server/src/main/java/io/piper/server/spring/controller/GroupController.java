@@ -14,6 +14,9 @@
 package io.piper.server.spring.controller;
 
 import io.piper.common.exception.IMResult;
+import io.piper.server.spring.dto.ImGroupDTO;
+import io.piper.server.spring.dto.PageVO;
+import io.piper.server.spring.dto.page_dto.GroupSearchDTO;
 import io.piper.server.spring.dto.param.CreateGroupParam;
 import io.piper.server.spring.service.ImGroupService;
 import io.swagger.annotations.Api;
@@ -37,5 +40,11 @@ public class GroupController {
     @ApiOperation("创建群组")
     public IMResult<Boolean> createGroup(@RequestBody CreateGroupParam param) {
         return IMResult.ok(groupService.createGroup(param));
+    }
+
+    @PostMapping("my-groups")
+    @ApiOperation("查询我的群组")
+    public IMResult<PageVO<ImGroupDTO>> myGroups(@RequestBody GroupSearchDTO searchDTO) {
+        return IMResult.ok(groupService.myGroups(searchDTO));
     }
 }
