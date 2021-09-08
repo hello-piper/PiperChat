@@ -125,38 +125,38 @@ public class ChatService {
         if (CollectionUtils.isEmpty(imMessages)) {
             return Collections.emptyList();
         }
+        Collections.reverse(imMessages);
         Map<String, ActiveContactVO> map = new LinkedHashMap<>();
         for (ImMessageDTO dto : imMessages) {
             String conversationId = dto.getConversationId();
             ActiveContactVO vo = map.get(conversationId);
             if (vo == null) {
                 vo = new ActiveContactVO();
-                vo.setId(dto.getTo());
                 vo.setChatType(dto.getChatType());
                 vo.setConversationId(conversationId);
-                this.fillToInfo(vo);
                 map.put(conversationId, vo);
+                if (ChatTypeEnum.SINGLE.type.equals(dto.getChatType())) {
+                    Long id = dto.getFrom();
+                    if (Objects.equals(LoginUserHolder.getUid(), dto.getFrom())) {
+                        id = dto.getTo();
+                    }
+                    vo.setId(id);
+                    ImUser imUser = imUserMapper.selectByPrimaryKey(id);
+                    if (!Objects.isNull(imUser)) {
+                        vo.setName(imUser.getNickname());
+                        vo.setAvatar(imUser.getAvatar());
+                    }
+                } else if (ChatTypeEnum.GROUP.type.equals(dto.getChatType())) {
+                    vo.setId(dto.getTo());
+                    ImGroup imGroup = imGroupMapper.selectByPrimaryKey(vo.getId());
+                    if (!Objects.isNull(imGroup)) {
+                        vo.setName(imGroup.getName());
+                        vo.setAvatar(imGroup.getAvatar());
+                    }
+                }
             }
             vo.addMessageDTO(dto);
         }
         return map.values();
-    }
-
-    private void fillToInfo(ActiveContactVO vo) {
-        Long id = vo.getId();
-        Byte chatType = vo.getChatType();
-        if (ChatTypeEnum.SINGLE.type.equals(chatType)) {
-            ImUser imUser = imUserMapper.selectByPrimaryKey(id);
-            if (!Objects.isNull(imUser)) {
-                vo.setName(imUser.getNickname());
-                vo.setAvatar(imUser.getAvatar());
-            }
-        } else if (ChatTypeEnum.GROUP.type.equals(chatType)) {
-            ImGroup imGroup = imGroupMapper.selectByPrimaryKey(id);
-            if (!Objects.isNull(imGroup)) {
-                vo.setName(imGroup.getName());
-                vo.setAvatar(imGroup.getAvatar());
-            }
-        }
     }
 }

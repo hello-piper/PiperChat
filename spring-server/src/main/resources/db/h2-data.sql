@@ -8,7 +8,7 @@ VALUES (0, 0, 0, 0, 1, '0:1', 'Hello', 1598976000000);
 INSERT INTO `im_message`(`id`, `chat_type`, `msg_type`, `from`, `to`, `conversation_id`, `title`, `server_time`)
 VALUES (1, 1, 0, 0, 0, '0', '群里有人吗', 1598976000000);
 INSERT INTO `im_message`(`id`, `chat_type`, `msg_type`, `from`, `to`, `conversation_id`, `title`, `server_time`)
-VALUES (2, 1, 0, 1, 0, '0', '我在', 1598976000000);
+VALUES (2, 1, 0, 1, 0, '0', '我在', 1598976001000);
 
 INSERT INTO `im_group`(`id`, `name`, `avatar`, `placard`, `status`, `create_uid`, `create_time`)
 VALUES (0, '群聊', 'https://profile.csdnimg.cn/6/C/F/1_gy325416', '这是群', 0, 0, 1598976000000);
