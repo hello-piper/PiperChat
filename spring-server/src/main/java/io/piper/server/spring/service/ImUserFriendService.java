@@ -97,13 +97,13 @@ public class ImUserFriendService {
 
     public Boolean addFriend(AddFriendDTO dto) {
         Long uid = LoginUserHolder.getUid();
-        if (StringUtil.isAnyEmpty(dto, dto.getFriendId())) {
+        if (StringUtil.isAnyEmpty(dto, dto.getUid())) {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUserFriend friend = new ImUserFriend();
-        friend.setId(Msg.getConversation(ChatTypeEnum.SINGLE.type, uid, dto.getFriendId()));
+        friend.setId(Msg.getConversation(ChatTypeEnum.SINGLE.type, uid, dto.getUid()));
         friend.setUid(uid);
-        friend.setFriendId(dto.getFriendId());
+        friend.setFriendId(dto.getUid());
         friend.setReqMsg(dto.getReqMsg());
         friend.setCreateTime(System.currentTimeMillis());
         friend.setStatus(0);

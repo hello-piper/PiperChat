@@ -14,9 +14,11 @@
 package io.piper.server.spring.controller;
 
 import io.piper.common.exception.IMResult;
+import io.piper.server.spring.dto.AddFriendDTO;
 import io.piper.server.spring.dto.ImUserDTO;
 import io.piper.server.spring.dto.PageVO;
 import io.piper.server.spring.dto.page_dto.FriendSearchDTO;
+import io.piper.server.spring.service.ImUserFriendService;
 import io.piper.server.spring.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +35,9 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private ImUserFriendService userFriendService;
+
     @GetMapping("user-info")
     @ApiOperation("用户信息")
     public IMResult<ImUserDTO> userInfo(@ApiParam("uid") @RequestParam(required = false) Long uid) {
@@ -43,5 +48,11 @@ public class UserController {
     @ApiOperation("好友列表")
     public IMResult<PageVO<ImUserDTO>> friends(@RequestBody FriendSearchDTO searchDTO) {
         return IMResult.ok(userService.friends(searchDTO));
+    }
+
+    @PostMapping("add-friend")
+    @ApiOperation("添加好友")
+    public IMResult<Boolean> addFriend(@RequestBody AddFriendDTO dto) {
+        return IMResult.ok(userFriendService.addFriend(dto));
     }
 }

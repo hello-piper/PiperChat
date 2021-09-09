@@ -24,8 +24,8 @@ import java.io.Serializable;
 public class AddFriendDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("friendId")
-    private Long friendId;
+    @ApiModelProperty("uid")
+    private Long uid;
 
     @ApiModelProperty("reqMsg")
     private String reqMsg;
