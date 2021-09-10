@@ -61,10 +61,12 @@ public class UserService {
         List<ImUser> imUsers = imUserMapper.selectByExample(example);
         List<ImUserDTO> list = new ArrayList<>();
         for (ImUser user : imUsers) {
-            ImUserDTO dto = new ImUserDTO();
-            BeanUtil.copyProperties(user, dto);
-            dto.setConversationId(Msg.getConversation((byte) 0, curUid, user.getId()));
-            list.add(dto);
+            if (!curUid.equals(user.getId())) {
+                ImUserDTO dto = new ImUserDTO();
+                BeanUtil.copyProperties(user, dto);
+                dto.setConversationId(Msg.getConversation((byte) 0, curUid, user.getId()));
+                list.add(dto);
+            }
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
     }
