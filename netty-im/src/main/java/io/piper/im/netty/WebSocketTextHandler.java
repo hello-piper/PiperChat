@@ -35,8 +35,8 @@ import java.util.Objects;
  * @author piper
  */
 @ChannelHandler.Sharable
-public class WebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
-    protected static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketFrameHandler.class);
+public class WebSocketTextHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+    protected static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketTextHandler.class);
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
