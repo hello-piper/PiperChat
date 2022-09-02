@@ -16,26 +16,20 @@ package io.piper.common.pojo.config;
 import lombok.Data;
 
 /**
- * 获取本机IP地址 返回结果
- * 请求地址 https://ip.dianduidian.com/
+ * IpInfo
  *
  * @author piper
  */
 @Data
 public class IpInfo {
 
-    // IP地址
     private String ip;
 
-    // 运营商
-    private String isp;
+    private String pro;
 
-    // 国家
-    private String country;
-
-    // 城市
     private String city;
 
-    // 区
     private String region;
+
+    private String addr;
 }

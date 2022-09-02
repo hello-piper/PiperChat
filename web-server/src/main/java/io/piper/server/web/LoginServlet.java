@@ -16,15 +16,15 @@ package io.piper.server.web;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.piper.common.constant.Constants;
+import io.piper.common.db.RedisDS;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.entity.ImUser;
 import io.piper.common.util.IdUtil;
-import io.piper.common.db.RedisDS;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.UserDAO;
 import io.piper.server.web.repository.impl.UserDAOJdbc;
@@ -54,8 +54,8 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String body = IoUtil.read(req.getReader());
         log.info("login body:{}", body);
-        JSONObject reqBody = JSONUtil.parseObj(body);
-        this.login(req, reqBody.getStr("uid"), reqBody.getStr("pwd"), req.getHeader("clientType"));
+        JSONObject reqBody = JSON.parseObject(body);
+        this.login(req, reqBody.getString("uid"), reqBody.getString("pwd"), req.getHeader("clientType"));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class LoginServlet extends HttpServlet {
 
         String token = IdUtil.fastSimpleUUID();
         Jedis jedis = RedisDS.getJedis();
-        jedis.set(Constants.USER_TOKEN + token, JSONUtil.toJsonStr(tokenDTO), SetParams.setParams().ex(43200L));
+        jedis.set(Constants.USER_TOKEN + token, JSON.toJSONString(tokenDTO), SetParams.setParams().ex(43200L));
         jedis.close();
 
         HttpSession session = req.getSession();

@@ -13,7 +13,7 @@
  */
 package io.piper.im.undertow;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.WebSocketUser;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
@@ -47,7 +47,7 @@ public class WebSocketEndpoint {
             session.close();
             throw IMException.build(IMErrorEnum.INVALID_TOKEN);
         }
-        UserTokenDTO tokenDTO = JSONUtil.toBean(tokenDTOStr, UserTokenDTO.class);
+        UserTokenDTO tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
         Long uid = tokenDTO.getId();
         WebSocketUser.put(uid, session);
         session.setMaxIdleTimeout(30000);

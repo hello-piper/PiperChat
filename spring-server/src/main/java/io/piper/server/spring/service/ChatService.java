@@ -13,7 +13,7 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
@@ -52,7 +52,7 @@ public class ChatService {
     private Snowflake snowflake;
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private ImMessageMapperExt imMessageMapperExt;
@@ -100,7 +100,7 @@ public class ChatService {
         message.setFileMsgBody(msg.getFileMsgBody() == null ? null : msg.getFileMsgBody().toString());
         message.setLocationMsgBody(msg.getLocationMsgBody() == null ? null : msg.getLocationMsgBody().toString());
         message.setCmdMsgBody(msg.getCmdMsgBody() == null ? null : msg.getCmdMsgBody().toString());
-        message.setExtra(msg.getExtra() == null ? null : JSONUtil.toJsonStr(msg.getExtra()));
+        message.setExtra(msg.getExtra() == null ? null : JSON.toJSONString(msg.getExtra()));
         imMessageMapperExt.insert(message);
 
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);

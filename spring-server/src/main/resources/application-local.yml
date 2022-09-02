@@ -9,11 +9,11 @@ spring:
     data: classpath:db/h2-data.sql
     url: jdbc:h2:mem:im
     username: root
-    password: 123456
+    password: "123456"
   redis:
     host: localhost
     port: 6379
-    password: "123456"
+    password:
     timeout: 3000
     pool:
       max-active: 8

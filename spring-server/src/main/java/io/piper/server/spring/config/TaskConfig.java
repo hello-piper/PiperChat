@@ -13,7 +13,7 @@
  */
 package io.piper.server.spring.config;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.server.spring.service.ChatService;
@@ -41,7 +41,7 @@ public class TaskConfig {
             Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
             if (imServerMap != null && !imServerMap.isEmpty()) {
                 for (String info : imServerMap.values()) {
-                    ChatService.ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(info, AddressInfo.class));
+                    ChatService.ADDRESS_HANDLER.flushAddress(JSON.parseObject(info, AddressInfo.class));
                 }
             }
             jedis.subscribe(new JedisPubSub() {
@@ -49,9 +49,9 @@ public class TaskConfig {
                 public void onMessage(String channel, String message) {
                     log.debug("onMessage >>> {} {}", channel, message);
                     if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
-                        ChatService.ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
+                        ChatService.ADDRESS_HANDLER.flushAddress(JSON.parseObject(message, AddressInfo.class));
                     } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {
-                        ChatService.ADDRESS_HANDLER.removeAddress(JSONUtil.toBean(message, AddressInfo.class));
+                        ChatService.ADDRESS_HANDLER.removeAddress(JSON.parseObject(message, AddressInfo.class));
                     }
                 }
             }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);

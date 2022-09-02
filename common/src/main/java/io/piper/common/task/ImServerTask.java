@@ -13,13 +13,13 @@
  */
 package io.piper.common.task;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.WebSocketUser;
 import io.piper.common.constant.Constants;
+import io.piper.common.db.RedisDS;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.util.IpUtil;
-import io.piper.common.db.RedisDS;
 import io.piper.common.util.ThreadUtil;
 import io.piper.common.util.YamlUtil;
 import org.apache.logging.log4j.LogManager;
@@ -58,22 +58,19 @@ public class ImServerTask {
             e.printStackTrace();
         }
         // 定时续约
-        ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
-                String info = JSONUtil.toJsonStr(ADDRESS_INFO);
-                Jedis jedis = RedisDS.getJedis();
-                jedis.publish(Constants.CHANNEL_IM_RENEW, info);
-                jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
-                jedis.close();
-                log.debug("广播当前网关机 负载信息 >>> {}", info);
-            }
+        ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
+            ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
+            String info = JSON.toJSONString(ADDRESS_INFO);
+            Jedis jedis = RedisDS.getJedis();
+            jedis.publish(Constants.CHANNEL_IM_RENEW, info);
+            jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
+            jedis.close();
+            log.debug("广播当前网关机 负载信息 >>> {}", info);
         }, 10, 15, TimeUnit.SECONDS);
 
         // 关机回调
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            String info = JSONUtil.toJsonStr(ADDRESS_INFO);
+            String info = JSON.toJSONString(ADDRESS_INFO);
             Jedis jedis = RedisDS.getJedis();
             jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
             jedis.hdel(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort());

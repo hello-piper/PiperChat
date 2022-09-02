@@ -13,7 +13,7 @@
  */
 package io.piper.common.exception;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 
 /**
  * IMResult
@@ -80,6 +80,6 @@ public class IMResult<T> {
 
     @Override
     public String toString() {
-        return JSONUtil.toJsonStr(this);
+        return JSON.toJSONString(this);
     }
 }

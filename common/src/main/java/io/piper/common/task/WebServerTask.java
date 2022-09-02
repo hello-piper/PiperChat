@@ -13,12 +13,12 @@
  */
 package io.piper.common.task;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
+import io.piper.common.db.RedisDS;
 import io.piper.common.load_banlance.AddressLoadBalanceHandler;
 import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.config.AddressInfo;
-import io.piper.common.db.RedisDS;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
@@ -42,7 +42,7 @@ public class WebServerTask {
             Map<String, String> serverMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
             if (serverMap != null && !serverMap.isEmpty()) {
                 for (String info : serverMap.values()) {
-                    ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(info, AddressInfo.class));
+                    ADDRESS_HANDLER.flushAddress(JSON.parseObject(info, AddressInfo.class));
                 }
             }
             jedis.subscribe(new JedisPubSub() {
@@ -50,9 +50,9 @@ public class WebServerTask {
                 public void onMessage(String channel, String message) {
                     log.debug("onMessage >>> {} {}", channel, message);
                     if (Constants.CHANNEL_IM_RENEW.equals(channel)) {
-                        ADDRESS_HANDLER.flushAddress(JSONUtil.toBean(message, AddressInfo.class));
+                        ADDRESS_HANDLER.flushAddress(JSON.parseObject(message, AddressInfo.class));
                     } else if (Constants.CHANNEL_IM_SHUTDOWN.equals(channel)) {
-                        ADDRESS_HANDLER.removeAddress(JSONUtil.toBean(message, AddressInfo.class));
+                        ADDRESS_HANDLER.removeAddress(JSON.parseObject(message, AddressInfo.class));
                     }
                 }
             }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);

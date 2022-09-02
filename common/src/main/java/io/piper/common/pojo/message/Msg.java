@@ -13,7 +13,7 @@
  */
 package io.piper.common.pojo.message;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import lombok.Data;
@@ -183,17 +183,17 @@ public class Msg implements Serializable {
             case TEXT:
                 return this.title;
             case IMAGE:
-                return JSONUtil.toJsonStr(this.imageMsgBody);
+                return JSON.toJSONString(this.imageMsgBody);
             case VOICE:
-                return JSONUtil.toJsonStr(this.voiceMsgBody);
+                return JSON.toJSONString(this.voiceMsgBody);
             case VIDEO:
-                return JSONUtil.toJsonStr(this.videoMsgBody);
+                return JSON.toJSONString(this.videoMsgBody);
             case FILE:
-                return JSONUtil.toJsonStr(this.fileMsgBody);
+                return JSON.toJSONString(this.fileMsgBody);
             case LOCATION:
-                return JSONUtil.toJsonStr(this.locationMsgBody);
+                return JSON.toJSONString(this.locationMsgBody);
             case CMD:
-                return JSONUtil.toJsonStr(this.cmdMsgBody);
+                return JSON.toJSONString(this.cmdMsgBody);
             default:
                 return null;
         }
@@ -217,6 +217,6 @@ public class Msg implements Serializable {
 
     @Override
     public String toString() {
-        return JSONUtil.toJsonStr(this);
+        return JSON.toJSONString(this);
     }
 }

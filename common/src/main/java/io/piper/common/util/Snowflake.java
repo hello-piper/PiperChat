@@ -1,9 +1,7 @@
 package io.piper.common.util;
 
-import cn.hutool.core.date.SystemClock;
-import cn.hutool.core.util.StrUtil;
-
 import java.io.Serializable;
+import java.time.Clock;
 import java.util.Date;
 
 /**
@@ -72,7 +70,7 @@ public final class Snowflake implements Serializable {
      *
      * @param workerId         终端ID
      * @param dataCenterId     数据中心ID
-     * @param isUseSystemClock 是否使用{@link SystemClock} 获取当前时间戳
+     * @param isUseSystemClock 是否使用{@link Clock} 获取当前时间戳
      */
     public Snowflake(long workerId, long dataCenterId, boolean isUseSystemClock) {
         this(null, workerId, dataCenterId, isUseSystemClock);
@@ -82,7 +80,7 @@ public final class Snowflake implements Serializable {
      * @param epochDate        初始化时间起点（null表示默认起始日期）,后期修改会导致id重复,如果要修改连workerId dataCenterId，慎用
      * @param workerId         工作机器节点id
      * @param dataCenterId     数据中心id
-     * @param isUseSystemClock 是否使用{@link SystemClock} 获取当前时间戳
+     * @param isUseSystemClock 是否使用{@link Clock} 获取当前时间戳
      * @since 5.1.3
      */
     public Snowflake(Date epochDate, long workerId, long dataCenterId, boolean isUseSystemClock) {
@@ -93,10 +91,10 @@ public final class Snowflake implements Serializable {
             this.twepoch = 1288834974657L;
         }
         if (workerId > maxWorkerId || workerId < 0) {
-            throw new IllegalArgumentException(StrUtil.format("worker Id can't be greater than {} or less than 0", maxWorkerId));
+            throw new IllegalArgumentException(String.format("worker Id can't be greater than %s or less than 0", maxWorkerId));
         }
         if (dataCenterId > maxDataCenterId || dataCenterId < 0) {
-            throw new IllegalArgumentException(StrUtil.format("datacenter Id can't be greater than {} or less than 0", maxDataCenterId));
+            throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %s or less than 0", maxDataCenterId));
         }
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
@@ -150,7 +148,7 @@ public final class Snowflake implements Serializable {
                 timestamp = lastTimestamp;
             } else {
                 // 如果服务器时间有问题(时钟后退) 报错。
-                throw new IllegalStateException(StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
+                throw new IllegalStateException(String.format("Clock moved backwards. Refusing to generate id for %sms", lastTimestamp - timestamp));
             }
         }
 
@@ -186,7 +184,7 @@ public final class Snowflake implements Serializable {
         if (timestamp < lastTimestamp) {
             // 如果发现新的时间戳比上次记录的时间戳数值小，说明操作系统时间发生了倒退，报错
             throw new IllegalStateException(
-                    StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
+                    String.format("Clock moved backwards. Refusing to generate id for %sms", lastTimestamp - timestamp));
         }
         return timestamp;
     }
@@ -197,7 +195,7 @@ public final class Snowflake implements Serializable {
      * @return 时间戳
      */
     private long genTime() {
-        return this.useSystemClock ? SystemClock.now() : System.currentTimeMillis();
+        return this.useSystemClock ? Clock.systemDefaultZone().millis() : System.currentTimeMillis();
     }
     // ------------------------------------------------------------------------------------------------------------------------------------ Private method end
 }

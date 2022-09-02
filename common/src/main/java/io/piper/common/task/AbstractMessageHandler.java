@@ -13,7 +13,7 @@
  */
 package io.piper.common.task;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
 import io.piper.common.pojo.message.Msg;
@@ -35,7 +35,7 @@ public abstract class AbstractMessageHandler {
             @Override
             public void onMessage(String channel, String message) {
                 log.debug("onMessage >>> {} {}", channel, message);
-                handler(JSONUtil.toBean(message, Msg.class));
+                handler(JSON.parseObject(message, Msg.class));
             }
         }, Constants.CHANNEL_IM_MESSAGE), "message-handler-thread").start();
     }

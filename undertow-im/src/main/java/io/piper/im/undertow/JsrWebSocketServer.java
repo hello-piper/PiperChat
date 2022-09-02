@@ -52,6 +52,7 @@ public class JsrWebSocketServer {
         manager.deploy();
         root.addPrefixPath(builder.getContextPath(), manager.start());
         Undertow server = Undertow.builder().addHttpListener(config.getPort(), "0.0.0.0").setHandler(root).build();
+
         ImServerTask.start(MessageHandler.class.getName());
         server.start();
     }

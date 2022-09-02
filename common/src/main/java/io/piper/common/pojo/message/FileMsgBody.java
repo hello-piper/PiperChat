@@ -13,7 +13,7 @@
  */
 package io.piper.common.pojo.message;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import org.msgpack.annotation.Message;
 
@@ -55,6 +55,6 @@ public class FileMsgBody implements Serializable {
 
     @Override
     public String toString() {
-        return JSONUtil.toJsonStr(this);
+        return JSON.toJSONString(this);
     }
 }

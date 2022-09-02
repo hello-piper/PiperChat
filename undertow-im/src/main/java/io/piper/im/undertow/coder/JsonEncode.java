@@ -13,7 +13,7 @@
  */
 package io.piper.im.undertow.coder;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.pojo.message.Msg;
 
 import javax.websocket.EncodeException;
@@ -30,7 +30,7 @@ public class JsonEncode implements Encoder.Text<Msg> {
 
     @Override
     public String encode(Msg msg) throws EncodeException {
-        return JSONUtil.toJsonStr(msg);
+        return JSON.toJSONString(msg);
     }
 
     @Override

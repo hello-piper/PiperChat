@@ -13,7 +13,7 @@
  */
 package io.piper.im.undertow.coder;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.pojo.message.Msg;
 
 import javax.websocket.DecodeException;
@@ -30,7 +30,7 @@ public class JsonDecode implements Decoder.Text<Msg> {
 
     @Override
     public Msg decode(String s) throws DecodeException {
-        return JSONUtil.toBean(s, Msg.class);
+        return JSON.parseObject(s, Msg.class);
     }
 
     @Override

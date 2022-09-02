@@ -13,7 +13,7 @@
  */
 package io.piper.im.netty;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -51,7 +51,7 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
             if (StringUtil.isEmpty(tokenDTOStr)) {
                 throw IMException.build(IMErrorEnum.INVALID_TOKEN);
             }
-            UserTokenDTO tokenDTO = JSONUtil.toBean(tokenDTOStr, UserTokenDTO.class);
+            UserTokenDTO tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
             Long uid = tokenDTO.getId();
             WebSocketUser.put(uid, ctx.channel());
             ctx.channel().attr(AttributeKey.valueOf(Constants.USER_ATTRIBUTE_KEY)).set(tokenDTO);

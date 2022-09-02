@@ -13,9 +13,8 @@
  */
 package io.piper.server.web;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
 import io.piper.common.enums.ChatTypeEnum;
@@ -27,6 +26,7 @@ import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.entity.ImMessage;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.IdUtil;
+import io.piper.common.util.IoUtil;
 import io.piper.common.util.Snowflake;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.MessageDAO;
@@ -53,7 +53,7 @@ public class ChatServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String data = JSONUtil.toJsonStr(addressHandler.getAddressByWeight());
+        String data = JSON.toJSONString(addressHandler.getAddressByWeight());
         IoUtil.writeUtf8(resp.getOutputStream(), true, data);
     }
 
@@ -63,7 +63,7 @@ public class ChatServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String chatMsg = IoUtil.read(req.getReader());
-        Msg msg = JSONUtil.toBean(chatMsg, Msg.class);
+        Msg msg = JSON.parseObject(chatMsg, Msg.class);
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
         MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
         if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, msg.getFrom(), msg.getTo())) {
@@ -90,7 +90,7 @@ public class ChatServlet extends HttpServlet {
         message.setFileMsgBody(msg.getFileMsgBody() == null ? null : msg.getFileMsgBody().toString());
         message.setLocationMsgBody(msg.getLocationMsgBody() == null ? null : msg.getLocationMsgBody().toString());
         message.setCmdMsgBody(msg.getCmdMsgBody() == null ? null : msg.getCmdMsgBody().toString());
-        message.setExtra(msg.getExtra() == null ? null : JSONUtil.toJsonStr(msg.getExtra()));
+        message.setExtra(msg.getExtra() == null ? null : JSON.toJSONString(msg.getExtra()));
         messageDAO.insert(message);
 
         Jedis jedis = RedisDS.getJedis();

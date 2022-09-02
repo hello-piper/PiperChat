@@ -13,14 +13,12 @@
  */
 package io.piper.common.util;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.piper.common.pojo.config.IpInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  * IpUtil
@@ -75,18 +73,17 @@ public final class IpUtil {
         //查本机
         String url = "http://whois.pconline.com.cn/ipJson.jsp?json=true";
         //查指定ip
-        if (StrUtil.isNotEmpty(ip)) {
+        if (StringUtil.isNotEmpty(ip)) {
             url = "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip;
         }
         String read = HttpUtil.get(url, Charset.forName("GBK"));
-        return JSONUtil.toBean(read, IpInfo.class);
+        return JSON.parseObject(read, IpInfo.class);
     }
 
     /**
      * 调用IP地址查询接口（https://ip.dianduidian.com），返回ip、地理位置
      */
     public static IpInfo getIpVo() {
-        String read = HttpUtil.get("https://ip.dianduidian.com", StandardCharsets.UTF_8);
-        return JSONUtil.toBean(read, IpInfo.class);
+        return getIpVo(null);
     }
 }

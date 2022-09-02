@@ -46,6 +46,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -64,7 +65,7 @@ public class LoginService {
     private Snowflake snowflake;
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     public LoginVO login(HttpServletRequest req, LoginDTO dto) {
         String code = dto.getVerifyCode();
@@ -89,7 +90,7 @@ public class LoginService {
             user = new ImUser();
             user.setId(snowflake.nextId());
             user.setEmail(email);
-            user.setNickname("萌爆的小鹬" + RandomUtil.randomNumbers(3));
+            user.setNickname("萌爆的小鹬" + ThreadLocalRandom.current().nextInt(3));
             user.setAvatar("https://profile.csdnimg.cn/6/C/F/1_gy325416");
             user.setSalt(RandomUtil.randomString(5));
             user.setPassword(DigestUtil.md5Hex(user.getSalt() + pwd));

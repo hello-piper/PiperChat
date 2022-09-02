@@ -13,7 +13,7 @@
  */
 package io.piper.im.netty;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -52,7 +52,7 @@ public class WebSocketTextHandler extends SimpleChannelInboundHandler<TextWebSoc
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
         if (frame != null) {
-            MessageHandler.INSTANCE.handler(JSONUtil.toBean(frame.text(), Msg.class), ctx.channel());
+            MessageHandler.INSTANCE.handler(JSON.parseObject(frame.text(), Msg.class), ctx.channel());
         } else {
             throw new UnsupportedOperationException("frame is null");
         }

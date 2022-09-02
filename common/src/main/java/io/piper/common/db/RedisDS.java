@@ -14,6 +14,7 @@
 package io.piper.common.db;
 
 import io.piper.common.pojo.config.RedisProperties;
+import io.piper.common.util.StringUtil;
 import io.piper.common.util.YamlUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -34,7 +35,11 @@ public class RedisDS {
         jedisPoolConfig.setMinIdle(config.getMinIdle());
         jedisPoolConfig.setMaxTotal(config.getMaxActive());
         jedisPoolConfig.setMaxWaitMillis(config.getMaxWait());
-        JEDIS_POOL = new JedisPool(jedisPoolConfig, config.getHost(), config.getPort(), config.getTimeout(), config.getPassword());
+        if (StringUtil.isEmpty(config.getPassword())) {
+            JEDIS_POOL = new JedisPool(config.getHost(), config.getPort());
+        } else {
+            JEDIS_POOL = new JedisPool(jedisPoolConfig, config.getHost(), config.getPort(), config.getTimeout(), config.getPassword());
+        }
     }
 
     public static Jedis getJedis() {
