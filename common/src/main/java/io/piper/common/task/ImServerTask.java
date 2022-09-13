@@ -57,7 +57,7 @@ public class ImServerTask {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        // 定时续约
+
         ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
             ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
             String info = JSON.toJSONString(ADDRESS_INFO);
@@ -68,7 +68,6 @@ public class ImServerTask {
             log.debug("广播当前网关机 负载信息 >>> {}", info);
         }, 10, 15, TimeUnit.SECONDS);
 
-        // 关机回调
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String info = JSON.toJSONString(ADDRESS_INFO);
             Jedis jedis = RedisDS.getJedis();

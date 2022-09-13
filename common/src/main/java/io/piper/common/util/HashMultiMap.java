@@ -13,7 +13,10 @@
  */
 package io.piper.common.util;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -67,7 +70,12 @@ public final class HashMultiMap<K, V> {
     }
 
     public boolean put(K key, V value) {
-        map.computeIfAbsent(key, v -> new HashSet<>(expectedValuesPerKey)).add(value);
+        this.map.compute(key, (k, vs) -> {
+            if (vs == null)
+                vs = ConcurrentHashMap.newKeySet(4);
+            vs.add(value);
+            return vs;
+        });
         valueSize.getAndIncrement();
         return true;
     }
@@ -86,23 +94,12 @@ public final class HashMultiMap<K, V> {
     }
 
     public Set<V> removeKey(K key) {
-        Set<V> vs = map.get(key);
-        if (null != vs) {
-            map.remove(key);
+        Set<V> vs = map.remove(key);
+        if (vs != null && vs.size() > 0) {
             valueSize.getAndAdd(-vs.size());
             return vs;
         }
         return null;
-    }
-
-    public boolean removeValue(V value) {
-        for (Set<V> set : map.values()) {
-            if (set.remove(value)) {
-                valueSize.decrementAndGet();
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean containsKey(K key) {

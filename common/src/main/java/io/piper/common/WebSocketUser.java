@@ -15,6 +15,7 @@ package io.piper.common;
 
 import io.piper.common.util.HashMultiMap;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -25,10 +26,12 @@ import java.util.Set;
 public class WebSocketUser {
     private static final HashMultiMap<Long, Object> CHANNEL_MAP = HashMultiMap.createCont(100000);
     private static final HashMultiMap<Long, Object> CHANNEL_ROOM_MAP = HashMultiMap.createCont(100000);
+    private static final HashMultiMap<Object, Long> SESSION_LINK = HashMultiMap.createCont(100000);
 
     // single
 
     public static void put(Long uid, Object channel) {
+        SESSION_LINK.put(channel, uid);
         CHANNEL_MAP.put(uid, channel);
     }
 
@@ -47,15 +50,12 @@ public class WebSocketUser {
     // chatRoom
 
     public static void putRoomChannel(Long roomId, Object channel) {
+        SESSION_LINK.put(channel, roomId);
         CHANNEL_ROOM_MAP.put(roomId, channel);
     }
 
     public static <T> Set<T> getRoomChannels(Long roomId) {
         return (Set<T>) CHANNEL_ROOM_MAP.get(roomId);
-    }
-
-    public static void removeRoomChannel(Object channel) {
-        CHANNEL_ROOM_MAP.removeValue(channel);
     }
 
     public static void removeRoomChannel(Long roomId, Object channel) {
@@ -73,4 +73,20 @@ public class WebSocketUser {
         }
         return 0;
     }
+
+    public static boolean removeChannel(Object channel) {
+        if (channel != null) {
+            Set<Long> keys = SESSION_LINK.get(channel);
+            if (keys == null) {
+                keys = new HashSet<>();
+            }
+            keys.forEach(key -> {
+                CHANNEL_MAP.remove(key, channel);
+                CHANNEL_ROOM_MAP.remove(key, channel);
+            });
+            return true;
+        }
+        return false;
+    }
+
 }
