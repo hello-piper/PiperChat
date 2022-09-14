@@ -69,6 +69,11 @@ public final class YamlUtil {
                 if (map.containsKey(name)) {
                     Object writeValue = map.get(name);
                     Class<?> propertyType = descriptor.getPropertyType();
+                    Method setMethod = descriptor.getWriteMethod();
+                    if (String.class.isAssignableFrom(propertyType)) {
+                        setMethod.invoke(bean, String.valueOf(writeValue));
+                        continue;
+                    }
                     if (Number.class.isAssignableFrom(propertyType)) {
                         if (!propertyType.getName().equals(writeValue.getClass().getName())) {
                             Method valueOfMethod = getMethod(propertyType, "valueOf", String.class);
@@ -78,8 +83,7 @@ public final class YamlUtil {
                             }
                         }
                     }
-                    Method writeMethod = descriptor.getWriteMethod();
-                    writeMethod.invoke(bean, writeValue);
+                    setMethod.invoke(bean, writeValue);
                 }
             }
         } catch (IllegalAccessException | IntrospectionException | InvocationTargetException e) {
