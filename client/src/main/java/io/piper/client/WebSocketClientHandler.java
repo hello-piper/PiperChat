@@ -47,7 +47,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.info("WebSocket Client disconnected!");
+        log.error("断开 WebSocket Client disconnected!");
+        MultipleWebSocketClient.num.decrementAndGet();
     }
 
     @Override
@@ -91,5 +92,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             handshakeFuture.setFailure(cause);
         }
         ctx.close();
+        log.error("断开 WebSocket Client exceptionCaught!");
+        MultipleWebSocketClient.num.decrementAndGet();
     }
 }

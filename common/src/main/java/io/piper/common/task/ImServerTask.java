@@ -22,8 +22,8 @@ import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.util.IpUtil;
 import io.piper.common.util.ThreadUtil;
 import io.piper.common.util.YamlUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 import java.util.concurrent.TimeUnit;
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * @author piper
  */
 public class ImServerTask {
-    private static final Logger log = LogManager.getLogger(ImServerTask.class);
+    private static final Logger log = LoggerFactory.getLogger(ImServerTask.class);
     private static final AddressInfo ADDRESS_INFO;
 
     static {

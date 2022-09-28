@@ -115,7 +115,7 @@ public class LoginService {
         tokenDTO.setAvatar(user.getAvatar());
         tokenDTO.setEmail(user.getEmail());
         tokenDTO.setPhone(user.getPhone());
-        tokenDTO.setClientType(clientType);
+        tokenDTO.setClientName(clientType);
         tokenDTO.setIsAdmin(false);
         ImUserAdmin imUserAdmin = imUserAdminMapper.selectByPrimaryKey(user.getId());
         if (!Objects.isNull(imUserAdmin)) {

@@ -24,10 +24,10 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpWebSocketClient {
 
     public static void main(String[] args) {
-        int socketNum = 1000;
+        int socketNum = 10;
 
-        String webSocketUrl = "ws://127.0.0.1:8080/echo";
-        OkHttpClient client = new OkHttpClient.Builder().pingInterval(20, TimeUnit.SECONDS).build();
+        String webSocketUrl = "ws://127.0.0.1:8080/websocket";
+        OkHttpClient client = new OkHttpClient.Builder().pingInterval(30, TimeUnit.SECONDS).build();
         Request request = new Request.Builder().url(webSocketUrl).build();
 
         List<WebSocket> list = new ArrayList<>(socketNum);
@@ -37,9 +37,9 @@ public class OkHttpWebSocketClient {
 
         ThreadUtil.SCHEDULE_POOL.scheduleAtFixedRate(() -> {
             for (WebSocket socket : list) {
-                socket.send("PING");
+                socket.send("ping");
             }
-        }, 10000, 25000, TimeUnit.SECONDS);
+        }, 1, 30, TimeUnit.SECONDS);
     }
 
     static class Listener extends WebSocketListener {

@@ -16,8 +16,8 @@ package io.piper.common.db;
 import io.piper.common.pojo.config.DbProperties;
 import io.piper.common.util.StringUtil;
 import io.piper.common.util.YamlUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
@@ -27,7 +27,7 @@ import java.sql.*;
  * @author piper
  */
 public class DbUtil {
-    private static final Logger log = LogManager.getLogger(DbUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(DbUtil.class);
     private static final ThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new ThreadLocal<>();
     private static DbProperties config;
 

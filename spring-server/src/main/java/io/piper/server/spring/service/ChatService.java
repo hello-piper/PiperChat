@@ -146,7 +146,7 @@ public class ChatService {
                         vo.setName(imUser.getNickname());
                         vo.setAvatar(imUser.getAvatar());
                     }
-                } else if (ChatTypeEnum.GROUP.type.equals(dto.getChatType())) {
+                } else if (ChatTypeEnum.CHATROOM.type.equals(dto.getChatType())) {
                     vo.setId(dto.getTo());
                     ImGroup imGroup = imGroupMapper.selectByPrimaryKey(vo.getId());
                     if (!Objects.isNull(imGroup)) {

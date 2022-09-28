@@ -27,13 +27,17 @@ public class UserTokenDTO {
 
     private String nickname;
 
+    private String deviceNo;
+
     private String avatar;
 
     private String email;
 
     private String phone;
 
-    private String clientType;
+    private String clientName;
 
     private Boolean isAdmin;
+
+    private long timestamp;
 }

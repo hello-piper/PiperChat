@@ -15,8 +15,8 @@ package io.piper.server.spring.config;
 
 import io.piper.common.exception.IMException;
 import io.piper.common.exception.IMResult;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Order(200)
 @ControllerAdvice
 public class ErrorHandler {
-    private static final Logger log = LogManager.getLogger(ErrorHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ErrorHandler.class);
 
     @ResponseBody
     @ExceptionHandler(IMException.class)

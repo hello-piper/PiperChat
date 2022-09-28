@@ -13,21 +13,18 @@
  */
 package io.piper.im.netty;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.util.Attribute;
-import io.netty.util.AttributeKey;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import io.piper.common.WebSocketUser;
-import io.piper.common.constant.Constants;
-import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.pojo.message.Msg;
+import io.piper.common.pojo.req.RequestMsg;
+import io.piper.common.util.StringUtil;
 
-import java.util.Objects;
+import java.util.Map;
 
 /**
  * WebSocketFrameHandler
@@ -40,20 +37,51 @@ public class WebSocketTextHandler extends SimpleChannelInboundHandler<TextWebSoc
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        Attribute<UserTokenDTO> attr = ctx.channel().attr(AttributeKey.valueOf(Constants.USER_ATTRIBUTE_KEY));
-        if (!Objects.isNull(attr)) {
-            Long uid = attr.get().getId();
-            WebSocketUser.removeChannel(ctx.channel());
-            log.debug("用户: {} 下线", uid);
+        String userKey = UserSessionHolder.getUserKey(ctx.channel());
+        UserSessionHolder.removeSession(ctx.channel());
+        if (userKey != null) {
+            log.info("用户下线 {} {}", userKey, UserSessionHolder.onlineNum());
         }
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
-        if (frame != null) {
-            MessageHandler.INSTANCE.handler(JSON.parseObject(frame.text(), Msg.class), ctx.channel());
-        } else {
-            throw new UnsupportedOperationException("frame is null");
+        String msg = frame.text();
+        Channel session = ctx.channel();
+        String userKey = UserSessionHolder.getUserKey(session);
+        log.info("receiveMsg {} {}", msg, userKey);
+        if (StringUtil.isEmpty(msg)) {
+            UserSessionHolder.close(session);
+            return;
+        }
+        if ("ping".equals(msg)) {
+            session.writeAndFlush("pong");
+            return;
+        }
+        try {
+            RequestMsg requestMsg = JSONObject.parseObject(msg, RequestMsg.class);
+            if (requestMsg.getType() == null || requestMsg.getData() == null || requestMsg.getData().isEmpty()) {
+                UserSessionHolder.close(session);
+                return;
+            }
+            RequestMsg.RequestTypeEnum requestTypeEnum = RequestMsg.RequestTypeEnum.valueOf(requestMsg.getType());
+            if (requestTypeEnum == null) {
+                UserSessionHolder.close(session);
+                return;
+            }
+            if (RequestMsg.RequestTypeEnum.ENTER_ROOM == requestTypeEnum) {
+                // 进入直播间
+                Map<String, Object> data = requestMsg.getData();
+                String roomId = String.valueOf(data.get("roomId"));
+                UserSessionHolder.putRoomSession(roomId, session);
+            } else if (RequestMsg.RequestTypeEnum.EXIT_ROOM == requestTypeEnum) {
+                // 退出直播间
+                Map<String, Object> data = requestMsg.getData();
+                String roomId = String.valueOf(data.get("roomId"));
+                UserSessionHolder.removeRoomSession(roomId, session);
+            }
+        } catch (Exception e) {
+            log.error("receiveMsg {} {}", msg, userKey, e);
         }
     }
 

@@ -13,10 +13,7 @@
  */
 package io.piper.common.util;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,47 +23,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author piper
  */
 public final class HashMultiMap<K, V> {
-    private final Map<K, Set<V>> map;
-    private final int expectedValuesPerKey;
-    private static final int DEFAULT_VALUES_PER_KEY = 2;
-    private final AtomicInteger valueSize = new AtomicInteger(0);
+    private final ConcurrentHashMap<K, Set<V>> map;
+    private final AtomicInteger size = new AtomicInteger(0);
 
-    public static <K, V> HashMultiMap<K, V> create() {
-        return new HashMultiMap<>();
+    public HashMultiMap() {
+        map = new ConcurrentHashMap<>(100000);
     }
 
-    public static <K, V> HashMultiMap<K, V> create(int expectedKeys) {
-        return new HashMultiMap<>(expectedKeys, DEFAULT_VALUES_PER_KEY);
-    }
-
-    public static <K, V> HashMultiMap<K, V> create(int expectedKeys, int expectedValuesPerKey) {
-        return new HashMultiMap<>(expectedKeys, expectedValuesPerKey);
-    }
-
-    public static <K, V> HashMultiMap<K, V> createCont(int expectedKey) {
-        return new HashMultiMap<>(expectedKey, DEFAULT_VALUES_PER_KEY, true);
-    }
-
-    public static <K, V> HashMultiMap<K, V> createCont(int expectedKeys, int expectedValuesPerKey) {
-        return new HashMultiMap<>(expectedKeys, expectedValuesPerKey, true);
-    }
-
-    private HashMultiMap() {
-        this(12, DEFAULT_VALUES_PER_KEY);
-    }
-
-    private HashMultiMap(int expectedKeys, int expectedValuesPerKey) {
-        this.expectedValuesPerKey = expectedValuesPerKey;
-        this.map = new HashMap<>(expectedKeys);
-    }
-
-    private HashMultiMap(int expectedKeys, int expectedValuesPerKey, boolean concurrent) {
-        this.expectedValuesPerKey = expectedValuesPerKey;
-        if (concurrent) {
-            map = new ConcurrentHashMap<>(expectedKeys);
-        } else {
-            map = new HashMap<>(expectedKeys);
-        }
+    public HashMultiMap(int expectedKeys) {
+        map = new ConcurrentHashMap<>(expectedKeys);
     }
 
     public boolean put(K key, V value) {
@@ -76,7 +41,7 @@ public final class HashMultiMap<K, V> {
             vs.add(value);
             return vs;
         });
-        valueSize.getAndIncrement();
+        size.getAndIncrement();
         return true;
     }
 
@@ -88,35 +53,36 @@ public final class HashMultiMap<K, V> {
         Set<V> set = map.get(key);
         boolean isRemove = set != null && set.remove(value);
         if (isRemove) {
-            valueSize.decrementAndGet();
+            size.decrementAndGet();
         }
         return isRemove;
     }
 
     public Set<V> removeKey(K key) {
-        Set<V> vs = map.remove(key);
-        if (vs != null && vs.size() > 0) {
-            valueSize.getAndAdd(-vs.size());
+        Set<V> vs = map.get(key);
+        if (null != vs) {
+            map.remove(key);
+            size.getAndAdd(-vs.size());
             return vs;
         }
         return null;
     }
 
-    public boolean containsKey(K key) {
-        return this.map.containsKey(key);
-    }
-
-    public boolean containsValue(V value) {
-        Iterator<Set<V>> iterator = map.values().iterator();
+    public boolean removeValue(V value) {
         for (Set<V> set : map.values()) {
-            if (set.contains(value)) {
+            if (set.remove(value)) {
+                size.decrementAndGet();
                 return true;
             }
         }
         return false;
     }
 
-    public boolean containsEntry(K key, V value) {
+    public boolean containsKey(K key) {
+        return this.map.containsKey(key);
+    }
+
+    public boolean contains(K key, V value) {
         Set<V> collection = map.get(key);
         return collection != null && collection.contains(value);
     }
@@ -126,6 +92,10 @@ public final class HashMultiMap<K, V> {
     }
 
     public int valueSize() {
-        return this.valueSize.get();
+        return this.size.get();
+    }
+
+    public Collection<Set<V>> values() {
+        return map.values();
     }
 }

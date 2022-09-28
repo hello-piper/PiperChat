@@ -40,7 +40,7 @@
     </appenders>
 
     <loggers>
-        <root level="debug">
+        <root level="info">
             <AppenderRef ref="stdout"/>
             <AppenderRef ref="logfile"/>
             <AppenderRef ref="error-logfile"/>

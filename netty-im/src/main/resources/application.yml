@@ -3,3 +3,7 @@ server:
   port: 8080
   wsPath: /websocket
   profile: ${profile}
+
+im:
+  systemUser: system
+  systemRoom: 0

@@ -24,9 +24,9 @@ import java.util.Set;
  * @author piper
  */
 public class WebSocketUser {
-    private static final HashMultiMap<Long, Object> CHANNEL_MAP = HashMultiMap.createCont(100000);
-    private static final HashMultiMap<Long, Object> CHANNEL_ROOM_MAP = HashMultiMap.createCont(100000);
-    private static final HashMultiMap<Object, Long> SESSION_LINK = HashMultiMap.createCont(100000);
+    private static final HashMultiMap<Long, Object> CHANNEL_MAP = new HashMultiMap<>(10000);
+    private static final HashMultiMap<Long, Object> CHANNEL_ROOM_MAP = new HashMultiMap<>(10000);
+    private static final HashMultiMap<Object, Long> SESSION_LINK = new HashMultiMap<>(10000);
 
     // single
 

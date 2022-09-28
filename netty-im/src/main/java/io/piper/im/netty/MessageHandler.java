@@ -24,8 +24,8 @@ import io.piper.common.pojo.message.Msg;
 import io.piper.common.task.AbstractMessageHandler;
 import io.piper.common.util.StringUtil;
 import io.piper.common.util.ThreadUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -35,7 +35,7 @@ import java.util.Set;
  * @author piper
  */
 public class MessageHandler extends AbstractMessageHandler {
-    private static final Logger log = LogManager.getLogger(MessageHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(MessageHandler.class);
     public static final MessageHandler INSTANCE = new MessageHandler();
 
     @Override
@@ -52,8 +52,6 @@ public class MessageHandler extends AbstractMessageHandler {
                 this.singleHandler(msg, currentChannel);
             } else if (ChatTypeEnum.CHATROOM.type.equals(msg.getChatType())) {
                 this.chatRoomHandler(msg, currentChannel);
-            } else if (ChatTypeEnum.GROUP.type.equals(msg.getChatType())) {
-                this.groupHandler(msg, currentChannel);
             } else {
                 throw new UnsupportedOperationException("type not found");
             }
@@ -66,9 +64,6 @@ public class MessageHandler extends AbstractMessageHandler {
             TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
             channels.forEach(ch -> ch.writeAndFlush(frame));
         }
-        if (MsgTypeEnum.CMD.type.equals(msg.getMsgType())) {
-            this.cmdHandler(msg, currentChannel);
-        }
     }
 
     private void chatRoomHandler(Msg msg, Channel currentChannel) {
@@ -77,39 +72,6 @@ public class MessageHandler extends AbstractMessageHandler {
             TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
             channels.forEach(ch -> ch.writeAndFlush(frame));
         }
-        if (MsgTypeEnum.CMD.type.equals(msg.getMsgType())) {
-            this.cmdHandler(msg, currentChannel);
-        }
     }
 
-    private void groupHandler(Msg msg, Channel currentChannel) {
-        if (MsgTypeEnum.CMD.type.equals(msg.getMsgType())) {
-            this.cmdHandler(msg, currentChannel);
-        }
-        // todo
-    }
-
-    private void cmdHandler(Msg msg, Channel currentChannel) {
-        CmdMsgBody cmdMsgBody = msg.getCmdMsgBody();
-        if (null == cmdMsgBody || null == cmdMsgBody.getType()) {
-            return;
-        }
-        if (CmdTypeEnum.SUB_ROOM.type.equals(cmdMsgBody.getType())) {
-            if (null != cmdMsgBody.getParams()) {
-                String roomId = cmdMsgBody.getParams().get("roomId");
-                if (StringUtil.isEmpty(roomId)) {
-                    return;
-                }
-                Long lRoomId = Long.valueOf(roomId);
-                if (null != currentChannel) {
-                    WebSocketUser.putRoomChannel(lRoomId, currentChannel);
-                    return;
-                }
-                Set<Channel> channels = WebSocketUser.get(msg.getFrom());
-                if (null != channels) {
-                    channels.forEach(ch -> WebSocketUser.putRoomChannel(lRoomId, ch));
-                }
-            }
-        }
-    }
 }

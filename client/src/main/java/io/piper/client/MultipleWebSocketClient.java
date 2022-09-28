@@ -31,6 +31,8 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import io.piper.common.pojo.message.Msg;
@@ -38,11 +40,14 @@ import io.piper.common.pojo.message.Msg;
 import java.net.URI;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultipleWebSocketClient {
-    static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
-    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket");
-    static final EventLoopGroup group = new NioEventLoopGroup(300);
+    static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(6);
+    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080");
+    static final EventLoopGroup group = new NioEventLoopGroup(4);
+    public static final AtomicInteger num = new AtomicInteger();
+    private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
 
     static Msg msg = new Msg();
 
@@ -53,17 +58,34 @@ public class MultipleWebSocketClient {
     }
 
     public static void main(String[] args) throws Exception {
-        for (int i = 0; i < 10240; i++) {
-            int finalI = i;
-            new Thread(() -> {
+
+        SCHEDULED_POOL.scheduleWithFixedDelay(() -> {
+            while (num.get() < 10000) {
+                int andIncrement = num.getAndIncrement();
+                new Thread(() -> {
+                    try {
+                        log.info("连接 {}", andIncrement);
+                        run(andIncrement);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
                 try {
-                    run(finalI);
-                } catch (Exception e) {
+                    Thread.sleep(100);
+                    if (andIncrement > 2000) {
+                        Thread.sleep(200);
+                    }
+                    if (andIncrement > 4000) {
+                        Thread.sleep(200);
+                    }
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }).start();
-            Thread.sleep(3);
-        }
+            }
+        }, 0, 500, TimeUnit.SECONDS);
+
+        Thread.sleep(100000000000000L);
+
     }
 
     public static void run(Integer num) throws Exception {
@@ -91,8 +113,7 @@ public class MultipleWebSocketClient {
         final boolean ssl = "wss".equalsIgnoreCase(scheme);
         final SslContext sslCtx;
         if (ssl) {
-            sslCtx = SslContextBuilder.forClient()
-                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+            sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
         } else {
             sslCtx = null;
         }
@@ -113,7 +134,7 @@ public class MultipleWebSocketClient {
                         }
                         p.addLast(
                                 new HttpClientCodec(),
-                                new HttpObjectAggregator(5120),
+                                new HttpObjectAggregator(1000),
                                 WebSocketClientCompressionHandler.INSTANCE,
                                 handler);
                     }
@@ -123,7 +144,7 @@ public class MultipleWebSocketClient {
         handler.handshakeFuture().sync();
 
         SCHEDULED_POOL.scheduleWithFixedDelay(() -> {
-            ch.writeAndFlush(new TextWebSocketFrame(msg.toString()));
-        }, 25, 25, TimeUnit.SECONDS);
+            ch.writeAndFlush(new TextWebSocketFrame("ping"));
+        }, 0, 120, TimeUnit.SECONDS);
     }
 }

@@ -11,28 +11,19 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.common.enums;
+package io.piper.common.pojo.config;
 
-import java.util.Arrays;
+import lombok.Data;
 
 /**
- * 会话类型枚举
+ * ImProperties
  *
  * @author piper
  */
-public enum ChatTypeEnum {
-    // 单聊
-    SINGLE((byte) 0),
-    // 聊天室
-    CHATROOM((byte) 1);
+@Data
+public class ImProperties {
 
-    public Byte type;
+    private String systemUser;
 
-    ChatTypeEnum(Byte type) {
-        this.type = type;
-    }
-
-    public static ChatTypeEnum valueOf(Byte type) {
-        return Arrays.stream(values()).filter(v -> v.type.equals(type)).findFirst().orElse(null);
-    }
+    private String systemRoom;
 }

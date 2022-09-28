@@ -28,8 +28,8 @@ import io.piper.common.util.IdUtil;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.UserDAO;
 import io.piper.server.web.repository.impl.UserDAOJdbc;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 
@@ -47,7 +47,7 @@ import java.util.Objects;
  * @author piper
  */
 public class LoginServlet extends HttpServlet {
-    private static final Logger log = LogManager.getLogger(LoginServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(LoginServlet.class);
     private static final UserDAO userDAO = Singleton.get(UserDAOJdbc.class);
 
     @Override
@@ -81,7 +81,7 @@ public class LoginServlet extends HttpServlet {
         UserTokenDTO tokenDTO = new UserTokenDTO();
         tokenDTO.setId(imUser.getId());
         tokenDTO.setNickname(imUser.getNickname());
-        tokenDTO.setClientType(clientType);
+        tokenDTO.setClientName(clientType);
 
         String token = IdUtil.fastSimpleUUID();
         Jedis jedis = RedisDS.getJedis();

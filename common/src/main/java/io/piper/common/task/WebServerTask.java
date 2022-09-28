@@ -19,8 +19,8 @@ import io.piper.common.db.RedisDS;
 import io.piper.common.load_banlance.AddressLoadBalanceHandler;
 import io.piper.common.load_banlance.IAddressLoadBalance;
 import io.piper.common.pojo.config.AddressInfo;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author piper
  */
 public class WebServerTask {
-    private static final Logger log = LogManager.getLogger(WebServerTask.class);
+    private static final Logger log = LoggerFactory.getLogger(WebServerTask.class);
     private static final IAddressLoadBalance ADDRESS_HANDLER = new AddressLoadBalanceHandler();
 
     public static void start() {

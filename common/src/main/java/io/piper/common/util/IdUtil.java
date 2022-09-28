@@ -14,8 +14,8 @@
 package io.piper.common.util;
 
 import io.piper.common.db.RedisDS;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @author piper
  */
 public final class IdUtil {
-    private static final Logger log = LogManager.getLogger(IdUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(IdUtil.class);
     private static final Map<String, Object> MAP = new HashMap<>();
 
     public static Snowflake getSnowflake(String key) {

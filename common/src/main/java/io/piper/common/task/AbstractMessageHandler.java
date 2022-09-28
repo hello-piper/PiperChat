@@ -17,8 +17,8 @@ import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
 import io.piper.common.pojo.message.Msg;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPubSub;
 
 /**
@@ -27,7 +27,7 @@ import redis.clients.jedis.JedisPubSub;
  * @author piper
  */
 public abstract class AbstractMessageHandler {
-    static final Logger log = LogManager.getLogger(AbstractMessageHandler.class);
+    static final Logger log = LoggerFactory.getLogger(AbstractMessageHandler.class);
 
     public AbstractMessageHandler() {
         // 订阅 消息通道

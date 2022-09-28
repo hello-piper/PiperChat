@@ -16,8 +16,8 @@ package io.piper.server.web;
 import cn.hutool.core.io.IoUtil;
 import io.piper.common.exception.IMException;
 import io.piper.common.exception.IMResult;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author piper
  */
 public class ErrorFilter implements Filter {
-    private static final Logger log = LogManager.getLogger(ErrorFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(ErrorFilter.class);
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException {
