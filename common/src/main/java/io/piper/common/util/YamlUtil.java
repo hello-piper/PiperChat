@@ -68,6 +68,9 @@ public final class YamlUtil {
                 String name = descriptor.getName();
                 if (map.containsKey(name)) {
                     Object writeValue = map.get(name);
+                    if (writeValue == null) {
+                        continue;
+                    }
                     Class<?> propertyType = descriptor.getPropertyType();
                     Method setMethod = descriptor.getWriteMethod();
                     if (String.class.isAssignableFrom(propertyType)) {
