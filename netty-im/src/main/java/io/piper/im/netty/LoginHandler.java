@@ -21,6 +21,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.util.AttributeKey;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.piper.common.constant.ClientNameEnum;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
 import io.piper.common.exception.IMErrorEnum;
@@ -37,8 +38,9 @@ import io.piper.common.util.YamlUtil;
  */
 @ChannelHandler.Sharable
 public class LoginHandler extends ChannelInboundHandlerAdapter {
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(LoginHandler.class);
+    private final InternalLogger log = InternalLoggerFactory.getInstance(LoginHandler.class);
     private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
+    private volatile long guest = 0;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -49,12 +51,19 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
             if (StringUtil.isEmpty(token)) {
                 throw IMException.build(IMErrorEnum.INVALID_TOKEN);
             }
-            String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
-            if (StringUtil.isEmpty(tokenDTOStr)) {
-                UserSessionHolder.close(ctx.channel());
-                throw IMException.build(IMErrorEnum.INVALID_TOKEN);
+            UserTokenDTO tokenDTO;
+            if ("guest".equals(token)) {
+                tokenDTO = new UserTokenDTO();
+                tokenDTO.setId(-guest++);
+                tokenDTO.setClientName(ClientNameEnum.WEB.getName());
+            } else {
+                String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
+                if (StringUtil.isEmpty(tokenDTOStr)) {
+                    UserSessionHolder.close(ctx.channel());
+                    throw IMException.build(IMErrorEnum.INVALID_TOKEN);
+                }
+                tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
             }
-            UserTokenDTO tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
             String userKey;
             if (tokenDTO.getId() != null) {
                 userKey = tokenDTO.getId().toString();

@@ -15,6 +15,7 @@ package io.piper.im.undertow;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.piper.common.constant.ClientNameEnum;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
 import io.piper.common.exception.IMErrorEnum;
@@ -39,6 +40,7 @@ import java.util.Map;
 public class WebSocketEndpoint {
     private final Logger log = LoggerFactory.getLogger(WebSocketEndpoint.class);
     private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
+    private volatile long guest = 0;
 
     @OnOpen
     public void onOpen(Session session, @PathParam("token") String token) throws IOException {
@@ -46,12 +48,19 @@ public class WebSocketEndpoint {
             session.close();
             throw IMException.build(IMErrorEnum.INVALID_TOKEN);
         }
-        String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
-        if (StringUtil.isEmpty(tokenDTOStr)) {
-            UserSessionHolder.close(session);
-            throw IMException.build(IMErrorEnum.INVALID_TOKEN);
+        UserTokenDTO tokenDTO;
+        if ("guest".equals(token)) {
+            tokenDTO = new UserTokenDTO();
+            tokenDTO.setId(-guest++);
+            tokenDTO.setClientName(ClientNameEnum.WEB.getName());
+        } else {
+            String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
+            if (StringUtil.isEmpty(tokenDTOStr)) {
+                UserSessionHolder.close(session);
+                throw IMException.build(IMErrorEnum.INVALID_TOKEN);
+            }
+            tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
         }
-        UserTokenDTO tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
         String userKey;
         if (tokenDTO.getId() != null) {
             userKey = tokenDTO.getId().toString();
