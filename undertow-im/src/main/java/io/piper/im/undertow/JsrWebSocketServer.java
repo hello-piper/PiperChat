@@ -45,7 +45,7 @@ public class JsrWebSocketServer {
                 .addWelcomePage("templates/index.html")
                 .setResourceManager(new ClassPathResourceManager(JsrWebSocketServer.class.getClassLoader()))
                 .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo()
-                        .addEndpoint(WebSocketEndpoint.class).setBuffers(new DefaultByteBufferPool(true, 100))
+                        .addEndpoint(WebSocketEndpoint.class).setBuffers(new DefaultByteBufferPool(true, 1024))
                 );
 
         DeploymentManager manager = container.addDeployment(builder);
