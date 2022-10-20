@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultipleWebSocketClient {
     static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(6);
-    static final String URL = System.getProperty("url", "wss://im.piper.com:443/api-websocket/guest");
+    static final String URL = System.getProperty("url", "wss://im.piper.io:443/api-websocket/guest");
     static final EventLoopGroup group = new NioEventLoopGroup(6);
     public static final AtomicInteger num = new AtomicInteger();
     private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
