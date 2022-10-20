@@ -74,7 +74,7 @@ public class WebSocketEndpoint {
             return;
         }
         tokenDTO.setTimestamp(System.currentTimeMillis());
-        session.setMaxIdleTimeout(180000);
+        session.setMaxIdleTimeout(18000);
         session.getUserProperties().put(UserSessionHolder.USER_KEY, userKey);
         session.getUserProperties().put(UserSessionHolder.USER_INFO, tokenDTO);
         UserSessionHolder.putRoomSession(config.getSystemRoom(), session);
