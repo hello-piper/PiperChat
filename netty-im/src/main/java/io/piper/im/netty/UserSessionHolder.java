@@ -74,9 +74,9 @@ public class UserSessionHolder {
     /**
      * 添加用户连接
      */
-    public static boolean putUserSession(String uid, Channel session) {
-        SESSION_LINK.put(session, uid);
-        return USER_SESSIONS.put(uid, session);
+    public static boolean putUserSession(String uid, Channel channel) {
+        SESSION_LINK.put(channel, uid);
+        return USER_SESSIONS.put(uid, channel);
     }
 
     /**
@@ -89,28 +89,28 @@ public class UserSessionHolder {
     /**
      * 添加直播间连接
      */
-    public static boolean putRoomSession(String roomId, Channel session) {
-        SESSION_LINK.put(session, roomId);
-        ROOM_SESSIONS.put(roomId, session);
+    public static boolean putRoomSession(String roomId, Channel channel) {
+        SESSION_LINK.put(channel, roomId);
+        ROOM_SESSIONS.put(roomId, channel);
         return true;
     }
 
     /**
      * 移除直播间连接
      */
-    public static boolean removeRoomSession(String roomId, Channel session) {
-        ROOM_SESSIONS.remove(roomId, session);
-        SESSION_LINK.remove(session, roomId);
+    public static boolean removeRoomSession(String roomId, Channel channel) {
+        ROOM_SESSIONS.remove(roomId, channel);
+        SESSION_LINK.remove(channel, roomId);
         return true;
     }
 
     /**
      * 移除连接
      */
-    public static void removeSession(Channel session) {
-        if (session != null) {
-            String uid = getUserKey(session);
-            Set<String> keys = SESSION_LINK.get(session);
+    public static void removeSession(Channel channel) {
+        if (channel != null) {
+            String uid = getUserKey(channel);
+            Set<String> keys = SESSION_LINK.get(channel);
             if (keys == null) {
                 keys = new HashSet<>();
             }
@@ -118,22 +118,22 @@ public class UserSessionHolder {
                 keys.add(uid);
             }
             keys.forEach(key -> {
-                USER_SESSIONS.remove(key, session);
-                ROOM_SESSIONS.remove(key, session);
+                USER_SESSIONS.remove(key, channel);
+                ROOM_SESSIONS.remove(key, channel);
             });
-            SESSION_LINK.removeKey(session);
+            SESSION_LINK.removeKey(channel);
         }
     }
 
     /**
      * 连接关闭
      */
-    public static void close(Channel session) {
-        if (session != null) {
+    public static void close(Channel channel) {
+        if (channel != null) {
             try {
-                session.close();
+                channel.close();
             } catch (Exception e) {
-                log.info("sessionClose error {}", getUserKey(session), e);
+                log.info("sessionClose error {}", getUserKey(channel), e);
             }
         }
     }
@@ -141,7 +141,7 @@ public class UserSessionHolder {
     /**
      * 踢出相同端的连接
      */
-    public static void kickOut(Channel session, String key, UserTokenDTO dto) {
+    public static void kickOut(Channel channel, String key, UserTokenDTO dto) {
         String clientName = dto.getClientName();
         if (Objects.equals(clientName, ClientNameEnum.WEB.getName())) {
             Set<Channel> userSession = getUserSession(key);
@@ -152,36 +152,36 @@ public class UserSessionHolder {
             if (count > 10) {
                 Optional<Channel> first = userSession.parallelStream().filter(s -> {
                     UserTokenDTO tokenDTO = getUserTokenDTO(s);
-                    return tokenDTO != null && Objects.equals(tokenDTO.getClientName(), ClientNameEnum.WEB.getName()) && session != s;
+                    return tokenDTO != null && Objects.equals(tokenDTO.getClientName(), ClientNameEnum.WEB.getName()) && channel != s;
                 }).findFirst();
                 first.ifPresent(UserSessionHolder::close);
             }
         } else if (Objects.equals(clientName, ClientNameEnum.ANDROID.getName())) {
             getUserSession(key).parallelStream().iterator().forEachRemaining(s -> {
                 UserTokenDTO tokenDTO = getUserTokenDTO(s);
-                if (tokenDTO != null && s != session && StringUtil.equals(tokenDTO.getClientName(), ClientNameEnum.ANDROID.getName())) {
-                    close(session);
+                if (tokenDTO != null && s != channel && StringUtil.equals(tokenDTO.getClientName(), ClientNameEnum.ANDROID.getName())) {
+                    close(channel);
                 }
             });
         } else if (Objects.equals(clientName, ClientNameEnum.IOS.getName())) {
             getUserSession(key).parallelStream().iterator().forEachRemaining(s -> {
                 UserTokenDTO tokenDTO = getUserTokenDTO(s);
-                if (tokenDTO != null && s != session && StringUtil.equals(tokenDTO.getClientName(), ClientNameEnum.IOS.getName())) {
-                    close(session);
+                if (tokenDTO != null && s != channel && StringUtil.equals(tokenDTO.getClientName(), ClientNameEnum.IOS.getName())) {
+                    close(channel);
                 }
             });
         } else {
-            close(session);
+            close(channel);
         }
     }
 
-    public static String getUserKey(Channel session) {
-        Attribute<String> attr = session.attr(AttributeKey.valueOf(USER_KEY));
+    public static String getUserKey(Channel channel) {
+        Attribute<String> attr = channel.attr(AttributeKey.valueOf(USER_KEY));
         return attr.get();
     }
 
-    public static UserTokenDTO getUserTokenDTO(Channel session) {
-        Attribute<UserTokenDTO> attr = session.attr(AttributeKey.valueOf(USER_INFO));
+    public static UserTokenDTO getUserTokenDTO(Channel channel) {
+        Attribute<UserTokenDTO> attr = channel.attr(AttributeKey.valueOf(USER_INFO));
         return attr.get();
     }
 

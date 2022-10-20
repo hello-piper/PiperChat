@@ -47,38 +47,38 @@ public class WebSocketTextHandler extends SimpleChannelInboundHandler<TextWebSoc
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
         String msg = frame.text();
-        Channel session = ctx.channel();
-        String userKey = UserSessionHolder.getUserKey(session);
+        Channel channel = ctx.channel();
+        String userKey = UserSessionHolder.getUserKey(channel);
         log.info("receiveMsg {} {}", msg, userKey);
         if (StringUtil.isEmpty(msg)) {
-            UserSessionHolder.close(session);
+            UserSessionHolder.close(channel);
             return;
         }
         if ("ping".equals(msg)) {
-            session.writeAndFlush("pong");
+            channel.writeAndFlush(new TextWebSocketFrame("pong"));
             return;
         }
         try {
             RequestMsg requestMsg = JSONObject.parseObject(msg, RequestMsg.class);
             if (requestMsg.getType() == null || requestMsg.getData() == null || requestMsg.getData().isEmpty()) {
-                UserSessionHolder.close(session);
+                UserSessionHolder.close(channel);
                 return;
             }
             RequestMsg.RequestTypeEnum requestTypeEnum = RequestMsg.RequestTypeEnum.valueOf(requestMsg.getType());
             if (requestTypeEnum == null) {
-                UserSessionHolder.close(session);
+                UserSessionHolder.close(channel);
                 return;
             }
             if (RequestMsg.RequestTypeEnum.ENTER_ROOM == requestTypeEnum) {
                 // 进入直播间
                 Map<String, Object> data = requestMsg.getData();
                 String roomId = String.valueOf(data.get("roomId"));
-                UserSessionHolder.putRoomSession(roomId, session);
+                UserSessionHolder.putRoomSession(roomId, channel);
             } else if (RequestMsg.RequestTypeEnum.EXIT_ROOM == requestTypeEnum) {
                 // 退出直播间
                 Map<String, Object> data = requestMsg.getData();
                 String roomId = String.valueOf(data.get("roomId"));
-                UserSessionHolder.removeRoomSession(roomId, session);
+                UserSessionHolder.removeRoomSession(roomId, channel);
             }
         } catch (Exception e) {
             log.error("receiveMsg {} {}", msg, userKey, e);
