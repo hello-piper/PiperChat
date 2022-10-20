@@ -40,7 +40,7 @@ import io.piper.common.util.YamlUtil;
 public class LoginHandler extends ChannelInboundHandlerAdapter {
     private final InternalLogger log = InternalLoggerFactory.getInstance(LoginHandler.class);
     private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
-    private volatile long guest = 0;
+    private static volatile long guest = 0;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

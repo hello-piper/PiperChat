@@ -40,7 +40,7 @@ import java.util.Map;
 public class WebSocketEndpoint {
     private final Logger log = LoggerFactory.getLogger(WebSocketEndpoint.class);
     private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
-    private volatile long guest = 0;
+    private static volatile long guest = 0;
 
     @OnOpen
     public void onOpen(Session session, @PathParam("token") String token) throws IOException {
