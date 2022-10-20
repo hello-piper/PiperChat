@@ -51,7 +51,8 @@ public class WebSocketEndpoint {
         UserTokenDTO tokenDTO;
         if ("guest".equals(token)) {
             tokenDTO = new UserTokenDTO();
-            tokenDTO.setId(-guest++);
+            tokenDTO.setId(-++guest);
+            tokenDTO.setNickname("guest:" + tokenDTO.getId());
             tokenDTO.setClientName(ClientNameEnum.WEB.getName());
         } else {
             String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);

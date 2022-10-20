@@ -15,12 +15,8 @@ package io.piper.im.undertow;
 
 import io.piper.common.WebSocketUser;
 import io.piper.common.enums.ChatTypeEnum;
-import io.piper.common.enums.CmdTypeEnum;
-import io.piper.common.enums.MsgTypeEnum;
-import io.piper.common.pojo.message.CmdMsgBody;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.task.AbstractMessageHandler;
-import io.piper.common.util.StringUtil;
 import io.piper.common.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

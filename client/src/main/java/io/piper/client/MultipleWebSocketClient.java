@@ -44,8 +44,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultipleWebSocketClient {
     static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(6);
-    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080");
-    static final EventLoopGroup group = new NioEventLoopGroup(4);
+    static final String URL = System.getProperty("url", "wss://im.piper.com:443/api-websocket/guest");
+    static final EventLoopGroup group = new NioEventLoopGroup(6);
     public static final AtomicInteger num = new AtomicInteger();
     private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
 
@@ -60,7 +60,7 @@ public class MultipleWebSocketClient {
     public static void main(String[] args) throws Exception {
 
         SCHEDULED_POOL.scheduleWithFixedDelay(() -> {
-            while (num.get() < 10000) {
+            while (num.get() < 5000) {
                 int andIncrement = num.getAndIncrement();
                 new Thread(() -> {
                     try {
@@ -73,16 +73,16 @@ public class MultipleWebSocketClient {
                 try {
                     Thread.sleep(100);
                     if (andIncrement > 2000) {
-                        Thread.sleep(200);
+                        Thread.sleep(100);
                     }
-                    if (andIncrement > 4000) {
-                        Thread.sleep(200);
+                    if (andIncrement > 5000) {
+                        Thread.sleep(100);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }, 0, 500, TimeUnit.SECONDS);
+        }, 0, 60, TimeUnit.MINUTES);
 
         Thread.sleep(100000000000000L);
 
