@@ -27,6 +27,7 @@ import io.piper.common.db.RedisDS;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.config.ImProperties;
+import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.util.StringUtil;
 import io.piper.common.util.YamlUtil;
@@ -37,15 +38,16 @@ import io.piper.common.util.YamlUtil;
  * @author piper
  */
 @ChannelHandler.Sharable
-public class LoginHandler extends ChannelInboundHandlerAdapter {
-    private final InternalLogger log = InternalLoggerFactory.getInstance(LoginHandler.class);
-    private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
+public class WebSocketLoginHandler extends ChannelInboundHandlerAdapter {
+    private final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketLoginHandler.class);
+    private final ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
+    private final ImProperties imConfig = YamlUtil.getConfig("im", ImProperties.class);
     private static volatile long guest = 0;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String uri = ((FullHttpRequest) msg).uri();
-        if (!"/".equals(uri)) {
+        if (uri.startsWith(config.getWsPath())) {
             String[] uriSplit = uri.split("/");
             String token = uriSplit[uriSplit.length - 1];
             if (StringUtil.isEmpty(token)) {
@@ -60,30 +62,31 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
             } else {
                 String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
                 if (StringUtil.isEmpty(tokenDTOStr)) {
-                    UserSessionHolder.close(ctx.channel());
+                    ImUserHolder.INSTANCE.close(ctx.channel());
                     throw IMException.build(IMErrorEnum.INVALID_TOKEN);
                 }
                 tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
             }
-            String userKey;
+            Long userKey;
             if (tokenDTO.getId() != null) {
-                userKey = tokenDTO.getId().toString();
+                userKey = tokenDTO.getId();
             } else {
-                userKey = tokenDTO.getDeviceNo();
+                userKey = -(long) tokenDTO.getDeviceNo().hashCode();
             }
-            boolean isOk = UserSessionHolder.putUserSession(userKey, ctx.channel());
+            boolean isOk = ImUserHolder.INSTANCE.putUserSession(userKey, ctx.channel());
             if (!isOk) {
-                UserSessionHolder.close(ctx.channel());
+                ImUserHolder.INSTANCE.close(ctx.channel());
                 return;
             }
             tokenDTO.setTimestamp(System.currentTimeMillis());
-            ctx.channel().attr(AttributeKey.valueOf(UserSessionHolder.USER_KEY)).set(userKey);
-            ctx.channel().attr(AttributeKey.valueOf(UserSessionHolder.USER_INFO)).set(tokenDTO);
-            UserSessionHolder.putRoomSession(config.getSystemRoom(), ctx.channel());
-            UserSessionHolder.kickOut(ctx.channel(), userKey, tokenDTO);
-            log.info("用户上线 {} {} {} {}", userKey, token, tokenDTO, UserSessionHolder.onlineNum());
+            ctx.channel().attr(AttributeKey.valueOf(ImUserHolder.USER_KEY)).set(userKey);
+            ctx.channel().attr(AttributeKey.valueOf(ImUserHolder.USER_INFO)).set(tokenDTO);
+            ImUserHolder.INSTANCE.putRoomSession(imConfig.getSystemRoom(), ctx.channel());
+            ImUserHolder.INSTANCE.kickOut(ctx.channel(), userKey, tokenDTO);
+            log.info("用户上线 {} {} {} {}", userKey, token, tokenDTO, ImUserHolder.INSTANCE.onlineNum());
+            ctx.pipeline().remove(WebSocketLoginHandler.class);
+            ctx.fireChannelRead(msg);
         }
-        ctx.pipeline().remove(LoginHandler.class);
-        super.channelRead(ctx, msg);
     }
+
 }

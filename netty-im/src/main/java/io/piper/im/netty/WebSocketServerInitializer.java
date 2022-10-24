@@ -56,11 +56,11 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(512));
         pipeline.addLast(new WebSocketServerCompressionHandler());
-        pipeline.addLast(new LoginHandler());
+        pipeline.addLast(new WebSocketLoginHandler());
         pipeline.addLast(new WebSocketServerProtocolHandler(config.getWsPath(), null, true, 512, false, true, 3000L));
         pipeline.addLast(new IdleStateHandler(180, 0, 0, TimeUnit.SECONDS));
         pipeline.addLast(new IdleStateEventHandler());
-        pipeline.addLast(new HttpRequestHandler());
         pipeline.addLast(new WebSocketTextHandler());
+        pipeline.addLast(new HttpRequestHandler());
     }
 }

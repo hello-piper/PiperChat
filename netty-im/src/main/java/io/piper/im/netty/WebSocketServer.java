@@ -21,8 +21,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.piper.common.ImApplication;
 import io.piper.common.pojo.config.ServerProperties;
-import io.piper.common.task.ImServerTask;
 import io.piper.common.util.YamlUtil;
 
 /**
@@ -40,7 +40,7 @@ public final class WebSocketServer {
             bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(config));
             Channel channel = bootstrap.bind(config.getPort()).sync().channel();
             channel.config().setAllocator(PooledByteBufAllocator.DEFAULT);
-            ImServerTask.start(MessageHandler.class.getName());
+            ImApplication.start();
             channel.closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

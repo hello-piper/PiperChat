@@ -64,7 +64,7 @@ public class UserService {
             if (!curUid.equals(user.getId())) {
                 ImUserDTO dto = new ImUserDTO();
                 BeanUtil.copyProperties(user, dto);
-                dto.setConversationId(Msg.getConversation((byte) 0, curUid, user.getId()));
+                dto.setConversationId(Msg.genConversation((byte) 0, curUid, user.getId()));
                 list.add(dto);
             }
         }

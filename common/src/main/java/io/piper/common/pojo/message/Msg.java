@@ -199,13 +199,7 @@ public class Msg implements Serializable {
         }
     }
 
-    public String getAndSetConversation() {
-        String conversationId = getConversation(this.chatType, this.from, this.to);
-        this.setConversationId(conversationId);
-        return conversationId;
-    }
-
-    public static String getConversation(Byte chatType, Long from, Long to) {
+    public static String genConversation(Byte chatType, Long from, Long to) {
         if (!ChatTypeEnum.SINGLE.type.equals(chatType)) {
             return to.toString();
         }
@@ -213,6 +207,10 @@ public class Msg implements Serializable {
             return from + ":" + to;
         }
         return to + ":" + from;
+    }
+
+    public boolean valid() {
+        return this.getTo() != null && this.getFrom() != null && this.getMsgType() != null && this.getChatType() != null;
     }
 
     @Override

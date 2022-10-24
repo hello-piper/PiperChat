@@ -5,5 +5,5 @@ server:
   profile: ${profile}
 
 im:
-  systemUser: system
+  systemUser: 0
   systemRoom: 0

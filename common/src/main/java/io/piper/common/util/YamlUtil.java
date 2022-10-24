@@ -81,7 +81,8 @@ public final class YamlUtil {
                         if (!propertyType.getName().equals(writeValue.getClass().getName())) {
                             Method valueOfMethod = getMethod(propertyType, "valueOf", String.class);
                             if (null != valueOfMethod) {
-                                valueOfMethod.invoke(null, writeValue.toString());
+                                writeValue = valueOfMethod.invoke(null, writeValue.toString());
+                                setMethod.invoke(bean, writeValue);
                                 continue;
                             }
                         }

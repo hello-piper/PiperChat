@@ -13,8 +13,8 @@
  */
 package io.piper.im.undertow;
 
+import io.piper.common.ImApplication;
 import io.piper.common.pojo.config.ServerProperties;
-import io.piper.common.task.ImServerTask;
 import io.piper.common.util.YamlUtil;
 import io.undertow.Undertow;
 import io.undertow.server.DefaultByteBufferPool;
@@ -53,7 +53,7 @@ public class JsrWebSocketServer {
         root.addPrefixPath(builder.getContextPath(), manager.start());
         Undertow server = Undertow.builder().addHttpListener(config.getPort(), "0.0.0.0").setHandler(root).build();
 
-        ImServerTask.start(MessageHandler.class.getName());
+        ImApplication.start();
         server.start();
     }
 }

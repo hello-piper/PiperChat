@@ -11,7 +11,7 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.common.task;
+package io.piper.common;
 
 import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
@@ -27,16 +27,15 @@ import redis.clients.jedis.JedisPubSub;
 import java.util.Map;
 
 /**
- * WebServerTask
+ * WebServerApplication
  *
  * @author piper
  */
-public class WebServerTask {
-    private static final Logger log = LoggerFactory.getLogger(WebServerTask.class);
+public class WebApplication {
+    private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
     private static final IAddressLoadBalance ADDRESS_HANDLER = new AddressLoadBalanceHandler();
 
     public static void start() {
-        // 订阅 消息通道
         new Thread(() -> {
             Jedis jedis = RedisDS.getJedis();
             Map<String, String> serverMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
@@ -45,6 +44,7 @@ public class WebServerTask {
                     ADDRESS_HANDLER.flushAddress(JSON.parseObject(info, AddressInfo.class));
                 }
             }
+
             jedis.subscribe(new JedisPubSub() {
                 @Override
                 public void onMessage(String channel, String message) {
@@ -58,4 +58,5 @@ public class WebServerTask {
             }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);
         }, "server-task-thread").start();
     }
+
 }

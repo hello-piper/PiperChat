@@ -23,7 +23,7 @@ import lombok.Data;
 @Data
 public class ImProperties {
 
-    private String systemUser;
+    private Long systemUser;
 
-    private String systemRoom;
+    private Long systemRoom;
 }

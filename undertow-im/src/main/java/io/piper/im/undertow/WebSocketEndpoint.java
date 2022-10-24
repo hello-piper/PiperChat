@@ -57,37 +57,37 @@ public class WebSocketEndpoint {
         } else {
             String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
             if (StringUtil.isEmpty(tokenDTOStr)) {
-                UserSessionHolder.close(session);
+                ImUserHolder.INSTANCE.close(session);
                 throw IMException.build(IMErrorEnum.INVALID_TOKEN);
             }
             tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
         }
-        String userKey;
+        Long userKey;
         if (tokenDTO.getId() != null) {
-            userKey = tokenDTO.getId().toString();
+            userKey = tokenDTO.getId();
         } else {
-            userKey = tokenDTO.getDeviceNo();
+            userKey = -(long) tokenDTO.getDeviceNo().hashCode();
         }
-        boolean isOk = UserSessionHolder.putUserSession(userKey, session);
+        boolean isOk = ImUserHolder.INSTANCE.putUserSession(userKey, session);
         if (!isOk) {
-            UserSessionHolder.close(session);
+            ImUserHolder.INSTANCE.close(session);
             return;
         }
         tokenDTO.setTimestamp(System.currentTimeMillis());
         session.setMaxIdleTimeout(18000);
-        session.getUserProperties().put(UserSessionHolder.USER_KEY, userKey);
-        session.getUserProperties().put(UserSessionHolder.USER_INFO, tokenDTO);
-        UserSessionHolder.putRoomSession(config.getSystemRoom(), session);
-        UserSessionHolder.kickOut(session, userKey, tokenDTO);
-        log.info("用户上线 {} {} {} {}", userKey, token, tokenDTO, UserSessionHolder.onlineNum());
+        session.getUserProperties().put(ImUserHolder.USER_KEY, userKey);
+        session.getUserProperties().put(ImUserHolder.USER_INFO, tokenDTO);
+        ImUserHolder.INSTANCE.putRoomSession(config.getSystemRoom(), session);
+        ImUserHolder.INSTANCE.kickOut(session, userKey, tokenDTO);
+        log.info("用户上线 {} {} {} {}", userKey, token, tokenDTO, ImUserHolder.INSTANCE.onlineNum());
     }
 
     @OnMessage
     public void message(String msg, Session session) {
-        String userKey = (String) session.getUserProperties().get(UserSessionHolder.USER_KEY);
+        String userKey = (String) session.getUserProperties().get(ImUserHolder.INSTANCE.USER_KEY);
         log.info("receiveMsg {} {}", msg, userKey);
         if (StringUtil.isEmpty(msg)) {
-            UserSessionHolder.close(session);
+            ImUserHolder.INSTANCE.close(session);
             return;
         }
         if ("ping".equals(msg)) {
@@ -97,24 +97,24 @@ public class WebSocketEndpoint {
         try {
             RequestMsg requestMsg = JSONObject.parseObject(msg, RequestMsg.class);
             if (requestMsg.getType() == null || requestMsg.getData() == null || requestMsg.getData().isEmpty()) {
-                UserSessionHolder.close(session);
+                ImUserHolder.INSTANCE.close(session);
                 return;
             }
             RequestMsg.RequestTypeEnum requestTypeEnum = RequestMsg.RequestTypeEnum.valueOf(requestMsg.getType());
             if (requestTypeEnum == null) {
-                UserSessionHolder.close(session);
+                ImUserHolder.INSTANCE.close(session);
                 return;
             }
             if (RequestMsg.RequestTypeEnum.ENTER_ROOM == requestTypeEnum) {
                 // 进入直播间
                 Map<String, Object> data = requestMsg.getData();
-                String roomId = String.valueOf(data.get("roomId"));
-                UserSessionHolder.putRoomSession(roomId, session);
+                Long roomId = Long.valueOf(data.get("roomId").toString());
+                ImUserHolder.INSTANCE.putRoomSession(roomId, session);
             } else if (RequestMsg.RequestTypeEnum.EXIT_ROOM == requestTypeEnum) {
                 // 退出直播间
                 Map<String, Object> data = requestMsg.getData();
-                String roomId = String.valueOf(data.get("roomId"));
-                UserSessionHolder.removeRoomSession(roomId, session);
+                Long roomId = Long.valueOf(data.get("roomId").toString());
+                ImUserHolder.INSTANCE.removeRoomSession(roomId, session);
             }
         } catch (Exception e) {
             log.error("receiveMsg {} {}", msg, userKey, e);
@@ -123,16 +123,16 @@ public class WebSocketEndpoint {
 
     @OnClose
     public void onClose(Session session) {
-        String userKey = (String) session.getUserProperties().get(UserSessionHolder.USER_KEY);
-        UserSessionHolder.removeSession(session);
+        String userKey = (String) session.getUserProperties().get(ImUserHolder.USER_KEY);
+        ImUserHolder.INSTANCE.removeSession(session);
         if (userKey != null) {
-            log.info("用户下线 {} {}", userKey, UserSessionHolder.onlineNum());
+            log.info("用户下线 {} {}", userKey, ImUserHolder.INSTANCE.onlineNum());
         }
     }
 
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("{}", session.getUserProperties().get(UserSessionHolder.USER_KEY), error);
+        log.error("{}", session.getUserProperties().get(ImUserHolder.USER_KEY), error);
     }
 
 }

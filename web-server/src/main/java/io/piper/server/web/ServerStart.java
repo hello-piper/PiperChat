@@ -14,7 +14,7 @@
 package io.piper.server.web;
 
 import io.piper.common.pojo.config.ServerProperties;
-import io.piper.common.task.WebServerTask;
+import io.piper.common.WebApplication;
 import io.piper.common.util.YamlUtil;
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
@@ -53,7 +53,7 @@ public class ServerStart {
                 .addDeploymentCompleteListener(new ServletContextListener() {
                     @Override
                     public void contextInitialized(ServletContextEvent sce) {
-                        WebServerTask.start();
+                        WebApplication.start();
                     }
                 });
 

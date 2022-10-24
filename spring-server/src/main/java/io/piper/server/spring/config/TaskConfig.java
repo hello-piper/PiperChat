@@ -13,48 +13,15 @@
  */
 package io.piper.server.spring.config;
 
-import com.alibaba.fastjson.JSON;
-import io.piper.common.constant.Constants;
-import io.piper.common.pojo.config.AddressInfo;
-import io.piper.server.spring.service.ChatService;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.piper.common.WebApplication;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPubSub;
 
-import javax.annotation.PostConstruct;
-import java.util.Map;
-
-@Log4j2
 @Configuration
-public class TaskConfig {
+public class TaskConfig implements CommandLineRunner {
 
-    @Autowired
-    private JedisPool jedisPool;
-
-    @PostConstruct
-    public void init() {
-        new Thread(() -> {
-            Jedis jedis = jedisPool.getResource();
-            Map<String, String> imServerMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
-            if (imServerMap != null && !imServerMap.isEmpty()) {
-                for (String info : imServerMap.values()) {
-                    ChatService.ADDRESS_HANDLER.flushAddress(JSON.parseObject(info, AddressInfo.class));
-                }
-            }
-            jedis.subscribe(new JedisPubSub() {
-                @Override
-                public void onMessage(String channel, String message) {
-                    log.debug("onMessage >>> {} {}", channel, message);
-                    if (channel.equals(Constants.CHANNEL_IM_RENEW)) {
-                        ChatService.ADDRESS_HANDLER.flushAddress(JSON.parseObject(message, AddressInfo.class));
-                    } else if (channel.equals(Constants.CHANNEL_IM_SHUTDOWN)) {
-                        ChatService.ADDRESS_HANDLER.removeAddress(JSON.parseObject(message, AddressInfo.class));
-                    }
-                }
-            }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);
-        }, "server-task-thread").start();
+    @Override
+    public void run(String... args) {
+        WebApplication.start();
     }
 }

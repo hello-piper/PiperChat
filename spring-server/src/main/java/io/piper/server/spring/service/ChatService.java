@@ -88,7 +88,7 @@ public class ChatService {
         message.setId(msgId);
         message.setMsgType(msg.getMsgType());
         message.setChatType(msg.getChatType());
-        message.setConversationId(msg.getAndSetConversation());
+        message.setConversationId(Msg.genConversation(msg.getChatType(), msg.getFrom(), msg.getTo()));
         message.setFrom(msg.getFrom());
         message.setTo(msg.getTo());
         message.setSendTime(msg.getSendTime());

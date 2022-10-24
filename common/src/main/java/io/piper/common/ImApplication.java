@@ -11,14 +11,15 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.common.task;
+package io.piper.common;
 
 import com.alibaba.fastjson.JSON;
-import io.piper.common.WebSocketUser;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.config.ServerProperties;
+import io.piper.common.task.AbstractImUserHolder;
+import io.piper.common.task.AbstractMessageConsumer;
 import io.piper.common.util.IpUtil;
 import io.piper.common.util.ThreadUtil;
 import io.piper.common.util.YamlUtil;
@@ -26,18 +27,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
+import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ImServerTask
+ * ImApplication
  *
  * @author piper
  */
-public class ImServerTask {
-    private static final Logger log = LoggerFactory.getLogger(ImServerTask.class);
-    private static final AddressInfo ADDRESS_INFO;
+public class ImApplication {
+    private static final Logger log = LoggerFactory.getLogger(ImApplication.class);
+    private static AddressInfo ADDRESS_INFO;
 
-    static {
+    public static void start() {
+        ServiceLoader<AbstractImUserHolder> imUserHolders = ServiceLoader.load(AbstractImUserHolder.class);
+        for (AbstractImUserHolder holder : imUserHolders) {
+            holder.INSTANCE = holder.getInstance();
+            log.info("load ImUserHolder {}", holder);
+        }
+
+        ServiceLoader<AbstractMessageConsumer> messageConsumers = ServiceLoader.load(AbstractMessageConsumer.class);
+        for (AbstractMessageConsumer consumer : messageConsumers) {
+            log.info("load MessageConsumer {}", consumer);
+        }
+
         ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
         AddressInfo addressInfo = new AddressInfo();
         addressInfo.setIp(IpUtil.getIpVo().getIp());
@@ -45,21 +58,9 @@ public class ImServerTask {
         addressInfo.setSsl(config.getSsl());
         addressInfo.setWsPath(config.getWsPath());
         ADDRESS_INFO = addressInfo;
-    }
-
-    public static void start(String... clazz) {
-        try {
-            if (null != clazz) {
-                for (String clz : clazz) {
-                    Class.forName(clz);
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
         ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
-            ADDRESS_INFO.setOnlineNum(WebSocketUser.onlineNum());
+            ADDRESS_INFO.setOnlineNum(AbstractImUserHolder.INSTANCE.onlineNum());
             String info = JSON.toJSONString(ADDRESS_INFO);
             Jedis jedis = RedisDS.getJedis();
             jedis.publish(Constants.CHANNEL_IM_RENEW, info);
@@ -77,4 +78,5 @@ public class ImServerTask {
             log.debug("广播当前网关机 关机信息 >>> {}", info);
         }));
     }
+
 }

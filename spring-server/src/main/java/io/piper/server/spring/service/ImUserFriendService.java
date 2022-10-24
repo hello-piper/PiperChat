@@ -61,7 +61,7 @@ public class ImUserFriendService {
         }
         ImUserFriend userFriend = new ImUserFriend();
         BeanUtil.copyProperties(dto, userFriend);
-        userFriend.setId(Msg.getConversation(ChatTypeEnum.SINGLE.type, dto.getUid(), dto.getFriendId()));
+        userFriend.setId(Msg.genConversation(ChatTypeEnum.SINGLE.type, dto.getUid(), dto.getFriendId()));
         userFriend.setCreateTime(System.currentTimeMillis());
         imUserFriendMapper.insertSelective(userFriend);
         return true;
@@ -101,7 +101,7 @@ public class ImUserFriendService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUserFriend friend = new ImUserFriend();
-        friend.setId(Msg.getConversation(ChatTypeEnum.SINGLE.type, uid, dto.getUid()));
+        friend.setId(Msg.genConversation(ChatTypeEnum.SINGLE.type, uid, dto.getUid()));
         friend.setUid(uid);
         friend.setFriendId(dto.getUid());
         friend.setReqMsg(dto.getReqMsg());
