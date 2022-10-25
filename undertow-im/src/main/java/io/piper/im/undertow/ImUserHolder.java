@@ -14,7 +14,7 @@
 package io.piper.im.undertow;
 
 import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.task.AbstractImUserHolder;
+import io.piper.common.spi.AbstractImUserHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class ImUserHolder extends AbstractImUserHolder<Session> {
     }
 
     @Override
-    public AbstractImUserHolder getInstance() {
+    public AbstractImUserHolder<Session> getInstance() {
         if (INSTANCE == null) {
             synchronized (ImUserHolder.class) {
                 if (INSTANCE == null) {

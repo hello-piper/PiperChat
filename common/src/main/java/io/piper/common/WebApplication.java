@@ -27,7 +27,7 @@ import redis.clients.jedis.JedisPubSub;
 import java.util.Map;
 
 /**
- * WebServerApplication
+ * WebApplication
  *
  * @author piper
  */

@@ -11,7 +11,7 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.common.task;
+package io.piper.common.spi;
 
 import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
@@ -28,16 +28,15 @@ import redis.clients.jedis.JedisPubSub;
 import java.util.concurrent.TimeUnit;
 
 /**
- * AbstractMessageConsumer
+ * AbstractMsgConsumer
  *
  * @author piper
  */
-public abstract class AbstractMessageConsumer {
-    static final Logger log = LoggerFactory.getLogger(AbstractMessageConsumer.class);
+public abstract class AbstractMsgConsumer {
+    static final Logger log = LoggerFactory.getLogger(AbstractMsgConsumer.class);
     private static final ImProperties imConfig = YamlUtil.getConfig("im", ImProperties.class);
 
     {
-        // Test
         if ("local".equals(YamlUtil.getProfile())) {
             ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
                 try {
@@ -48,19 +47,19 @@ public abstract class AbstractMessageConsumer {
                     handler(dto);
                 } catch (Exception ignored) {
                 }
-            }, 5, 5, TimeUnit.SECONDS);
+            }, 10, 10, TimeUnit.SECONDS);
         }
     }
 
-    public AbstractMessageConsumer() {
+    public AbstractMsgConsumer() {
         new Thread(() -> RedisDS.getJedis().subscribe(new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
                 log.info("onMessage >>> {} {}", channel, message);
                 handler(JSON.parseObject(message, Msg.class));
             }
-        }, Constants.CHANNEL_IM_MESSAGE), "message-handler-thread").start();
-        log.info("AbstractMessageConsumer init");
+        }, Constants.CHANNEL_IM_MESSAGE), "AbstractMsgConsumer Thread").start();
+        log.info("AbstractMsgConsumer init");
     }
 
     public abstract void handler(Msg msg);

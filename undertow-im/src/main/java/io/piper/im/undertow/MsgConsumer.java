@@ -15,7 +15,7 @@ package io.piper.im.undertow;
 
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.pojo.message.Msg;
-import io.piper.common.task.AbstractMessageConsumer;
+import io.piper.common.spi.AbstractMsgConsumer;
 import io.piper.common.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +24,12 @@ import javax.websocket.Session;
 import java.util.Set;
 
 /**
- * MessageConsumer
+ * MsgConsumer
  *
  * @author piper
  */
-public class MessageConsumer extends AbstractMessageConsumer {
-    private static final Logger log = LoggerFactory.getLogger(MessageConsumer.class);
+public class MsgConsumer extends AbstractMsgConsumer {
+    private static final Logger log = LoggerFactory.getLogger(MsgConsumer.class);
 
     @Override
     public void handler(Msg msg) {
@@ -46,6 +46,8 @@ public class MessageConsumer extends AbstractMessageConsumer {
     }
 
     private void singleHandler(Msg msg) {
+        Set userSession = ImUserHolder.INSTANCE.getUserSession(msg.getTo());
+
         Set<Session> sessions = ImUserHolder.INSTANCE.getUserSession(msg.getTo());
         sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
     }

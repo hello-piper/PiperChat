@@ -17,7 +17,7 @@ import io.netty.channel.Channel;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.task.AbstractImUserHolder;
+import io.piper.common.spi.AbstractImUserHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class ImUserHolder extends AbstractImUserHolder<Channel> {
     }
 
     @Override
-    public AbstractImUserHolder getInstance() {
+    public AbstractImUserHolder<Channel> getInstance() {
         if (INSTANCE == null) {
             synchronized (ImUserHolder.class) {
                 if (INSTANCE == null) {

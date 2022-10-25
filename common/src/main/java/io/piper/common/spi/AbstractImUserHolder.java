@@ -11,7 +11,7 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.common.task;
+package io.piper.common.spi;
 
 import io.piper.common.constant.ClientNameEnum;
 import io.piper.common.pojo.dto.UserTokenDTO;
@@ -40,7 +40,7 @@ public abstract class AbstractImUserHolder<T> {
     // 用户的连接在上边哪些key里面
     private final HashMultiMap<T, Long> SESSION_LINK = new HashMultiMap<>();
 
-    public abstract AbstractImUserHolder getInstance();
+    public abstract AbstractImUserHolder<T> getInstance();
 
     public abstract Long getUserKey(T channel);
 

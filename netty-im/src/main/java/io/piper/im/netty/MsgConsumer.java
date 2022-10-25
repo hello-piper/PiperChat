@@ -18,7 +18,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.ReferenceCountUtil;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.pojo.message.Msg;
-import io.piper.common.task.AbstractMessageConsumer;
+import io.piper.common.spi.AbstractMsgConsumer;
 import io.piper.common.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +26,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 
 /**
- * MessageConsumer
+ * MsgConsumer
  *
  * @author piper
  */
-public class MessageConsumer extends AbstractMessageConsumer {
-    private static final Logger log = LoggerFactory.getLogger(MessageConsumer.class);
+public class MsgConsumer extends AbstractMsgConsumer {
+    private static final Logger log = LoggerFactory.getLogger(MsgConsumer.class);
 
     @Override
     public void handler(Msg msg) {

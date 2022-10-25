@@ -18,8 +18,8 @@ import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.config.ServerProperties;
-import io.piper.common.task.AbstractImUserHolder;
-import io.piper.common.task.AbstractMessageConsumer;
+import io.piper.common.spi.AbstractImUserHolder;
+import io.piper.common.spi.AbstractMsgConsumer;
 import io.piper.common.util.IpUtil;
 import io.piper.common.util.ThreadUtil;
 import io.piper.common.util.YamlUtil;
@@ -42,13 +42,12 @@ public class ImApplication {
     public static void start() {
         ServiceLoader<AbstractImUserHolder> imUserHolders = ServiceLoader.load(AbstractImUserHolder.class);
         for (AbstractImUserHolder holder : imUserHolders) {
-            holder.INSTANCE = holder.getInstance();
             log.info("load ImUserHolder {}", holder);
         }
 
-        ServiceLoader<AbstractMessageConsumer> messageConsumers = ServiceLoader.load(AbstractMessageConsumer.class);
-        for (AbstractMessageConsumer consumer : messageConsumers) {
-            log.info("load MessageConsumer {}", consumer);
+        ServiceLoader<AbstractMsgConsumer> msgConsumers = ServiceLoader.load(AbstractMsgConsumer.class);
+        for (AbstractMsgConsumer consumer : msgConsumers) {
+            log.info("load MsgConsumer {}", consumer);
         }
 
         ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
@@ -66,7 +65,7 @@ public class ImApplication {
             jedis.publish(Constants.CHANNEL_IM_RENEW, info);
             jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
             jedis.close();
-            log.debug("广播当前网关机 负载信息 >>> {}", info);
+            log.debug("Broadcast the load information of the current im machine {}", info);
         }, 10, 15, TimeUnit.SECONDS);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -75,7 +74,7 @@ public class ImApplication {
             jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
             jedis.hdel(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort());
             jedis.close();
-            log.debug("广播当前网关机 关机信息 >>> {}", info);
+            log.debug("Broadcast the shutdown information of the current im machine {}", info);
         }));
     }
 
