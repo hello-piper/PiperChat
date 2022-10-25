@@ -57,7 +57,7 @@ public class WebSocketTextHandler extends SimpleChannelInboundHandler<TextWebSoc
                 return;
             }
             if ("ping".equals(msg)) {
-                channel.write(pong.retainedDuplicate());
+                channel.writeAndFlush(pong.retainedDuplicate());
                 return;
             }
             RequestMsg requestMsg = JSONObject.parseObject(msg, RequestMsg.class);

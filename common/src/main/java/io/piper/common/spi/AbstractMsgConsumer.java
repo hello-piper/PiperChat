@@ -59,7 +59,6 @@ public abstract class AbstractMsgConsumer {
                 handler(JSON.parseObject(message, Msg.class));
             }
         }, Constants.CHANNEL_IM_MESSAGE), "AbstractMsgConsumer Thread").start();
-        log.info("AbstractMsgConsumer init");
     }
 
     public abstract void handler(Msg msg);

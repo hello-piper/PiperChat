@@ -72,7 +72,7 @@ public class MsgConsumer extends AbstractMsgConsumer {
         // Memory stable at 500M, the same as when I use Undertow
         // channels.forEach(ch -> ch.writeAndFlush(frame));
 
-        ReferenceCountUtil.release(frame);
+        ReferenceCountUtil.safeRelease(frame);
 
         // So!  Please give me a way to reuse frame. without memory dont growing over time.
     }
