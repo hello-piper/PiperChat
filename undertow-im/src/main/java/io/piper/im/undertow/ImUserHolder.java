@@ -28,21 +28,7 @@ import javax.websocket.Session;
 public class ImUserHolder extends AbstractImUserHolder<Session> {
     private static final Logger log = LoggerFactory.getLogger(ImUserHolder.class);
 
-    public ImUserHolder() {
-        INSTANCE = this;
-    }
-
-    @Override
-    public AbstractImUserHolder<Session> getInstance() {
-        if (INSTANCE == null) {
-            synchronized (ImUserHolder.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ImUserHolder();
-                }
-            }
-        }
-        return INSTANCE;
-    }
+    public static final ImUserHolder INSTANCE = new ImUserHolder();
 
     @Override
     public Long getUserKey(Session session) {

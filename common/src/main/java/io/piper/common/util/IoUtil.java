@@ -105,6 +105,18 @@ public final class IoUtil {
         }
     }
 
+    public static void copy(InputStream in, OutputStream out) {
+        try {
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int len;
+            while ((len = in.read(buffer)) != EOF) {
+                out.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            throw new IMException(IMErrorEnum.SERVER_ERROR);
+        }
+    }
+
     public static void close(Closeable closeable) {
         if (null != closeable) {
             try {

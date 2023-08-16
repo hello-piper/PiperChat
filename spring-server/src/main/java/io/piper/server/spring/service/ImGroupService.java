@@ -13,7 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.piper.common.exception.IMErrorEnum;
@@ -32,6 +31,7 @@ import io.piper.server.spring.pojo.entity.ImGroupExample;
 import io.piper.server.spring.pojo.entity.ImGroupUser;
 import io.piper.server.spring.pojo.mapper.ImGroupMapper;
 import io.piper.server.spring.pojo.mapper.ImGroupUserMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -57,7 +57,7 @@ public class ImGroupService {
         List<ImGroupDTO> list = new ArrayList<>();
         for (ImGroup group : imGroups) {
             ImGroupDTO dto = new ImGroupDTO();
-            BeanUtil.copyProperties(group, dto);
+            BeanUtils.copyProperties(group, dto);
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
@@ -68,7 +68,7 @@ public class ImGroupService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImGroup group = new ImGroup();
-        BeanUtil.copyProperties(dto, group);
+        BeanUtils.copyProperties(dto, group);
         group.setId(snowflake.nextId());
         group.setCreateUid(userTokenDTO.getId());
         group.setCreateTime(System.currentTimeMillis());
@@ -81,7 +81,7 @@ public class ImGroupService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImGroup group = imGroupMapper.selectByPrimaryKey(dto.getId());
-        BeanUtil.copyProperties(dto, group);
+        BeanUtils.copyProperties(dto, group);
         imGroupMapper.updateByPrimaryKeySelective(group);
         return true;
     }
@@ -100,7 +100,7 @@ public class ImGroupService {
         }
         ImGroup group = imGroupMapper.selectByPrimaryKey(id);
         ImGroupDTO dto = new ImGroupDTO();
-        BeanUtil.copyProperties(group, dto);
+        BeanUtils.copyProperties(group, dto);
         return dto;
     }
 
@@ -137,7 +137,7 @@ public class ImGroupService {
         List<ImGroupDTO> list = new ArrayList<>();
         for (ImGroup group : imGroups) {
             ImGroupDTO dto = new ImGroupDTO();
-            BeanUtil.copyProperties(group, dto);
+            BeanUtils.copyProperties(group, dto);
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());

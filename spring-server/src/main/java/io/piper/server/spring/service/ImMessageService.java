@@ -13,7 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.piper.common.exception.IMErrorEnum;
@@ -27,6 +26,7 @@ import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
 import io.piper.server.spring.pojo.entity.ImMessage;
 import io.piper.server.spring.pojo.entity.ImMessageExample;
 import io.piper.server.spring.pojo.mapper.ImMessageMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,7 +49,7 @@ public class ImMessageService {
         List<ImMessageDTO> list = new ArrayList<>();
         for (ImMessage message : imGroups) {
             ImMessageDTO dto = new ImMessageDTO();
-            BeanUtil.copyProperties(message, dto);
+            BeanUtils.copyProperties(message, dto);
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
@@ -60,7 +60,7 @@ public class ImMessageService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImMessage message = new ImMessage();
-        BeanUtil.copyProperties(dto, message);
+        BeanUtils.copyProperties(dto, message);
         message.setId(snowflake.nextId());
         message.setServerTime(System.currentTimeMillis());
         imMessageMapper.insertSelective(message);
@@ -72,7 +72,7 @@ public class ImMessageService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImMessage message = imMessageMapper.selectByPrimaryKey(dto.getId());
-        BeanUtil.copyProperties(dto, message);
+        BeanUtils.copyProperties(dto, message);
         imMessageMapper.updateByPrimaryKeySelective(message);
         return true;
     }
@@ -91,7 +91,7 @@ public class ImMessageService {
         }
         ImMessage message = imMessageMapper.selectByPrimaryKey(id);
         ImMessageDTO dto = new ImMessageDTO();
-        BeanUtil.copyProperties(message, dto);
+        BeanUtils.copyProperties(message, dto);
         return dto;
     }
 }

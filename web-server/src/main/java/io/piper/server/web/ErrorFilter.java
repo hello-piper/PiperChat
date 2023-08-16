@@ -13,9 +13,9 @@
  */
 package io.piper.server.web;
 
-import cn.hutool.core.io.IoUtil;
 import io.piper.common.exception.IMException;
 import io.piper.common.exception.IMResult;
+import io.piper.common.util.IoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

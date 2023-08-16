@@ -27,11 +27,10 @@ import java.util.*;
  *
  * @author piper
  */
-public abstract class AbstractImUserHolder<T> {
+public class AbstractImUserHolder<T> {
     public static final Logger log = LoggerFactory.getLogger(AbstractImUserHolder.class);
     public static final String USER_KEY = "key";
     public static final String USER_INFO = "userInfo";
-    public static volatile AbstractImUserHolder INSTANCE = null;
 
     // 用户的连接
     private final HashMultiMap<Long, T> USER_SESSIONS = new HashMultiMap<>();
@@ -40,11 +39,15 @@ public abstract class AbstractImUserHolder<T> {
     // 用户的连接在上边哪些key里面
     private final HashMultiMap<T, Long> SESSION_LINK = new HashMultiMap<>();
 
-    public abstract AbstractImUserHolder<T> getInstance();
+    public static final AbstractImUserHolder INSTANCE = new AbstractImUserHolder();
 
-    public abstract Long getUserKey(T channel);
+    public Long getUserKey(T channel) {
+        return null;
+    }
 
-    public abstract UserTokenDTO getUserTokenDTO(T channel);
+    public UserTokenDTO getUserTokenDTO(T channel) {
+        return null;
+    }
 
     /**
      * 根据uid获取连接
@@ -130,7 +133,8 @@ public abstract class AbstractImUserHolder<T> {
     /**
      * 连接关闭
      */
-    public abstract void close(T channel);
+    public void close(T channel) {
+    }
 
     /**
      * 踢出相同端的连接

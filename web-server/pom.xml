@@ -64,6 +64,11 @@
             <version>${druid.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-db</artifactId>
+            <version>5.8.21</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -15,18 +15,24 @@ package io.piper.common.load_banlance;
 
 import io.piper.common.pojo.config.AddressInfo;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * AddressLoadBalanceHandler
+ * AddressLoadBalance
  *
  * @author piper
  */
-public class AddressLoadBalanceHandler implements IAddressLoadBalance {
+public class AddressLoadBalance {
 
-    @Override
-    public void flushAddress(AddressInfo addressInfo) {
+    static final Map<String, AddressInfo> IM_SERVER_MAP = new ConcurrentHashMap<>();
+
+    static final CopyOnWriteArrayList<AddressInfo> IM_SERVER_LIST_BY_WEIGHT = new CopyOnWriteArrayList<>();
+
+    public static void flushAddress(AddressInfo addressInfo) {
         String key = addressInfo.getIp() + ":" + addressInfo.getPort();
         AddressInfo info = IM_SERVER_MAP.get(key);
         IM_SERVER_MAP.put(key, addressInfo);
@@ -50,8 +56,7 @@ public class AddressLoadBalanceHandler implements IAddressLoadBalance {
         }
     }
 
-    @Override
-    public void removeAddress(AddressInfo addressInfo) {
+    public static void removeAddress(AddressInfo addressInfo) {
         String key = addressInfo.getIp() + ":" + addressInfo.getPort();
         AddressInfo info = IM_SERVER_MAP.remove(key);
         if (!Objects.isNull(info)) {
@@ -62,8 +67,7 @@ public class AddressLoadBalanceHandler implements IAddressLoadBalance {
         }
     }
 
-    @Override
-    public AddressInfo getAddressByWeight() {
+    public static AddressInfo getAddressByWeight() {
         int size = IM_SERVER_LIST_BY_WEIGHT.size();
         if (size == 0) {
             return null;

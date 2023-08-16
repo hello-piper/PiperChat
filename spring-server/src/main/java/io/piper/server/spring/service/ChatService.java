@@ -19,8 +19,7 @@ import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
-import io.piper.common.load_banlance.AddressLoadBalanceHandler;
-import io.piper.common.load_banlance.IAddressLoadBalance;
+import io.piper.common.load_banlance.AddressLoadBalance;
 import io.piper.common.pojo.config.AddressInfo;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.message.Msg;
@@ -36,7 +35,8 @@ import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.mapper.ImGroupMapper;
 import io.piper.server.spring.pojo.mapper.ImMessageMapperExt;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -44,9 +44,9 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.*;
 
-@Log4j2
 @Service
 public class ChatService {
+    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
 
     @Resource
     private Snowflake snowflake;
@@ -63,10 +63,8 @@ public class ChatService {
     @Resource
     private ImGroupMapper imGroupMapper;
 
-    public static final IAddressLoadBalance ADDRESS_HANDLER = new AddressLoadBalanceHandler();
-
     public AddressInfo getAddress() {
-        return ADDRESS_HANDLER.getAddressByWeight();
+        return AddressLoadBalance.getAddressByWeight();
     }
 
     public Msg chat(Msg msg) {

@@ -13,7 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.piper.common.exception.IMErrorEnum;
@@ -27,6 +26,7 @@ import io.piper.server.spring.dto.page_dto.ImUserPageDTO;
 import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.entity.ImUserExample;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,7 +49,7 @@ public class ImUserService {
         List<ImUserDTO> list = new ArrayList<>();
         for (ImUser user : imGroups) {
             ImUserDTO dto = new ImUserDTO();
-            BeanUtil.copyProperties(user, dto);
+            BeanUtils.copyProperties(user, dto);
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
@@ -60,7 +60,7 @@ public class ImUserService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUser user = new ImUser();
-        BeanUtil.copyProperties(dto, user);
+        BeanUtils.copyProperties(dto, user);
         user.setId(snowflake.nextId());
         user.setCreateUid(userTokenDTO.getId());
         user.setCreateTime(System.currentTimeMillis());
@@ -73,7 +73,7 @@ public class ImUserService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUser user = imUserMapper.selectByPrimaryKey(dto.getId());
-        BeanUtil.copyProperties(dto, user);
+        BeanUtils.copyProperties(dto, user);
         imUserMapper.updateByPrimaryKeySelective(user);
         return true;
     }
@@ -92,7 +92,7 @@ public class ImUserService {
         }
         ImUser user = imUserMapper.selectByPrimaryKey(id);
         ImUserDTO dto = new ImUserDTO();
-        BeanUtil.copyProperties(user, dto);
+        BeanUtils.copyProperties(user, dto);
         return dto;
     }
 }

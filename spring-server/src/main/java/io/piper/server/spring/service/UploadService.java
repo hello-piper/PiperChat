@@ -13,11 +13,11 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.io.IoUtil;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.util.IdUtil;
+import io.piper.common.util.IoUtil;
 import io.piper.common.util.IpUtil;
 import io.piper.common.util.YamlUtil;
 import org.springframework.stereotype.Service;

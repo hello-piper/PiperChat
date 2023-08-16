@@ -13,9 +13,6 @@
  */
 package io.piper.server.web;
 
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Singleton;
-import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.piper.common.constant.Constants;
@@ -24,7 +21,9 @@ import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.pojo.entity.ImUser;
+import io.piper.common.util.DigestUtil;
 import io.piper.common.util.IdUtil;
+import io.piper.common.util.IoUtil;
 import io.piper.common.util.StringUtil;
 import io.piper.server.web.repository.dao.UserDAO;
 import io.piper.server.web.repository.impl.UserDAOJdbc;
@@ -48,7 +47,7 @@ import java.util.Objects;
  */
 public class LoginServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(LoginServlet.class);
-    private static final UserDAO userDAO = Singleton.get(UserDAOJdbc.class);
+    private static final UserDAO userDAO = new UserDAOJdbc();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

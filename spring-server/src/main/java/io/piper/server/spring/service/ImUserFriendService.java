@@ -13,7 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.piper.common.enums.ChatTypeEnum;
@@ -30,6 +29,7 @@ import io.piper.server.spring.dto.page_dto.ImUserFriendPageDTO;
 import io.piper.server.spring.pojo.entity.ImUserFriend;
 import io.piper.server.spring.pojo.entity.ImUserFriendExample;
 import io.piper.server.spring.pojo.mapper.ImUserFriendMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,7 +49,7 @@ public class ImUserFriendService {
         List<ImUserFriendDTO> list = new ArrayList<>();
         for (ImUserFriend userFriend : imGroups) {
             ImUserFriendDTO dto = new ImUserFriendDTO();
-            BeanUtil.copyProperties(userFriend, dto);
+            BeanUtils.copyProperties(userFriend, dto);
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
@@ -60,7 +60,7 @@ public class ImUserFriendService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUserFriend userFriend = new ImUserFriend();
-        BeanUtil.copyProperties(dto, userFriend);
+        BeanUtils.copyProperties(dto, userFriend);
         userFriend.setId(Msg.genConversation(ChatTypeEnum.SINGLE.type, dto.getUid(), dto.getFriendId()));
         userFriend.setCreateTime(System.currentTimeMillis());
         imUserFriendMapper.insertSelective(userFriend);
@@ -72,7 +72,7 @@ public class ImUserFriendService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUserFriend userFriend = imUserFriendMapper.selectByPrimaryKey(dto.getId());
-        BeanUtil.copyProperties(dto, userFriend);
+        BeanUtils.copyProperties(dto, userFriend);
         imUserFriendMapper.updateByPrimaryKeySelective(userFriend);
         return true;
     }
@@ -91,7 +91,7 @@ public class ImUserFriendService {
         }
         ImUserFriend userFriend = imUserFriendMapper.selectByPrimaryKey(id);
         ImUserFriendDTO dto = new ImUserFriendDTO();
-        BeanUtil.copyProperties(userFriend, dto);
+        BeanUtils.copyProperties(userFriend, dto);
         return dto;
     }
 

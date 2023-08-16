@@ -21,8 +21,7 @@ import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
-import io.piper.common.load_banlance.AddressLoadBalanceHandler;
-import io.piper.common.load_banlance.IAddressLoadBalance;
+import io.piper.common.load_banlance.AddressLoadBalance;
 import io.piper.common.pojo.entity.ImMessage;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.IdUtil;
@@ -44,7 +43,6 @@ import java.io.IOException;
  * @author piper
  */
 public class ChatServlet extends HttpServlet {
-    private static final IAddressLoadBalance addressHandler = new AddressLoadBalanceHandler();
     private static final MessageDAO messageDAO = Singleton.get(MessageDAOImpl.class);
     private static final Snowflake snowflake = IdUtil.getSnowflake(Constants.IM_WORK_ID);
 
@@ -53,7 +51,7 @@ public class ChatServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String data = JSON.toJSONString(addressHandler.getAddressByWeight());
+        String data = JSON.toJSONString(AddressLoadBalance.getAddressByWeight());
         IoUtil.writeUtf8(resp.getOutputStream(), true, data);
     }
 

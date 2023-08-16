@@ -13,7 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.piper.common.exception.IMErrorEnum;
@@ -27,6 +26,7 @@ import io.piper.server.spring.dto.page_dto.ImGroupUserPageDTO;
 import io.piper.server.spring.pojo.entity.ImGroupUser;
 import io.piper.server.spring.pojo.entity.ImGroupUserExample;
 import io.piper.server.spring.pojo.mapper.ImGroupUserMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,7 +49,7 @@ public class ImGroupUserService {
         List<ImGroupUserDTO> list = new ArrayList<>();
         for (ImGroupUser groupUser : imGroups) {
             ImGroupUserDTO dto = new ImGroupUserDTO();
-            BeanUtil.copyProperties(groupUser, dto);
+            BeanUtils.copyProperties(groupUser, dto);
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
@@ -60,7 +60,7 @@ public class ImGroupUserService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImGroupUser groupUser = new ImGroupUser();
-        BeanUtil.copyProperties(dto, groupUser);
+        BeanUtils.copyProperties(dto, groupUser);
         groupUser.setId(snowflake.nextId());
         groupUser.setCreateUid(userTokenDTO.getId());
         groupUser.setCreateTime(System.currentTimeMillis());
@@ -73,7 +73,7 @@ public class ImGroupUserService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImGroupUser groupUser = imGroupUserMapper.selectByPrimaryKey(dto.getId());
-        BeanUtil.copyProperties(dto, groupUser);
+        BeanUtils.copyProperties(dto, groupUser);
         imGroupUserMapper.updateByPrimaryKeySelective(groupUser);
         return true;
     }
@@ -92,7 +92,7 @@ public class ImGroupUserService {
         }
         ImGroupUser groupUser = imGroupUserMapper.selectByPrimaryKey(id);
         ImGroupUserDTO dto = new ImGroupUserDTO();
-        BeanUtil.copyProperties(groupUser, dto);
+        BeanUtils.copyProperties(groupUser, dto);
         return dto;
     }
 }

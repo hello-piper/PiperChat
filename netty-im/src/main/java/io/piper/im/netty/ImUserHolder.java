@@ -29,21 +29,7 @@ import org.slf4j.LoggerFactory;
 public class ImUserHolder extends AbstractImUserHolder<Channel> {
     private static final Logger log = LoggerFactory.getLogger(ImUserHolder.class);
 
-    public ImUserHolder() {
-        INSTANCE = this;
-    }
-
-    @Override
-    public AbstractImUserHolder<Channel> getInstance() {
-        if (INSTANCE == null) {
-            synchronized (ImUserHolder.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ImUserHolder();
-                }
-            }
-        }
-        return INSTANCE;
-    }
+    public static final ImUserHolder INSTANCE = new ImUserHolder();
 
     @Override
     public Long getUserKey(Channel channel) {

@@ -13,7 +13,7 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
+import org.springframework.beans.BeanUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.piper.common.pojo.message.Msg;
@@ -47,7 +47,7 @@ public class UserService {
             return null;
         }
         ImUserDTO userDTO = new ImUserDTO();
-        BeanUtil.copyProperties(imUser, userDTO);
+        BeanUtils.copyProperties(imUser, userDTO);
         return userDTO;
     }
 
@@ -63,7 +63,7 @@ public class UserService {
         for (ImUser user : imUsers) {
             if (!curUid.equals(user.getId())) {
                 ImUserDTO dto = new ImUserDTO();
-                BeanUtil.copyProperties(user, dto);
+                BeanUtils.copyProperties(user, dto);
                 dto.setConversationId(Msg.genConversation((byte) 0, curUid, user.getId()));
                 list.add(dto);
             }

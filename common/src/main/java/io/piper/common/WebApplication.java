@@ -16,8 +16,7 @@ package io.piper.common;
 import com.alibaba.fastjson.JSON;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
-import io.piper.common.load_banlance.AddressLoadBalanceHandler;
-import io.piper.common.load_banlance.IAddressLoadBalance;
+import io.piper.common.load_banlance.AddressLoadBalance;
 import io.piper.common.pojo.config.AddressInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,6 @@ import java.util.Map;
  */
 public class WebApplication {
     private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
-    private static final IAddressLoadBalance ADDRESS_HANDLER = new AddressLoadBalanceHandler();
 
     public static void start() {
         new Thread(() -> {
@@ -41,7 +39,7 @@ public class WebApplication {
             Map<String, String> serverMap = jedis.hgetAll(Constants.IM_SERVER_HASH);
             if (serverMap != null && !serverMap.isEmpty()) {
                 for (String info : serverMap.values()) {
-                    ADDRESS_HANDLER.flushAddress(JSON.parseObject(info, AddressInfo.class));
+                    AddressLoadBalance.flushAddress(JSON.parseObject(info, AddressInfo.class));
                 }
             }
 
@@ -50,9 +48,9 @@ public class WebApplication {
                 public void onMessage(String channel, String message) {
                     log.debug("onMessage >>> {} {}", channel, message);
                     if (Constants.CHANNEL_IM_RENEW.equals(channel)) {
-                        ADDRESS_HANDLER.flushAddress(JSON.parseObject(message, AddressInfo.class));
+                        AddressLoadBalance.flushAddress(JSON.parseObject(message, AddressInfo.class));
                     } else if (Constants.CHANNEL_IM_SHUTDOWN.equals(channel)) {
-                        ADDRESS_HANDLER.removeAddress(JSON.parseObject(message, AddressInfo.class));
+                        AddressLoadBalance.removeAddress(JSON.parseObject(message, AddressInfo.class));
                     }
                 }
             }, Constants.CHANNEL_IM_RENEW, Constants.CHANNEL_IM_SHUTDOWN);

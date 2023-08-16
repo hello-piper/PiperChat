@@ -13,7 +13,6 @@
  */
 package io.piper.server.spring.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.piper.common.exception.IMErrorEnum;
@@ -26,6 +25,7 @@ import io.piper.server.spring.dto.page_dto.ImUserAdminPageDTO;
 import io.piper.server.spring.pojo.entity.ImUserAdmin;
 import io.piper.server.spring.pojo.entity.ImUserAdminExample;
 import io.piper.server.spring.pojo.mapper.ImUserAdminMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -45,7 +45,7 @@ public class ImUserAdminService {
         List<ImUserAdminDTO> list = new ArrayList<>();
         for (ImUserAdmin userAdmin : imGroups) {
             ImUserAdminDTO dto = new ImUserAdminDTO();
-            BeanUtil.copyProperties(userAdmin, dto);
+            BeanUtils.copyProperties(userAdmin, dto);
             list.add(dto);
         }
         return PageVO.build(list, page.getPageNum(), page.getPageSize(), page.getPages(), page.getTotal());
@@ -56,7 +56,7 @@ public class ImUserAdminService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUserAdmin userAdmin = new ImUserAdmin();
-        BeanUtil.copyProperties(dto, userAdmin);
+        BeanUtils.copyProperties(dto, userAdmin);
         userAdmin.setCreateUid(userTokenDTO.getId());
         userAdmin.setCreateTime(System.currentTimeMillis());
         imUserAdminMapper.insertSelective(userAdmin);
@@ -68,7 +68,7 @@ public class ImUserAdminService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUserAdmin userAdmin = imUserAdminMapper.selectByPrimaryKey(dto.getUid());
-        BeanUtil.copyProperties(dto, userAdmin);
+        BeanUtils.copyProperties(dto, userAdmin);
         imUserAdminMapper.updateByPrimaryKeySelective(userAdmin);
         return true;
     }
@@ -87,7 +87,7 @@ public class ImUserAdminService {
         }
         ImUserAdmin userAdmin = imUserAdminMapper.selectByPrimaryKey(uid);
         ImUserAdminDTO dto = new ImUserAdminDTO();
-        BeanUtil.copyProperties(userAdmin, dto);
+        BeanUtils.copyProperties(userAdmin, dto);
         return dto;
     }
 }
