@@ -60,7 +60,7 @@ public class WebSocketLoginHandler extends ChannelInboundHandlerAdapter {
                 tokenDTO.setNickname("guest:" + tokenDTO.getId());
                 tokenDTO.setClientName(ClientNameEnum.WEB.getName());
             } else {
-                String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
+                String tokenDTOStr = RedisDS.execute(jedis -> jedis.get(Constants.USER_TOKEN + token));
                 if (StringUtil.isEmpty(tokenDTOStr)) {
                     ImUserHolder.INSTANCE.close(ctx.channel());
                     throw IMException.build(IMErrorEnum.INVALID_TOKEN);

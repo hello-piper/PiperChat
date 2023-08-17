@@ -37,8 +37,8 @@ import java.io.IOException;
 import java.util.Map;
 
 @ServerEndpoint(value = "/websocket/{token}", encoders = {JsonEncode.class}, decoders = {JsonDecode.class})
-public class WebSocketEndpoint {
-    private final Logger log = LoggerFactory.getLogger(WebSocketEndpoint.class);
+public class JsrChatWebSocketEndpoint {
+    private final Logger log = LoggerFactory.getLogger(JsrChatWebSocketEndpoint.class);
     private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
     private static volatile long guest = 0;
 
@@ -49,13 +49,13 @@ public class WebSocketEndpoint {
             throw IMException.build(IMErrorEnum.INVALID_TOKEN);
         }
         UserTokenDTO tokenDTO;
-        if ("guest".equals(token)) {
+        if ("guest" .equals(token)) {
             tokenDTO = new UserTokenDTO();
             tokenDTO.setId(-++guest);
             tokenDTO.setNickname("guest:" + tokenDTO.getId());
             tokenDTO.setClientName(ClientNameEnum.WEB.getName());
         } else {
-            String tokenDTOStr = RedisDS.getJedis().get(Constants.USER_TOKEN + token);
+            String tokenDTOStr = RedisDS.execute(jedis -> jedis.get(Constants.USER_TOKEN + token));
             if (StringUtil.isEmpty(tokenDTOStr)) {
                 ImUserHolder.INSTANCE.close(session);
                 throw IMException.build(IMErrorEnum.INVALID_TOKEN);
@@ -90,7 +90,7 @@ public class WebSocketEndpoint {
             ImUserHolder.INSTANCE.close(session);
             return;
         }
-        if ("ping".equals(msg)) {
+        if ("ping" .equals(msg)) {
             session.getAsyncRemote().sendText("pong");
             return;
         }

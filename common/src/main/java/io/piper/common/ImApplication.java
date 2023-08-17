@@ -25,7 +25,6 @@ import io.piper.common.util.ThreadUtil;
 import io.piper.common.util.YamlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
 
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
@@ -58,22 +57,24 @@ public class ImApplication {
         addressInfo.setWsPath(config.getWsPath());
         ADDRESS_INFO = addressInfo;
 
+        System.out.println("ImApplication start success!  ws://" + addressInfo.getIp() + ":" + addressInfo.getPort() + addressInfo.getWsPath() + "/guest");
+
         ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
             ADDRESS_INFO.setOnlineNum(AbstractImUserHolder.INSTANCE.onlineNum());
             String info = JSON.toJSONString(ADDRESS_INFO);
-            Jedis jedis = RedisDS.getJedis();
-            jedis.publish(Constants.CHANNEL_IM_RENEW, info);
-            jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
-            jedis.close();
+            RedisDS.consumer(jedis -> {
+                jedis.publish(Constants.CHANNEL_IM_RENEW, info);
+                jedis.hset(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort(), info);
+            });
             log.debug("Broadcast the load information of the current im machine {}", info);
         }, 10, 15, TimeUnit.SECONDS);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String info = JSON.toJSONString(ADDRESS_INFO);
-            Jedis jedis = RedisDS.getJedis();
-            jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
-            jedis.hdel(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort());
-            jedis.close();
+            RedisDS.consumer(jedis -> {
+                jedis.publish(Constants.CHANNEL_IM_SHUTDOWN, info);
+                jedis.hdel(Constants.IM_SERVER_HASH, ADDRESS_INFO.getIp() + ":" + ADDRESS_INFO.getPort());
+            });
             log.debug("Broadcast the shutdown information of the current im machine {}", info);
         }));
     }

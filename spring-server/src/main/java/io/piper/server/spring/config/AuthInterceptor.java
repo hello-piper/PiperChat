@@ -32,7 +32,7 @@ import java.util.Objects;
 public class AuthInterceptor implements HandlerInterceptor {
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

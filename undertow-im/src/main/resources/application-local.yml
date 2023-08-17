@@ -3,7 +3,7 @@ redis:
   port: 6379
   password:
   timeout: 30000
-  maxActive: 5000
-  maxWait: 5000
-  maxIdle: 100
-  minIdle: 50
+  minIdle: 3
+  maxIdle: 10
+  maxActive: 100
+  maxWait: 3000

@@ -11,21 +11,16 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.server.web;
+package io.piper.common.db;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
+import redis.clients.jedis.Jedis;
 
 /**
- * Unit test for simple App.
+ * JedisConsumer
+ *
+ * @author piper
  */
-public class AppTest {
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue() {
-        assertTrue(true);
-    }
+@FunctionalInterface
+public interface JedisConsumer {
+    void consumer(Jedis jedis);
 }

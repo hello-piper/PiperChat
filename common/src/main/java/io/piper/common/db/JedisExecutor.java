@@ -11,13 +11,17 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.server.web.repository.dao;
+package io.piper.common.db;
 
-import io.piper.common.pojo.entity.ImMessage;
+import redis.clients.jedis.Jedis;
 
-public interface MessageDAO {
-
-    ImMessage getById(String id);
-
-    boolean insert(ImMessage imMessage);
+/**
+ * JedisExecutor
+ *
+ * @author piper
+ */
+@FunctionalInterface
+public interface JedisExecutor<T> {
+    T execute(Jedis jedis);
 }
+

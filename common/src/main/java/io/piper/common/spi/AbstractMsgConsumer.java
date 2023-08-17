@@ -36,8 +36,17 @@ public abstract class AbstractMsgConsumer {
     static final Logger log = LoggerFactory.getLogger(AbstractMsgConsumer.class);
     private static final ImProperties imConfig = YamlUtil.getConfig("im", ImProperties.class);
 
-    {
-        if ("local".equals(YamlUtil.getProfile())) {
+    public AbstractMsgConsumer() {
+        new Thread(() -> RedisDS.consumer(jedis -> jedis.subscribe(new JedisPubSub() {
+            @Override
+            public void onMessage(String channel, String message) {
+                log.info("onMessage >>> {} {}", channel, message);
+                handler(JSON.parseObject(message, Msg.class));
+            }
+        }, Constants.CHANNEL_IM_MESSAGE)), "AbstractMsgConsumer Thread").start();
+
+
+        if ("local" .equals(YamlUtil.getProfile())) {
             ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
                 try {
                     Msg dto = Msg.createTextMsg("hello piper");
@@ -49,16 +58,6 @@ public abstract class AbstractMsgConsumer {
                 }
             }, 10, 10, TimeUnit.SECONDS);
         }
-    }
-
-    public AbstractMsgConsumer() {
-        new Thread(() -> RedisDS.getJedis().subscribe(new JedisPubSub() {
-            @Override
-            public void onMessage(String channel, String message) {
-                log.info("onMessage >>> {} {}", channel, message);
-                handler(JSON.parseObject(message, Msg.class));
-            }
-        }, Constants.CHANNEL_IM_MESSAGE), "AbstractMsgConsumer Thread").start();
     }
 
     public abstract void handler(Msg msg);

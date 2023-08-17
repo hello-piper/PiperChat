@@ -15,7 +15,6 @@ package io.piper.common.pojo.message;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
-import org.msgpack.annotation.Message;
 
 import java.io.Serializable;
 
@@ -25,7 +24,6 @@ import java.io.Serializable;
  * @author piper
  */
 @Data
-@Message
 public class FileMsgBody implements Serializable {
     private static final long serialVersionUID = 1;
 

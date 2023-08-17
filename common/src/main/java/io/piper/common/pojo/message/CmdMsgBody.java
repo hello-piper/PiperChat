@@ -16,7 +16,6 @@ package io.piper.common.pojo.message;
 import com.alibaba.fastjson.JSON;
 import io.piper.common.enums.CmdTypeEnum;
 import lombok.Data;
-import org.msgpack.annotation.Message;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -27,7 +26,6 @@ import java.util.Map;
  * @author piper
  */
 @Data
-@Message
 public class CmdMsgBody implements Serializable {
     private static final long serialVersionUID = 1;
 

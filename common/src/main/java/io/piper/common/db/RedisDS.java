@@ -20,29 +20,41 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.time.Duration;
+
 /**
  * RedisDS
  *
  * @author piper
  */
 public class RedisDS {
-    private static final JedisPool JEDIS_POOL;
+    private static JedisPool JEDIS_POOL = null;
 
     static {
         RedisProperties config = YamlUtil.getConfig("redis", RedisProperties.class);
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(config.getMaxIdle());
-        jedisPoolConfig.setMinIdle(config.getMinIdle());
-        jedisPoolConfig.setMaxTotal(config.getMaxActive());
-        jedisPoolConfig.setMaxWaitMillis(config.getMaxWait());
-        if (StringUtil.isEmpty(config.getPassword())) {
-            JEDIS_POOL = new JedisPool(config.getHost(), config.getPort());
-        } else {
-            JEDIS_POOL = new JedisPool(jedisPoolConfig, config.getHost(), config.getPort(), config.getTimeout(), config.getPassword());
+        if (config != null) {
+            JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+            jedisPoolConfig.setMinIdle(config.getMinIdle());
+            jedisPoolConfig.setMaxIdle(config.getMaxIdle());
+            jedisPoolConfig.setMaxTotal(config.getMaxActive());
+            jedisPoolConfig.setMaxWait(Duration.ofMillis(config.getMaxWait()));
+            if (StringUtil.isEmpty(config.getPassword())) {
+                JEDIS_POOL = new JedisPool(config.getHost(), config.getPort());
+            } else {
+                JEDIS_POOL = new JedisPool(jedisPoolConfig, config.getHost(), config.getPort(), config.getTimeout(), config.getPassword());
+            }
         }
     }
 
-    public static Jedis getJedis() {
-        return JEDIS_POOL.getResource();
+    public static void consumer(JedisConsumer consumer) {
+        try (Jedis jedis = JEDIS_POOL.getResource()) {
+            consumer.consumer(jedis);
+        }
+    }
+
+    public static <T> T execute(JedisExecutor<T> executor) {
+        try (Jedis jedis = JEDIS_POOL.getResource()) {
+            return executor.execute(jedis);
+        }
     }
 }

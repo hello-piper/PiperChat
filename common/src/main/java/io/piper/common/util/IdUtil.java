@@ -38,14 +38,15 @@ public final class IdUtil {
             if (MAP.containsKey(key)) {
                 return (Snowflake) MAP.get(key);
             }
-            Long workerId = (Long) RedisDS.getJedis().eval("for i=0," + Snowflake.getMaxWorkerId() + " do if redis.call('sadd',KEYS[1],i) == 1 then return i end end",
-                    Collections.singletonList(key), Collections.emptyList());
+            Long workerId = (Long) RedisDS.execute(jedis -> jedis.eval("for i=0," + Snowflake.getMaxWorkerId()
+                            + " do if redis.call('sadd',KEYS[1],i) == 1 then return i end end",
+                    Collections.singletonList(key), Collections.emptyList()));
             Snowflake snowflake = new Snowflake(workerId, 0);
             MAP.put(key, snowflake);
             log.debug("get Snowflake workId {}", workerId);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 log.debug("rem Snowflake workId {}", workerId);
-                RedisDS.getJedis().srem(key, String.valueOf(workerId));
+                RedisDS.consumer(jedis -> jedis.srem(key, String.valueOf(workerId)));
             }));
             return snowflake;
         }

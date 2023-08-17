@@ -48,14 +48,18 @@ public final class YamlUtil {
      * 获取配置
      */
     public static <T> T getConfig(String key, Class<T> config) {
-        T instance = null;
         try {
-            instance = config.getDeclaredConstructor().newInstance();
-            populate((Map) LOADED_CONFIG.get(key), instance);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            Object o = LOADED_CONFIG.get(key);
+            if (o != null) {
+                T instance = config.getDeclaredConstructor().newInstance();
+                populate((Map) o, instance);
+                return instance;
+            }
+        } catch (InstantiationException | IllegalAccessException
+                 | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return instance;
+        return null;
     }
 
     /**

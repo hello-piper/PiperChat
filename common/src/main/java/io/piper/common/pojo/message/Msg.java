@@ -17,7 +17,6 @@ import com.alibaba.fastjson.JSON;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import lombok.Data;
-import org.msgpack.annotation.Message;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -28,7 +27,6 @@ import java.util.Map;
  * @author piper
  */
 @Data
-@Message
 public class Msg implements Serializable {
     private static final long serialVersionUID = 1;
 
