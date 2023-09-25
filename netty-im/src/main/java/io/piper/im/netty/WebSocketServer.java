@@ -16,6 +16,7 @@ package io.piper.im.netty;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -37,7 +38,9 @@ public final class WebSocketServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup(8);
         try {
             ServerBootstrap bootstrap = new ServerBootstrap().group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
-            bootstrap.handler(new LoggingHandler(LogLevel.INFO)).childHandler(new WebSocketServerInitializer(config));
+            bootstrap.handler(new LoggingHandler(LogLevel.INFO));
+            bootstrap.childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE);
+            bootstrap.childHandler(new WebSocketServerInitializer(config));
             Channel channel = bootstrap.bind(config.getPort()).sync().channel();
             channel.config().setAllocator(PooledByteBufAllocator.DEFAULT);
             ImApplication.start();
