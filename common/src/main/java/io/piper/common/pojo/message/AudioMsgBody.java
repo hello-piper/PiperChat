@@ -13,18 +13,18 @@
  */
 package io.piper.common.pojo.message;
 
-import com.alibaba.fastjson.JSON;
-import lombok.Data;
-
 import java.io.Serializable;
+
+import com.alibaba.fastjson.JSON;
+
+import lombok.Data;
 
 /**
  * 语言消息
- *
  * @author piper
  */
 @Data
-public class VoiceMsgBody implements Serializable {
+public class AudioMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
     /**
@@ -35,19 +35,19 @@ public class VoiceMsgBody implements Serializable {
     /**
      * 语言时长(s)
      */
-    private Integer length;
+    private Integer seconds;
 
     /**
      * 语言大小(kb)
      */
-    private Long size;
+    private Integer size;
 
-    public VoiceMsgBody() {
+    public AudioMsgBody() {
     }
 
-    public VoiceMsgBody(String url, Integer length, Long size) {
+    public AudioMsgBody(String url, Integer seconds, Integer size) {
         this.url = url;
-        this.length = length;
+        this.seconds = seconds;
         this.size = size;
     }
 

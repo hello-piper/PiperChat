@@ -24,13 +24,13 @@ import java.io.Serializable;
  * @author piper
  */
 @Data
-public class VideoMsgBody implements Serializable {
+public class VideoMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
     /**
      * 视频名称
      */
-    private String videoName;
+    private String name;
 
     /**
      * 视频地址
@@ -40,20 +40,20 @@ public class VideoMsgBody implements Serializable {
     /**
      * 视频时长(s)
      */
-    private Integer length;
+    private Integer seconds;
 
     /**
-     * 视频大小(kb)
+     * 视频大小(Byte)
      */
-    private Long size;
+    private Integer size;
 
     public VideoMsgBody() {
     }
 
-    public VideoMsgBody(String videoName, String url, Integer length, Long size) {
-        this.videoName = videoName;
+    public VideoMsgBody(String name, String url, Integer seconds, Integer size) {
+        this.name = name;
         this.url = url;
-        this.length = length;
+        this.seconds = seconds;
         this.size = size;
     }
 

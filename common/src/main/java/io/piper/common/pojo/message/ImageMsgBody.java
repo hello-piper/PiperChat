@@ -24,23 +24,23 @@ import java.io.Serializable;
  * @author piper
  */
 @Data
-public class ImageMsgBody implements Serializable {
+public class ImageMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
     /**
      * 图片宽度
      */
-    private Double width;
+    private Integer width;
 
     /**
      * 图片高度
      */
-    private Double height;
+    private Integer height;
 
     /**
      * 图片大小(kb)
      */
-    private Long size;
+    private Integer size;
 
     /**
      * 图片地址
@@ -50,7 +50,7 @@ public class ImageMsgBody implements Serializable {
     public ImageMsgBody() {
     }
 
-    public ImageMsgBody(Double width, Double height, Long size, String url, String thumbnailUrl) {
+    public ImageMsgBody(Integer width, Integer height, Integer size, String url, String thumbnailUrl) {
         this.width = width;
         this.height = height;
         this.size = size;

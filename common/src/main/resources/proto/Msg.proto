@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2020-2030 The Piper(https://github.com/hello-piper)
+ *
+ * The PiperChat is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *
+ * http://license.coscl.org.cn/MulanPSL2
+ *
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+// resources dir open terminal，protoc --java_out=../java */*.proto
+
+syntax = "proto3";
+
+package protoObj;
+
+import "google/protobuf/any.proto";
+
+option java_package = "io.piper.common.pojo.message.protoObj";
+option java_outer_classname = "PBOuterClass";
+option java_multiple_files = true;
+option cc_enable_arenas = true;
+
+message Msg {
+  int64 id = 1;
+  int32 type = 2;
+  int32 chatType = 3;
+  int64 chatId = 4;
+  int64 from = 5;
+  repeated int64 to = 6;
+  string text = 7;
+  int64 time = 8;
+
+  ImageMsgBody imageMsgBody = 9;
+  AudioMsgBody audioMsgBody = 10;
+  VideoMsgBody videoMsgBody = 11;
+  FileMsgBody fileMsgBody = 12;
+  LocationMsgBody locationMsgBody = 13;
+  CustomMsgBody customMsgBody = 14;
+
+  google.protobuf.Any body = 15;
+}
+
+message ImageMsgBody {
+    string url = 1;
+    int32 size = 2;
+    int32 width = 3;
+    int32 height = 4;
+}
+
+message AudioMsgBody {
+    string url = 1;
+    int32 size = 2;
+    int32 seconds = 3;
+}
+
+message VideoMsgBody {
+    string url = 1;
+    int32 size = 2;
+    int32 seconds = 3;
+    string name = 4;
+}
+
+message FileMsgBody {
+    string url = 1;
+    int32 size = 2;
+    string name = 3;
+}
+
+message LocationMsgBody {
+    string address = 1;
+    double latitude = 2;
+    double longitude = 3;
+}
+
+message CustomMsgBody {
+    string data = 1;
+}

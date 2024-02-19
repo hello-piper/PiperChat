@@ -13,13 +13,20 @@
  */
 package io.piper.server.spring.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.piper.common.enums.ChatTypeEnum;
+
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
-import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.LoginUserHolder;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.AddFriendDTO;
@@ -29,12 +36,6 @@ import io.piper.server.spring.dto.page_dto.ImUserFriendPageDTO;
 import io.piper.server.spring.pojo.entity.ImUserFriend;
 import io.piper.server.spring.pojo.entity.ImUserFriendExample;
 import io.piper.server.spring.pojo.mapper.ImUserFriendMapper;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ImUserFriendService {
@@ -61,7 +62,7 @@ public class ImUserFriendService {
         }
         ImUserFriend userFriend = new ImUserFriend();
         BeanUtils.copyProperties(dto, userFriend);
-        userFriend.setId(Msg.genConversation(ChatTypeEnum.SINGLE.type, dto.getUid(), dto.getFriendId()));
+        userFriend.setId(dto.getUid() + dto.getFriendId()); // todo 发号器生成
         userFriend.setCreateTime(System.currentTimeMillis());
         imUserFriendMapper.insertSelective(userFriend);
         return true;
@@ -101,7 +102,7 @@ public class ImUserFriendService {
             throw new IMException(IMErrorEnum.PARAM_ERROR);
         }
         ImUserFriend friend = new ImUserFriend();
-        friend.setId(Msg.genConversation(ChatTypeEnum.SINGLE.type, uid, dto.getUid()));
+        friend.setId(uid + dto.getUid()); // todo 发号器生成
         friend.setUid(uid);
         friend.setFriendId(dto.getUid());
         friend.setReqMsg(dto.getReqMsg());

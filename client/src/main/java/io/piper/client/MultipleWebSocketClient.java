@@ -38,6 +38,7 @@ import io.piper.common.enums.MsgTypeEnum;
 import io.piper.common.pojo.message.Msg;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,9 +53,9 @@ public class MultipleWebSocketClient {
     static Msg msg = new Msg();
 
     static {
-        msg.setMsgType(MsgTypeEnum.TEXT.type);
+        msg.setType(MsgTypeEnum.TEXT.type);
         msg.setChatType(ChatTypeEnum.SINGLE.type);
-        msg.setTo(0L);
+        msg.setTo(Collections.singletonList(0L));
     }
 
     public static void main(String[] args) throws Exception {

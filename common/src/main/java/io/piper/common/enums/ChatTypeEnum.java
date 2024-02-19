@@ -17,22 +17,21 @@ import java.util.Arrays;
 
 /**
  * 会话类型枚举
- *
  * @author piper
  */
 public enum ChatTypeEnum {
     // 单聊
-    SINGLE((byte) 0),
-    // 聊天室
-    CHATROOM((byte) 1);
+    SINGLE(0),
+    // 群组
+    GROUP(1);
 
-    public Byte type;
+    public final Integer type;
 
-    ChatTypeEnum(Byte type) {
+    ChatTypeEnum(Integer type) {
         this.type = type;
     }
 
-    public static ChatTypeEnum valueOf(Byte type) {
+    public static ChatTypeEnum valueOf(Integer type) {
         return Arrays.stream(values()).filter(v -> v.type.equals(type)).findFirst().orElse(null);
     }
 }

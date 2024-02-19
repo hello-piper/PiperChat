@@ -17,20 +17,19 @@ import java.util.Arrays;
 
 /**
  * 信令类型枚举
- *
  * @author piper
  */
 public enum CmdTypeEnum {
-    HEARTBEAT((byte) 0),
-    SUB_ROOM((byte) 1);
+    HEARTBEAT(0),
+    SUB_ROOM(1);
 
-    public Byte type;
+    public final Integer type;
 
-    CmdTypeEnum(Byte type) {
+    CmdTypeEnum(Integer type) {
         this.type = type;
     }
 
-    public static CmdTypeEnum valueOf(Byte type) {
+    public static CmdTypeEnum valueOf(Integer type) {
         return Arrays.stream(values()).filter(v -> v.type.equals(type)).findFirst().orElse(null);
     }
 }

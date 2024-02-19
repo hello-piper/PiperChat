@@ -13,13 +13,16 @@
  */
 package io.piper.im.undertow;
 
+import java.util.Collections;
+
+import org.junit.Test;
+
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.pojo.message.Msg;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
-import org.junit.Test;
 
 public class AppTest {
 
@@ -28,7 +31,7 @@ public class AppTest {
         Msg msg = Msg.createTextMsg("hello protostuff");
         msg.setChatType(ChatTypeEnum.SINGLE.type);
         msg.setFrom(0L);
-        msg.setTo(1L);
+        msg.setTo(Collections.singletonList(1L));
 
         Schema<Msg> schema = RuntimeSchema.getSchema(Msg.class);
 

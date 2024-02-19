@@ -27,8 +27,8 @@ public class ImUserDTO implements Serializable {
     @ApiModelProperty("id")
     private Long id;
 
-    @ApiModelProperty("conversationId")
-    private String conversationId;
+    @ApiModelProperty("chatId")
+    private String chatId;
 
     @ApiModelProperty("nickname")
     private String nickname;

@@ -24,13 +24,13 @@ import java.io.Serializable;
  * @author piper
  */
 @Data
-public class FileMsgBody implements Serializable {
+public class FileMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
     /**
      * 文件名称
      */
-    private String fileName;
+    private String name;
 
     /**
      * 文件地址
@@ -40,13 +40,13 @@ public class FileMsgBody implements Serializable {
     /**
      * 文件大小(kb)
      */
-    private Long size;
+    private Integer size;
 
     public FileMsgBody() {
     }
 
-    public FileMsgBody(String fileName, String url, Long size) {
-        this.fileName = fileName;
+    public FileMsgBody(String name, String url, Integer size) {
+        this.name = name;
         this.url = url;
         this.size = size;
     }

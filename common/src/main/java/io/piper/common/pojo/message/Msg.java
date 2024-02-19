@@ -13,17 +13,17 @@
  */
 package io.piper.common.pojo.message;
 
+import java.io.Serializable;
+import java.util.List;
+
 import com.alibaba.fastjson.JSON;
+
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Map;
-
 /**
  * 聊天消息
- *
  * @author piper
  */
 @Data
@@ -36,19 +36,19 @@ public class Msg implements Serializable {
     private Long id;
 
     /**
-     * 会话类型
-     */
-    private Byte chatType;
-
-    /**
      * 消息类型
      */
-    private Byte msgType;
+    private Integer type;
 
     /**
-     * 会话id
+     * 会话类型
      */
-    private String conversationId;
+    private Integer chatType;
+
+    /**
+     * 消息所属的会话id conversationId/roomId/groupId
+     */
+    private Long chatId;
 
     /**
      * 发送者id
@@ -56,163 +56,112 @@ public class Msg implements Serializable {
     private Long from;
 
     /**
-     * 发送者昵称
+     * 接收方的用户id列表，最大100
      */
-    private String fromNickname;
+    private List<Long> to;
 
     /**
-     * 接收者id/群id/聊天室id
+     * 文本消息内容/描述内容
      */
-    private Long to;
+    private String text;
 
     /**
-     * 消息发送时间
+     * 消息内容
      */
-    private Long sendTime;
+    private IMsgBody body;
 
     /**
-     * 服务器时间
+     * 消息时间戳，秒
      */
-    private Long serverTime;
-
-    /**
-     * 消息标题/文本消息内容
-     */
-    private String title;
-
-    /**
-     * 图片消息内容
-     */
-    private ImageMsgBody imageMsgBody;
-
-    /**
-     * 语音消息内容
-     */
-    private VoiceMsgBody voiceMsgBody;
-
-    /**
-     * 视频消息内容
-     */
-    private VideoMsgBody videoMsgBody;
-
-    /**
-     * 文件消息内容
-     */
-    private FileMsgBody fileMsgBody;
-
-    /**
-     * 位置消息内容
-     */
-    private LocationMsgBody locationMsgBody;
-
-    /**
-     * 信令消息内容
-     */
-    private CmdMsgBody cmdMsgBody;
-
-    /**
-     * 附加属性
-     */
-    private Map<String, String> extra;
+    private Long time;
 
     public Msg() {
     }
 
     public static Msg createTextMsg(String text) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.TEXT.type);
-        msg.setTitle(text);
+        msg.setType(MsgTypeEnum.TEXT.type);
+        msg.setText(text);
         return msg;
     }
 
-    public static Msg createImageMsg(Double width, Double height, Long size, String imgUrl, String thumbnailUrl) {
+    public static Msg createImageMsg(Integer width, Integer height, Integer size, String imgUrl, String thumbnailUrl) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.IMAGE.type);
-        msg.setImageMsgBody(new ImageMsgBody(width, height, size, imgUrl, thumbnailUrl));
+        msg.setType(MsgTypeEnum.IMAGE.type);
+        msg.setBody(new ImageMsgBody(width, height, size, imgUrl, thumbnailUrl));
         return msg;
     }
 
-    public static Msg createVoiceMsg(String voiceUrl, int length, Long size) {
+    public static Msg createAudioMsg(String voiceUrl, int seconds, Integer size) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.VOICE.type);
-        msg.setVoiceMsgBody(new VoiceMsgBody(voiceUrl, length, size));
+        msg.setType(MsgTypeEnum.AUDIO.type);
+        msg.setBody(new AudioMsgBody(voiceUrl, seconds, size));
         return msg;
     }
 
-    public static Msg createVideoMsg(String videoName, String videoUrl, int length, Long size) {
+    public static Msg createVideoMsg(String videoName, String videoUrl, int seconds, Integer size) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.VIDEO.type);
-        msg.setVideoMsgBody(new VideoMsgBody(videoName, videoUrl, length, size));
+        msg.setType(MsgTypeEnum.VIDEO.type);
+        msg.setBody(new VideoMsgBody(videoName, videoUrl, seconds, size));
         return msg;
     }
 
-    public static Msg createFileMsg(String fileName, String fileUrl, Long size) {
+    public static Msg createFileMsg(String fileName, String fileUrl, Integer size) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.FILE.type);
-        msg.setFileMsgBody(new FileMsgBody(fileName, fileUrl, size));
+        msg.setType(MsgTypeEnum.FILE.type);
+        msg.setBody(new FileMsgBody(fileName, fileUrl, size));
         return msg;
     }
 
     public static Msg createLocationMsg(String address, Double latitude, Double longitude) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.LOCATION.type);
-        msg.setLocationMsgBody(new LocationMsgBody(address, latitude, longitude));
+        msg.setType(MsgTypeEnum.LOCATION.type);
+        msg.setBody(new LocationMsgBody(address, latitude, longitude));
         return msg;
     }
 
-    public static Msg createNotifyMsg(Byte type, Map<String, String> params) {
+    public static Msg createCustomMsg(String data) {
         Msg msg = new Msg();
-        msg.setMsgType(MsgTypeEnum.CMD.type);
-        msg.setCmdMsgBody(new CmdMsgBody(type, params));
+        msg.setType(MsgTypeEnum.CUSTOM.type);
+        msg.setBody(new CustomMsgBody(data));
         return msg;
+    }
+
+    public MsgTypeEnum getTypeEnum() {
+        return MsgTypeEnum.valueOf(this.getType());
     }
 
     public ChatTypeEnum getChatTypeEnum() {
         return ChatTypeEnum.valueOf(this.getChatType());
     }
 
-    public MsgTypeEnum getMsgTypeEnum() {
-        return MsgTypeEnum.valueOf(this.getMsgType());
-    }
-
     public String getBodyStr() {
-        MsgTypeEnum msgTypeEnum = this.getMsgTypeEnum();
-        switch (msgTypeEnum) {
-            case TEXT:
-                return this.title;
+        switch (this.getTypeEnum()) {
             case IMAGE:
-                return JSON.toJSONString(this.imageMsgBody);
-            case VOICE:
-                return JSON.toJSONString(this.voiceMsgBody);
+            case AUDIO:
             case VIDEO:
-                return JSON.toJSONString(this.videoMsgBody);
             case FILE:
-                return JSON.toJSONString(this.fileMsgBody);
             case LOCATION:
-                return JSON.toJSONString(this.locationMsgBody);
-            case CMD:
-                return JSON.toJSONString(this.cmdMsgBody);
+            case CUSTOM:
+                return JSON.toJSONString(this.body);
+            case TEXT:
             default:
                 return null;
         }
     }
 
-    public static String genConversation(Byte chatType, Long from, Long to) {
-        if (!ChatTypeEnum.SINGLE.type.equals(chatType)) {
-            return to.toString();
-        }
-        if (from < to) {
-            return from + ":" + to;
-        }
-        return to + ":" + from;
-    }
-
     public boolean valid() {
-        return this.getTo() != null && this.getFrom() != null && this.getMsgType() != null && this.getChatType() != null;
+        return this.getTo() != null && this.getFrom() != null && this.getType() != null && this.getChatType() != null;
     }
 
     @Override
     public String toString() {
         return JSON.toJSONString(this);
+    }
+
+    /**
+     * 消息体
+     */
+    public interface IMsgBody {
     }
 }

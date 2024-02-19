@@ -17,32 +17,33 @@ import java.util.Arrays;
 
 /**
  * 消息类型枚举
- *
  * @author piper
  */
 public enum MsgTypeEnum {
     // 文本消息
-    TEXT((byte) 0),
+    TEXT(0),
     // 图片
-    IMAGE((byte) 1),
+    IMAGE(1),
     // 语音
-    VOICE((byte) 2),
+    AUDIO(2),
     // 视频
-    VIDEO((byte) 3),
+    VIDEO(3),
     // 文件
-    FILE((byte) 4),
+    FILE(4),
     // 地理位置
-    LOCATION((byte) 5),
-    // 信令
-    CMD((byte) 6);
+    LOCATION(5),
+    // 信令消息
+    CMD(6),
+    // 自定义消息
+    CUSTOM(7);
 
-    public Byte type;
+    public final Integer type;
 
-    MsgTypeEnum(Byte type) {
+    MsgTypeEnum(Integer type) {
         this.type = type;
     }
 
-    public static MsgTypeEnum valueOf(Byte type) {
+    public static MsgTypeEnum valueOf(Integer type) {
         return Arrays.stream(values()).filter(v -> v.type.equals(type)).findFirst().orElse(null);
     }
 }

@@ -13,8 +13,17 @@
  */
 package io.piper.server.spring.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+
 import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.dto.UserTokenDTO;
@@ -26,12 +35,6 @@ import io.piper.server.spring.dto.page_dto.ImMessagePageDTO;
 import io.piper.server.spring.pojo.entity.ImMessage;
 import io.piper.server.spring.pojo.entity.ImMessageExample;
 import io.piper.server.spring.pojo.mapper.ImMessageMapper;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ImMessageService {
@@ -62,7 +65,7 @@ public class ImMessageService {
         ImMessage message = new ImMessage();
         BeanUtils.copyProperties(dto, message);
         message.setId(snowflake.nextId());
-        message.setServerTime(System.currentTimeMillis());
+        message.setTime(System.currentTimeMillis() / 1000);
         imMessageMapper.insertSelective(message);
         return true;
     }

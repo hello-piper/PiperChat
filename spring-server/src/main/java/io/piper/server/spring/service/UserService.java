@@ -16,7 +16,6 @@ package io.piper.server.spring.service;
 import org.springframework.beans.BeanUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.piper.common.pojo.message.Msg;
 import io.piper.common.util.LoginUserHolder;
 import io.piper.common.util.StringUtil;
 import io.piper.server.spring.dto.ImUserDTO;
@@ -52,6 +51,7 @@ public class UserService {
     }
 
     public PageVO<ImUserDTO> friends(FriendSearchDTO searchDTO) {
+        // todo 从Friend好友列表获取
         Long curUid = LoginUserHolder.get().getId();
         Page<Object> page = PageHelper.startPage(searchDTO.getPageNum(), searchDTO.getPageSize());
         ImUserExample example = new ImUserExample();
@@ -64,7 +64,6 @@ public class UserService {
             if (!curUid.equals(user.getId())) {
                 ImUserDTO dto = new ImUserDTO();
                 BeanUtils.copyProperties(user, dto);
-                dto.setConversationId(Msg.genConversation((byte) 0, curUid, user.getId()));
                 list.add(dto);
             }
         }

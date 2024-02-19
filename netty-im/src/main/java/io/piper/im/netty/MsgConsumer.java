@@ -13,6 +13,11 @@
  */
 package io.piper.im.netty;
 
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.ReferenceCountUtil;
@@ -20,14 +25,9 @@ import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.pojo.message.Msg;
 import io.piper.common.spi.AbstractMsgConsumer;
 import io.piper.common.util.ThreadUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Set;
 
 /**
  * MsgConsumer
- *
  * @author piper
  */
 public class MsgConsumer extends AbstractMsgConsumer {
@@ -41,23 +41,25 @@ public class MsgConsumer extends AbstractMsgConsumer {
         ThreadUtil.LISTENING_POOL.execute(() -> {
             if (ChatTypeEnum.SINGLE.type.equals(msg.getChatType())) {
                 this.singleHandler(msg);
-            } else if (ChatTypeEnum.CHATROOM.type.equals(msg.getChatType())) {
+            } else if (ChatTypeEnum.GROUP.type.equals(msg.getChatType())) {
                 this.chatRoomHandler(msg);
             }
         });
     }
 
     private void singleHandler(Msg msg) {
-        Set<Channel> channels = ImUserHolder.INSTANCE.getUserSession(msg.getTo());
-        if (channels.isEmpty()) {
-            return;
+        for (Long uid : msg.getTo()) {
+            Set<Channel> channels = ImUserHolder.INSTANCE.getUserSession(uid);
+            if (channels.isEmpty()) {
+                return;
+            }
+            TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
+            channels.forEach(ch -> ch.write(frame.retainedDuplicate()));
         }
-        TextWebSocketFrame frame = new TextWebSocketFrame(msg.toString());
-        channels.forEach(ch -> ch.write(frame.retainedDuplicate()));
     }
 
     private void chatRoomHandler(Msg msg) {
-        Set<Channel> channels = ImUserHolder.INSTANCE.getRoomSession(msg.getTo());
+        Set<Channel> channels = ImUserHolder.INSTANCE.getRoomSession(msg.getChatId());
         if (channels.isEmpty()) {
             return;
         }

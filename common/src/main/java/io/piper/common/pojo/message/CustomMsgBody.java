@@ -13,42 +13,30 @@
  */
 package io.piper.common.pojo.message;
 
+import java.io.Serializable;
+
 import com.alibaba.fastjson.JSON;
-import io.piper.common.enums.CmdTypeEnum;
+
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Map;
-
 /**
- * 信令消息
- *
+ * 自定义消息
  * @author piper
  */
 @Data
-public class CmdMsgBody implements Serializable {
+public class CustomMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
     /**
-     * 信令类型
+     * 数据
      */
-    private Integer type;
+    private String data;
 
-    /**
-     * 参数
-     */
-    private Map<String, String> params;
-
-    public CmdMsgBody() {
+    public CustomMsgBody() {
     }
 
-    public CmdMsgBody(Integer type, Map<String, String> params) {
-        this.type = type;
-        this.params = params;
-    }
-
-    public CmdTypeEnum getCmdTypeEnum() {
-        return CmdTypeEnum.valueOf(this.getType());
+    public CustomMsgBody(String data) {
+        this.data = data;
     }
 
     @Override

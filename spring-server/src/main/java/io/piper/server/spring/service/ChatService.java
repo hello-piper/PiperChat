@@ -13,7 +13,23 @@
  */
 package io.piper.server.spring.service;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.alibaba.fastjson.JSON;
+
 import io.piper.common.constant.Constants;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
@@ -35,14 +51,6 @@ import io.piper.server.spring.pojo.entity.ImUser;
 import io.piper.server.spring.pojo.mapper.ImGroupMapper;
 import io.piper.server.spring.pojo.mapper.ImMessageMapperExt;
 import io.piper.server.spring.pojo.mapper.ImUserMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 @Service
 public class ChatService {
@@ -71,7 +79,7 @@ public class ChatService {
         log.debug("chat msg:{}", msg);
 
         ChatTypeEnum chatTypeEnum = msg.getChatTypeEnum();
-        MsgTypeEnum msgTypeEnum = msg.getMsgTypeEnum();
+        MsgTypeEnum msgTypeEnum = msg.getTypeEnum();
         if (StringUtil.isAnyEmpty(msgTypeEnum, chatTypeEnum, msg.getFrom(), msg.getTo())) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
@@ -79,26 +87,18 @@ public class ChatService {
         long msgId = snowflake.nextId();
         long now = System.currentTimeMillis();
         msg.setFrom(loginUser.getId());
-        msg.setServerTime(now);
         msg.setId(msgId);
 
         ImMessage message = new ImMessage();
         message.setId(msgId);
-        message.setMsgType(msg.getMsgType());
+        message.setMsgType(msg.getType());
         message.setChatType(msg.getChatType());
-        message.setConversationId(Msg.genConversation(msg.getChatType(), msg.getFrom(), msg.getTo()));
+        message.setChatId(msg.getChatId());
         message.setFrom(msg.getFrom());
-        message.setTo(msg.getTo());
-        message.setSendTime(msg.getSendTime());
-        message.setServerTime(now);
-        message.setTitle(msg.getTitle());
-        message.setImageMsgBody(msg.getImageMsgBody() == null ? null : msg.getImageMsgBody().toString());
-        message.setVoiceMsgBody(msg.getVoiceMsgBody() == null ? null : msg.getVoiceMsgBody().toString());
-        message.setVideoMsgBody(msg.getVideoMsgBody() == null ? null : msg.getVideoMsgBody().toString());
-        message.setFileMsgBody(msg.getFileMsgBody() == null ? null : msg.getFileMsgBody().toString());
-        message.setLocationMsgBody(msg.getLocationMsgBody() == null ? null : msg.getLocationMsgBody().toString());
-        message.setCmdMsgBody(msg.getCmdMsgBody() == null ? null : msg.getCmdMsgBody().toString());
-        message.setExtra(msg.getExtra() == null ? null : JSON.toJSONString(msg.getExtra()));
+        message.setTo(JSON.toJSONString(msg.getTo()));
+        message.setTime(now / 1000);
+        message.setText(msg.getText());
+        message.setBody(msg.getBodyStr());
         imMessageMapperExt.insert(message);
 
         redisTemplate.convertAndSend(Constants.CHANNEL_IM_MESSAGE, msg);
@@ -107,7 +107,7 @@ public class ChatService {
 
     public void subRoom(Msg msg) {
         log.debug("subRoom msg:{}", msg);
-        if (StringUtil.isAnyEmpty(msg.getMsgTypeEnum(), msg.getCmdMsgBody())) {
+        if (StringUtil.isAnyEmpty(msg.getTypeEnum(),msg.getChatTypeEnum(), msg.getBody())) {
             throw IMException.build(IMErrorEnum.PARAM_ERROR);
         }
         msg.setFrom(LoginUserHolder.get().getId());
@@ -144,7 +144,7 @@ public class ChatService {
                         vo.setName(imUser.getNickname());
                         vo.setAvatar(imUser.getAvatar());
                     }
-                } else if (ChatTypeEnum.CHATROOM.type.equals(dto.getChatType())) {
+                } else if (ChatTypeEnum.GROUP.type.equals(dto.getChatType())) {
                     vo.setId(dto.getTo());
                     ImGroup imGroup = imGroupMapper.selectByPrimaryKey(vo.getId());
                     if (!Objects.isNull(imGroup)) {

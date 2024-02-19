@@ -24,7 +24,7 @@ import java.io.Serializable;
  * @author piper
  */
 @Data
-public class LocationMsgBody implements Serializable {
+public class LocationMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
     /**

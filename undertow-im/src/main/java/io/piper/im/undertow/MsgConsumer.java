@@ -39,21 +39,21 @@ public class MsgConsumer extends AbstractMsgConsumer {
         ThreadUtil.LISTENING_POOL.execute(() -> {
             if (ChatTypeEnum.SINGLE.type.equals(msg.getChatType())) {
                 this.singleHandler(msg);
-            } else if (ChatTypeEnum.CHATROOM.type.equals(msg.getChatType())) {
+            } else if (ChatTypeEnum.GROUP.type.equals(msg.getChatType())) {
                 this.chatRoomHandler(msg);
             }
         });
     }
 
     private void singleHandler(Msg msg) {
-        Set userSession = ImUserHolder.INSTANCE.getUserSession(msg.getTo());
-
-        Set<Session> sessions = ImUserHolder.INSTANCE.getUserSession(msg.getTo());
-        sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
+        for (Long uid : msg.getTo()) {
+            Set<Session> sessions = ImUserHolder.INSTANCE.getUserSession(uid);
+            sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
+        }
     }
 
     private void chatRoomHandler(Msg msg) {
-        Set<Session> sessions = ImUserHolder.INSTANCE.getRoomSession(msg.getTo());
+        Set<Session> sessions = ImUserHolder.INSTANCE.getRoomSession(msg.getChatId());
         sessions.forEach(s -> s.getAsyncRemote().sendObject(msg));
     }
 
