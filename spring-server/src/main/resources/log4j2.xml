@@ -5,7 +5,7 @@
         <property name="pattern" value="%d{yyyy-MM-dd' 'HH:mm:ss.SSS} [%-5p] %l [%t] %m%n"/>
         <property name="patternColor"
                   value="%red{%d{yyyy-MM-dd HH:mm:ss}} %green{[%thread]} %blue{[%-5p]} %magenta{%logger} %cyan{%msg%n}"/>
-        <property name="logHome">/logs</property>
+        <property name="logHome">/tmp/logs</property>
         <property name="appName">spring-server</property>
     </properties>
 

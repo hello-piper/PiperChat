@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-package protoObj;
+package v1;
 
 import "google/protobuf/any.proto";
 
@@ -79,3 +79,4 @@ message LocationMsgBody {
 message CustomMsgBody {
     string data = 1;
 }
+
