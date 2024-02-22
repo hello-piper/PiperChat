@@ -11,7 +11,7 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.im.netty;
+package io.piper.im.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;

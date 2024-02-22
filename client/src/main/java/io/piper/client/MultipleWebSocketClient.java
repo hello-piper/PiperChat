@@ -28,6 +28,10 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -36,6 +40,7 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import io.piper.common.pojo.message.Msg;
+import io.piper.common.pojo.message.protoObj.PBOuterClass;
 
 import java.net.URI;
 import java.util.Collections;
@@ -45,7 +50,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultipleWebSocketClient {
     static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(4);
-    static final String URL = System.getProperty("url", "ws://10.3.0.187:8080/websocket/guest");
+    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
     static final EventLoopGroup group = new NioEventLoopGroup(4);
     public static final AtomicInteger num = new AtomicInteger();
     private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
@@ -135,8 +140,12 @@ public class MultipleWebSocketClient {
                         }
                         p.addLast(
                                 new HttpClientCodec(),
-                                new HttpObjectAggregator(1000),
+                                new HttpObjectAggregator(1024),
                                 WebSocketClientCompressionHandler.INSTANCE,
+                                new ProtobufVarint32FrameDecoder(),
+                                new ProtobufDecoder(PBOuterClass.getDescriptor().toProto()),
+                                new ProtobufVarint32LengthFieldPrepender(),
+                                new ProtobufEncoder(),
                                 handler);
                     }
                 });

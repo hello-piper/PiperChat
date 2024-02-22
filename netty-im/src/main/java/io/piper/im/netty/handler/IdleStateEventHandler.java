@@ -11,24 +11,25 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.im.netty;
+package io.piper.im.netty.handler;
 
-import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * IdleStateEventHandler
- *
  * @author piper
  */
 @ChannelHandler.Sharable
-public class IdleStateEventHandler extends ChannelDuplexHandler {
+public class IdleStateEventHandler extends IdleStateHandler {
+    public IdleStateEventHandler(int readerIdleTimeSeconds, int writerIdleTimeSeconds, int allIdleTimeSeconds) {
+        super(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
+    }
 
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
-        if (evt instanceof IdleStateEvent) {
+    protected final void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
+        if (evt != null) {
             ctx.close();
         }
     }

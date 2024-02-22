@@ -11,7 +11,7 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.im.netty;
+package io.piper.im.netty.handler;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -27,11 +27,8 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
-import io.netty.handler.timeout.IdleStateHandler;
 import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.pojo.message.protoObj.PBOuterClass;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * WebSocketServerInitializer
@@ -58,19 +55,20 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         pipeline.addLast(new HttpServerCodec());
-        pipeline.addLast(new HttpObjectAggregator(512));
-        pipeline.addLast(new WebSocketServerCompressionHandler());
+        pipeline.addLast(new HttpObjectAggregator(1024));
         pipeline.addLast(new WebSocketLoginHandler());
-        pipeline.addLast(new WebSocketServerProtocolHandler(config.getWsPath(), null, true, 512, false, true, 3000L));
-        pipeline.addLast(new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS));
-        pipeline.addLast(new IdleStateEventHandler());
+        pipeline.addLast(new WebSocketServerCompressionHandler());
+        pipeline.addLast(new WebSocketServerProtocolHandler(config.getWsPath(), null, true, 1024, false, true, 3000L));
+        pipeline.addLast(new IdleStateEventHandler(0, 0, 60));
         pipeline.addLast(new ProtobufVarint32FrameDecoder());
         pipeline.addLast(new ProtobufDecoder(PBOuterClass.getDescriptor().toProto()));
         pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
         pipeline.addLast(new ProtobufEncoder());
         pipeline.addLast(new WebSocketBinaryHandler());
         pipeline.addLast(new WebSocketTextHandler());
+        pipeline.addLast(new WebSocketCloseHandler());
         pipeline.addLast(new HttpRequestHandler());
     }
 }

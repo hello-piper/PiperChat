@@ -11,22 +11,25 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.im.netty;
+package io.piper.im.netty.handler;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.pojo.message.protoObj.Msg;
+import io.piper.im.netty.ImUserHolder;
 
 /**
  * WebSocketBinaryHandler
  * @author piper
  */
+@ChannelHandler.Sharable
 public class WebSocketBinaryHandler extends SimpleChannelInboundHandler<BinaryWebSocketFrame> {
     private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketBinaryHandler.class);
 
@@ -35,7 +38,8 @@ public class WebSocketBinaryHandler extends SimpleChannelInboundHandler<BinaryWe
         Channel channel = ctx.channel();
         Long userKey = ImUserHolder.INSTANCE.getUserKey(channel);
         Msg msg = Msg.parseFrom(frame.content().nioBuffer());
-        log.info("receiveMsg {} {}", msg, userKey);
+        log.info("receiveMsg bin {} {}", msg, userKey);
+        // todo msg process
     }
 
     @Override

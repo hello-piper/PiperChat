@@ -19,6 +19,7 @@ import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.piper.common.pojo.message.protoObj.Msg;
 
 @ChannelHandler.Sharable
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
@@ -41,6 +42,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) {
+        log.error("断开 WebSocket Client disconnected!");
+    }
+
+    @Override
     public void channelActive(ChannelHandlerContext ctx) {
         handshaker.handshake(ctx.channel());
     }
@@ -48,7 +54,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         log.error("断开 WebSocket Client disconnected!");
-        MultipleWebSocketClient.num.decrementAndGet();
     }
 
     @Override
@@ -76,7 +81,11 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            log.info("WebSocket Client received message: " + textFrame.text());
+            log.info("WebSocket Client received text message: " + textFrame.text());
+        } else if (frame instanceof BinaryWebSocketFrame) {
+            BinaryWebSocketFrame binaryFrame = (BinaryWebSocketFrame) frame;
+            Msg msg2 = Msg.parseFrom(binaryFrame.content().nioBuffer());
+            log.info("WebSocket Client received binary message: " + msg2);
         } else if (frame instanceof PongWebSocketFrame) {
             log.info("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
@@ -93,6 +102,5 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         }
         ctx.close();
         log.error("断开 WebSocket Client exceptionCaught!");
-        MultipleWebSocketClient.num.decrementAndGet();
     }
 }

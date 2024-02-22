@@ -20,8 +20,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
 import io.piper.common.pojo.message.protoObj.Msg;
 import io.piper.common.util.ThreadUtil;
 import okhttp3.OkHttpClient;
@@ -83,14 +81,12 @@ public class OkHttpWebSocketClient {
         @Override
         public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
             super.onMessage(webSocket, bytes);
-            System.out.println("onMessage bytes " + seq + " " + bytes);
             try {
                 Msg msg = Msg.parseFrom(bytes.toByteArray());
-                System.out.println("onMessage bytes " + seq + " " + bytes + "  " + msg);
-            } catch (InvalidProtocolBufferException e) {
-                throw new RuntimeException(e);
+                System.out.println("onMessage bytes " + seq + " " + bytes + "  " + msg.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
         }
 
         @Override

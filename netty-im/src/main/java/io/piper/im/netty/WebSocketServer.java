@@ -25,6 +25,7 @@ import io.netty.handler.logging.LoggingHandler;
 import io.piper.common.ImApplication;
 import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.util.YamlUtil;
+import io.piper.im.netty.handler.WebSocketServerInitializer;
 
 /**
  * WebSocketServer

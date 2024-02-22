@@ -11,7 +11,7 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.im.netty;
+package io.piper.im.netty.handler;
 
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandler;
@@ -31,6 +31,7 @@ import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.pojo.dto.UserTokenDTO;
 import io.piper.common.util.StringUtil;
 import io.piper.common.util.YamlUtil;
+import io.piper.im.netty.ImUserHolder;
 
 /**
  * LoginHandler

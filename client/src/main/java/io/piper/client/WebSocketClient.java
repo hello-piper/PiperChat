@@ -14,6 +14,7 @@
 package io.piper.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -27,17 +28,24 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.piper.common.pojo.message.protoObj.Msg;
+import io.piper.common.pojo.message.protoObj.PBOuterClass;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Collections;
 
 public final class WebSocketClient {
 
-    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket");
+    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
 
     public static void main(String[] args) throws Exception {
         URI uri = new URI(URL);
@@ -89,8 +97,12 @@ public final class WebSocketClient {
                             }
                             p.addLast(
                                     new HttpClientCodec(),
-                                    new HttpObjectAggregator(8192),
+                                    new HttpObjectAggregator(1024),
                                     WebSocketClientCompressionHandler.INSTANCE,
+                                    new ProtobufVarint32FrameDecoder(),
+                                    new ProtobufDecoder(PBOuterClass.getDescriptor().toProto()),
+                                    new ProtobufVarint32LengthFieldPrepender(),
+                                    new ProtobufEncoder(),
                                     handler);
                         }
                     });
@@ -107,12 +119,19 @@ public final class WebSocketClient {
                     ch.writeAndFlush(new CloseWebSocketFrame());
                     ch.closeFuture().sync();
                     break;
-                } else if ("ping".equals(msg.toLowerCase())) {
-                    WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer(new byte[]{8, 1, 8, 1}));
-                    ch.writeAndFlush(frame);
+                } else if ("ping0".equals(msg.toLowerCase())) {
+                    ch.writeAndFlush(new PingWebSocketFrame(Unpooled.wrappedBuffer(new byte[]{8, 1, 8, 1})));
+                } else if ("binary".equals(msg.toLowerCase())) {
+                    Msg.Builder builder = Msg.newBuilder();
+                    builder.setType(0);
+                    builder.setChatType(0);
+                    builder.setFrom(0);
+                    builder.addAllTo(Collections.singletonList(0L));
+                    builder.setText("Hi");
+                    ByteBuf byteBuf = Unpooled.wrappedBuffer(builder.build().toByteArray());
+                    ch.writeAndFlush(new BinaryWebSocketFrame(byteBuf));
                 } else {
-                    WebSocketFrame frame = new TextWebSocketFrame(msg);
-                    ch.writeAndFlush(frame);
+                    ch.writeAndFlush(new TextWebSocketFrame(msg));
                 }
             }
         } finally {

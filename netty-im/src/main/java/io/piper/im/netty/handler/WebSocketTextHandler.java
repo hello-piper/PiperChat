@@ -11,7 +11,7 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package io.piper.im.netty;
+package io.piper.im.netty.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.Channel;
@@ -23,6 +23,7 @@ import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.pojo.req.RequestMsg;
 import io.piper.common.util.StringUtil;
+import io.piper.im.netty.ImUserHolder;
 
 import java.util.Map;
 
@@ -35,15 +36,6 @@ import java.util.Map;
 public class WebSocketTextHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
     protected static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketTextHandler.class);
     private static final TextWebSocketFrame pong = new TextWebSocketFrame("pong");
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) {
-        Long userKey = ImUserHolder.INSTANCE.getUserKey(ctx.channel());
-        ImUserHolder.INSTANCE.removeSession(ctx.channel());
-        if (userKey != null) {
-            log.info("用户下线 {} {}", userKey, ImUserHolder.INSTANCE.onlineNum());
-        }
-    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
