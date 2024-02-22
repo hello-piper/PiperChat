@@ -15,6 +15,8 @@ package io.piper.im.undertow;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import io.piper.common.constant.ClientNameEnum;
 import io.piper.common.constant.Constants;
 import io.piper.common.db.RedisDS;
@@ -22,6 +24,7 @@ import io.piper.common.exception.IMErrorEnum;
 import io.piper.common.exception.IMException;
 import io.piper.common.pojo.config.ImProperties;
 import io.piper.common.pojo.dto.UserTokenDTO;
+import io.piper.common.pojo.message.protoObj.Msg;
 import io.piper.common.pojo.req.RequestMsg;
 import io.piper.common.util.StringUtil;
 import io.piper.common.util.YamlUtil;
@@ -34,6 +37,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 @ServerEndpoint(value = "/websocket/{token}", encoders = {JsonEncode.class}, decoders = {JsonDecode.class})
@@ -49,7 +53,7 @@ public class JsrChatWebSocketEndpoint {
             throw IMException.build(IMErrorEnum.INVALID_TOKEN);
         }
         UserTokenDTO tokenDTO;
-        if ("guest" .equals(token)) {
+        if ("guest".equals(token)) {
             tokenDTO = new UserTokenDTO();
             tokenDTO.setId(-++guest);
             tokenDTO.setNickname("guest:" + tokenDTO.getId());
@@ -84,13 +88,13 @@ public class JsrChatWebSocketEndpoint {
 
     @OnMessage
     public void message(String msg, Session session) {
-        String userKey = (String) session.getUserProperties().get(ImUserHolder.INSTANCE.USER_KEY);
+        Long userKey = (Long) session.getUserProperties().get(ImUserHolder.INSTANCE.USER_KEY);
         log.info("receiveMsg {} {}", msg, userKey);
         if (StringUtil.isEmpty(msg)) {
             ImUserHolder.INSTANCE.close(session);
             return;
         }
-        if ("ping" .equals(msg)) {
+        if ("ping".equals(msg)) {
             session.getAsyncRemote().sendText("pong");
             return;
         }
@@ -120,6 +124,14 @@ public class JsrChatWebSocketEndpoint {
             log.error("receiveMsg {} {}", msg, userKey, e);
         }
     }
+
+    @OnMessage
+    public void message(ByteBuffer byteBuf, Session session) throws InvalidProtocolBufferException {
+        Long userKey = (Long) session.getUserProperties().get(ImUserHolder.INSTANCE.USER_KEY);
+        Msg msg = Msg.parseFrom(byteBuf);
+        log.info("receiveMsg {} {}", msg, userKey);
+    }
+
 
     @OnClose
     public void onClose(Session session) {
