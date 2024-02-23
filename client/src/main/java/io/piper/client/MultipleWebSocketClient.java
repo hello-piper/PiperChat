@@ -49,11 +49,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultipleWebSocketClient {
-    static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(4);
-    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
-    static final EventLoopGroup group = new NioEventLoopGroup(4);
-    public static final AtomicInteger num = new AtomicInteger();
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
+    private static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(4);
+    private static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
+    private static final EventLoopGroup GROUP = new NioEventLoopGroup(4);
+    private static final AtomicInteger NUM = new AtomicInteger();
+    private static final InternalLogger LOG = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
 
     static Msg msg = new Msg();
 
@@ -66,11 +66,11 @@ public class MultipleWebSocketClient {
     public static void main(String[] args) throws Exception {
 
         SCHEDULED_POOL.scheduleWithFixedDelay(() -> {
-            while (num.get() < 5000) {
-                int andIncrement = num.getAndIncrement();
+            while (NUM.get() < 5000) {
+                int andIncrement = NUM.getAndIncrement();
                 new Thread(() -> {
                     try {
-                        log.info("连接 {}", andIncrement);
+                        LOG.info("连接 {}", andIncrement);
                         run(andIncrement);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -129,7 +129,7 @@ public class MultipleWebSocketClient {
                         uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
 
         Bootstrap b = new Bootstrap();
-        b.group(group)
+        b.group(GROUP)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override

@@ -16,7 +16,6 @@ package io.piper.im.undertow.coder;
 import com.alibaba.fastjson.JSON;
 import io.piper.common.pojo.message.Msg;
 
-import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
@@ -29,7 +28,7 @@ import javax.websocket.EndpointConfig;
 public class JsonDecode implements Decoder.Text<Msg> {
 
     @Override
-    public Msg decode(String s) throws DecodeException {
+    public Msg decode(String s) {
         return JSON.parseObject(s, Msg.class);
     }
 

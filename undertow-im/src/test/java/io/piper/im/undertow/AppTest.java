@@ -13,41 +13,11 @@
  */
 package io.piper.im.undertow;
 
-import java.util.Collections;
-
 import org.junit.Test;
-
-import io.piper.common.enums.ChatTypeEnum;
-import io.piper.common.pojo.message.Msg;
-import io.protostuff.LinkedBuffer;
-import io.protostuff.ProtostuffIOUtil;
-import io.protostuff.Schema;
-import io.protostuff.runtime.RuntimeSchema;
 
 public class AppTest {
 
     @Test
-    public void testProtostuff() {
-        Msg msg = Msg.createTextMsg("hello protostuff");
-        msg.setChatType(ChatTypeEnum.SINGLE.type);
-        msg.setFrom(0L);
-        msg.setTo(Collections.singletonList(1L));
-
-        Schema<Msg> schema = RuntimeSchema.getSchema(Msg.class);
-
-        // Re-use (manage) this buffer to avoid allocating on every serialization
-        LinkedBuffer buffer = LinkedBuffer.allocate(512);
-
-        // ser
-        final byte[] protostuff;
-        try {
-            protostuff = ProtostuffIOUtil.toByteArray(msg, schema, buffer);
-        } finally {
-            buffer.clear();
-        }
-
-        // deser
-        Msg fooParsed = schema.newMessage();
-        ProtostuffIOUtil.mergeFrom(protostuff, fooParsed, schema);
+    public void test() {
     }
 }

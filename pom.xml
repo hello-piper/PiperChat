@@ -22,9 +22,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <undertow.version>2.2.25.Final</undertow.version>
+        <undertow.version>2.2.30.Final</undertow.version>
+<!--  TODO      <undertow.version>2.3.12.Final</undertow.version>-->
         <okhttp.version>4.11.0</okhttp.version>
-        <protostuff.version>1.8.0</protostuff.version>
         <protobuf.version>3.23.1</protobuf.version>
         <fastjson.version>2.0.39</fastjson.version>
         <snakeyaml.version>2.1</snakeyaml.version>
@@ -46,7 +46,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
-                <version>4.1.96.Final</version>
+                <version>4.1.107.Final</version>
             </dependency>
             <dependency>
                 <groupId>io.undertow</groupId>
@@ -77,16 +77,6 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java-util</artifactId>
                 <version>${protobuf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.protostuff</groupId>
-                <artifactId>protostuff-core</artifactId>
-                <version>${protostuff.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.protostuff</groupId>
-                <artifactId>protostuff-runtime</artifactId>
-                <version>${protostuff.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

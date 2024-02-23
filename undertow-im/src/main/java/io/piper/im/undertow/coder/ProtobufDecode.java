@@ -13,33 +13,34 @@
  */
 package io.piper.im.undertow.coder;
 
-import io.protostuff.LinkedBuffer;
-import io.protostuff.ProtostuffIOUtil;
-import io.protostuff.Schema;
-import io.protostuff.runtime.RuntimeSchema;
-import io.piper.common.pojo.message.Msg;
-
-import javax.websocket.Encoder;
-import javax.websocket.EndpointConfig;
 import java.nio.ByteBuffer;
 
+import javax.websocket.DecodeException;
+import javax.websocket.Decoder;
+import javax.websocket.EndpointConfig;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import io.piper.common.pojo.message.protoObj.Msg;
+
 /**
- * ProtostuffEncode
- *
+ * ProtobufDecode
  * @author piper
- * @date 2020/9/11 16:51
  */
-public class ProtostuffEncode implements Encoder.Binary<Msg> {
-    static LinkedBuffer buffer = LinkedBuffer.allocate(1024);
+public class ProtobufDecode implements Decoder.Binary<Msg> {
 
     @Override
-    public ByteBuffer encode(Msg msg) {
-        Schema<Msg> schema = RuntimeSchema.getSchema(Msg.class);
+    public Msg decode(ByteBuffer byteBuffer) throws DecodeException {
         try {
-            return ByteBuffer.wrap(ProtostuffIOUtil.toByteArray(msg, schema, buffer));
-        } finally {
-            buffer.clear();
+            return Msg.parseFrom(byteBuffer);
+        } catch (InvalidProtocolBufferException e) {
+            throw new DecodeException(byteBuffer, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public boolean willDecode(ByteBuffer byteBuffer) {
+        return true;
     }
 
     @Override

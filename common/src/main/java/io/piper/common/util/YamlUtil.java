@@ -57,7 +57,7 @@ public final class YamlUtil {
             }
         } catch (InstantiationException | IllegalAccessException
                  | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return null;
     }
@@ -95,7 +95,7 @@ public final class YamlUtil {
                 }
             }
         } catch (IllegalAccessException | IntrospectionException | InvocationTargetException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -104,7 +104,7 @@ public final class YamlUtil {
             try {
                 return clz.getMethod(name, paramClz);
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
         return null;

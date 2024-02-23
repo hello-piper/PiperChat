@@ -15,6 +15,8 @@ package io.piper.im.netty.handler;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,7 +33,7 @@ import io.piper.im.netty.ImUserHolder;
  */
 @ChannelHandler.Sharable
 public class WebSocketBinaryHandler extends SimpleChannelInboundHandler<BinaryWebSocketFrame> {
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketBinaryHandler.class);
+    private final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketBinaryHandler.class);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BinaryWebSocketFrame frame) throws InvalidProtocolBufferException {
@@ -39,7 +41,9 @@ public class WebSocketBinaryHandler extends SimpleChannelInboundHandler<BinaryWe
         Long userKey = ImUserHolder.INSTANCE.getUserKey(channel);
         Msg msg = Msg.parseFrom(frame.content().nioBuffer());
         log.info("receiveMsg bin {} {}", msg, userKey);
-        // todo msg process
+        // todo echo msg process
+        ByteBuf byteBuf = Unpooled.wrappedBuffer(msg.toByteArray());
+        ctx.writeAndFlush(new BinaryWebSocketFrame(byteBuf));
     }
 
     @Override

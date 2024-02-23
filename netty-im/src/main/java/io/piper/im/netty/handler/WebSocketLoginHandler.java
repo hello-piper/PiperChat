@@ -46,7 +46,7 @@ public class WebSocketLoginHandler extends ChannelInboundHandlerAdapter {
     private static volatile long guest = 0;
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         String uri = ((FullHttpRequest) msg).uri();
         if (uri.startsWith(config.getWsPath())) {
             String[] uriSplit = uri.split("/");
@@ -61,12 +61,12 @@ public class WebSocketLoginHandler extends ChannelInboundHandlerAdapter {
                 tokenDTO.setNickname("guest:" + tokenDTO.getId());
                 tokenDTO.setClientName(ClientNameEnum.WEB.getName());
             } else {
-                String tokenDTOStr = RedisDS.execute(jedis -> jedis.get(Constants.USER_TOKEN + token));
-                if (StringUtil.isEmpty(tokenDTOStr)) {
+                String tokenDtoStr = RedisDS.execute(jedis -> jedis.get(Constants.USER_TOKEN + token));
+                if (StringUtil.isEmpty(tokenDtoStr)) {
                     ImUserHolder.INSTANCE.close(ctx.channel());
                     throw IMException.build(IMErrorEnum.INVALID_TOKEN);
                 }
-                tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
+                tokenDTO = JSON.parseObject(tokenDtoStr, UserTokenDTO.class);
             }
             Long userKey;
             if (tokenDTO.getId() != null) {

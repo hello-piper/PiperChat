@@ -27,7 +27,7 @@ import io.piper.im.netty.ImUserHolder;
  */
 @ChannelHandler.Sharable
 public class WebSocketCloseHandler extends SimpleChannelInboundHandler<CloseWebSocketFrame> {
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketCloseHandler.class);
+    private final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketCloseHandler.class);
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {

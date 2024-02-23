@@ -16,7 +16,6 @@ package io.piper.im.undertow;
 import io.piper.common.ImApplication;
 import io.piper.common.pojo.config.ServerProperties;
 import io.piper.common.util.YamlUtil;
-import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.DefaultByteBufferPool;
 import io.undertow.server.handlers.PathHandler;
@@ -46,7 +45,7 @@ public class JsrWebSocketServer {
                 .addWelcomePage("templates/index.html")
                 .setResourceManager(new ClassPathResourceManager(JsrWebSocketServer.class.getClassLoader(), JsrWebSocketServer.class.getPackage()))
                 .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo()
-                        .addEndpoint(JsrChatWebSocketEndpoint.class).setBuffers(new DefaultByteBufferPool(true, 512))
+                        .addEndpoint(JsrWebSocketEndpoint.class).setBuffers(new DefaultByteBufferPool(true, 1024))
                 );
 
         DeploymentManager manager = container.addDeployment(builder);

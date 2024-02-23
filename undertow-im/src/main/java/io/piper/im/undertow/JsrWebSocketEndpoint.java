@@ -15,7 +15,6 @@ package io.piper.im.undertow;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.piper.common.constant.ClientNameEnum;
 import io.piper.common.constant.Constants;
@@ -30,19 +29,26 @@ import io.piper.common.util.StringUtil;
 import io.piper.common.util.YamlUtil;
 import io.piper.im.undertow.coder.JsonDecode;
 import io.piper.im.undertow.coder.JsonEncode;
+import io.piper.im.undertow.coder.ProtobufDecode;
+import io.piper.im.undertow.coder.ProtobufEncode;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Map;
 
-@ServerEndpoint(value = "/websocket/{token}", encoders = {JsonEncode.class}, decoders = {JsonDecode.class})
-public class JsrChatWebSocketEndpoint {
-    private final Logger log = LoggerFactory.getLogger(JsrChatWebSocketEndpoint.class);
+/**
+ * JsrWebSocketEndpoint
+ * @author piper
+ */
+@ServerEndpoint(value = "/websocket/{token}", encoders = {JsonEncode.class, ProtobufEncode.class}, decoders = {JsonDecode.class, ProtobufDecode.class})
+public class JsrWebSocketEndpoint {
+    private final Logger log = LoggerFactory.getLogger(JsrWebSocketEndpoint.class);
     private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
     private static volatile long guest = 0;
 
@@ -59,12 +65,12 @@ public class JsrChatWebSocketEndpoint {
             tokenDTO.setNickname("guest:" + tokenDTO.getId());
             tokenDTO.setClientName(ClientNameEnum.WEB.getName());
         } else {
-            String tokenDTOStr = RedisDS.execute(jedis -> jedis.get(Constants.USER_TOKEN + token));
-            if (StringUtil.isEmpty(tokenDTOStr)) {
+            String tokenDtoStr = RedisDS.execute(jedis -> jedis.get(Constants.USER_TOKEN + token));
+            if (StringUtil.isEmpty(tokenDtoStr)) {
                 ImUserHolder.INSTANCE.close(session);
                 throw IMException.build(IMErrorEnum.INVALID_TOKEN);
             }
-            tokenDTO = JSON.parseObject(tokenDTOStr, UserTokenDTO.class);
+            tokenDTO = JSON.parseObject(tokenDtoStr, UserTokenDTO.class);
         }
         Long userKey;
         if (tokenDTO.getId() != null) {
@@ -89,7 +95,7 @@ public class JsrChatWebSocketEndpoint {
     @OnMessage
     public void message(String msg, Session session) {
         Long userKey = (Long) session.getUserProperties().get(ImUserHolder.INSTANCE.USER_KEY);
-        log.info("receiveMsg {} {}", msg, userKey);
+        log.info("receiveMsg str {} {}", msg, userKey);
         if (StringUtil.isEmpty(msg)) {
             ImUserHolder.INSTANCE.close(session);
             return;
@@ -121,25 +127,23 @@ public class JsrChatWebSocketEndpoint {
                 ImUserHolder.INSTANCE.removeRoomSession(roomId, session);
             }
         } catch (Exception e) {
-            log.error("receiveMsg {} {}", msg, userKey, e);
+            log.error("receiveMsg str {} {}", msg, userKey, e);
         }
     }
 
     @OnMessage
-    public void message(ByteBuffer byteBuf, Session session) throws InvalidProtocolBufferException {
+    public void message(Msg msg, Session session) {
         Long userKey = (Long) session.getUserProperties().get(ImUserHolder.INSTANCE.USER_KEY);
-        Msg msg = Msg.parseFrom(byteBuf);
-        log.info("receiveMsg {} {}", msg, userKey);
+        // todo echo msg process
+        session.getAsyncRemote().sendObject(msg);
+        log.info("receiveMsg msg {} {}", msg, userKey);
     }
-
 
     @OnClose
     public void onClose(Session session) {
         String userKey = (String) session.getUserProperties().get(ImUserHolder.USER_KEY);
         ImUserHolder.INSTANCE.removeSession(session);
-        if (userKey != null) {
-            log.info("用户下线 {} {}", userKey, ImUserHolder.INSTANCE.onlineNum());
-        }
+        log.info("用户下线 {} {}", userKey, ImUserHolder.INSTANCE.onlineNum());
     }
 
     @OnError

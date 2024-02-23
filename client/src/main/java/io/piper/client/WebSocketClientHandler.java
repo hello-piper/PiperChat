@@ -21,9 +21,13 @@ import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.piper.common.pojo.message.protoObj.Msg;
 
+/**
+ * WebSocketClientHandler
+ * @author piper
+ */
 @ChannelHandler.Sharable
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
+    private final InternalLogger log = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);
 
     private final WebSocketClientHandshaker handshaker;
     private ChannelPromise handshakeFuture;
