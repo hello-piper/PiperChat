@@ -19,7 +19,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 图片消息
+ * ImageMsgBody
  *
  * @author piper
  */
@@ -27,24 +27,12 @@ import java.io.Serializable;
 public class ImageMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 图片宽度
-     */
     private Integer width;
 
-    /**
-     * 图片高度
-     */
     private Integer height;
 
-    /**
-     * 图片大小(kb)
-     */
     private Integer size;
 
-    /**
-     * 图片地址
-     */
     private String url;
 
     public ImageMsgBody() {

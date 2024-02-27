@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * 信令消息
+ * CmdMsgBody
  *
  * @author piper
  */
@@ -29,14 +29,8 @@ import java.util.Map;
 public class CmdMsgBody implements Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 信令类型
-     */
     private Integer type;
 
-    /**
-     * 参数
-     */
     private Map<String, String> params;
 
     public CmdMsgBody() {

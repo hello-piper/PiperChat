@@ -63,7 +63,7 @@ public class JsrWebSocketEndpoint {
             tokenDTO = new UserTokenDTO();
             tokenDTO.setId(-++guest);
             tokenDTO.setNickname("guest:" + tokenDTO.getId());
-            tokenDTO.setClientName(ClientNameEnum.WEB.getName());
+            tokenDTO.setClientName(ClientNameEnum.WEB.type);
         } else {
             String tokenDtoStr = RedisDS.execute(jedis -> jedis.get(Constants.USER_TOKEN + token));
             if (StringUtil.isEmpty(tokenDtoStr)) {

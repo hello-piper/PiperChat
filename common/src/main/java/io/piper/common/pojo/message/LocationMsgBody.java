@@ -19,7 +19,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 位置消息
+ * LocationMsgBody
  *
  * @author piper
  */
@@ -27,19 +27,10 @@ import java.io.Serializable;
 public class LocationMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 地址
-     */
     public String address;
 
-    /**
-     * 维度
-     */
     public Double latitude;
 
-    /**
-     * 经度
-     */
     public Double longitude;
 
     public LocationMsgBody() {

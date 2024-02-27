@@ -29,14 +29,13 @@ import javax.servlet.ServletException;
 
 /**
  * JsrWebSocketServer
- *
  * @author piper
  */
 public class JsrWebSocketServer {
     public static void main(final String[] args) throws ServletException {
-        final PathHandler root = new PathHandler();
-        final ServletContainer container = ServletContainer.Factory.newInstance();
-        final ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
+        PathHandler root = new PathHandler();
+        ServletContainer container = ServletContainer.Factory.newInstance();
+        ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
 
         DeploymentInfo builder = new DeploymentInfo()
                 .setClassLoader(JsrWebSocketServer.class.getClassLoader())

@@ -34,13 +34,15 @@ import io.piper.im.netty.handler.WebSocketServerInitializer;
  */
 public final class WebSocketServer {
     public static void main(String[] args) throws Exception {
-        final ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
+        ServerProperties config = YamlUtil.getConfig("server", ServerProperties.class);
         EventLoopGroup bossGroup = new NioEventLoopGroup(2);
         EventLoopGroup workerGroup = new NioEventLoopGroup(8);
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap().group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
+            ServerBootstrap bootstrap = new ServerBootstrap().group(bossGroup, workerGroup);
+            bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.handler(new LoggingHandler(LogLevel.INFO));
-            bootstrap.childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE);
+            bootstrap.childOption(ChannelOption.SO_BACKLOG, 128);
+            bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
             bootstrap.childHandler(new WebSocketServerInitializer(config));
             Channel channel = bootstrap.bind(config.getPort()).sync().channel();
             channel.config().setAllocator(PooledByteBufAllocator.DEFAULT);

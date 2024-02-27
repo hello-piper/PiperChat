@@ -13,6 +13,10 @@
  */
 package io.piper.common.constant;
 
+/**
+ * Constants
+ * @author piper
+ */
 public interface Constants {
     String IM_WORK_ID = "im:work-ids";
     String IM_SERVER_HASH = "im-server-hash";

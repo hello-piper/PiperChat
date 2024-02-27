@@ -23,7 +23,7 @@ import io.piper.common.enums.MsgTypeEnum;
 import lombok.Data;
 
 /**
- * 聊天消息
+ * Msg
  * @author piper
  */
 @Data
@@ -31,47 +31,47 @@ public class Msg implements Serializable {
     private static final long serialVersionUID = 1;
 
     /**
-     * 消息id
+     * id
      */
     private Long id;
 
     /**
-     * 消息类型
+     * type
      */
     private Integer type;
 
     /**
-     * 会话类型
+     * chatType
      */
     private Integer chatType;
 
     /**
-     * 消息所属的会话id conversationId/roomId/groupId
+     * chatId conversationId/roomId/groupId
      */
     private Long chatId;
 
     /**
-     * 发送者id
+     * from
      */
     private Long from;
 
     /**
-     * 接收方的用户id列表，最大100
+     * to，[0-100]
      */
     private List<Long> to;
 
     /**
-     * 文本消息内容/描述内容
+     * text/desc
      */
     private String text;
 
     /**
-     * 消息内容
+     * body
      */
     private IMsgBody body;
 
     /**
-     * 消息时间戳，秒
+     * seconds
      */
     private Long time;
 

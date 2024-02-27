@@ -19,7 +19,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 视频消息
+ * VideoMsgBody
  *
  * @author piper
  */
@@ -27,24 +27,12 @@ import java.io.Serializable;
 public class VideoMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 视频名称
-     */
     private String name;
 
-    /**
-     * 视频地址
-     */
     private String url;
 
-    /**
-     * 视频时长(s)
-     */
     private Integer seconds;
 
-    /**
-     * 视频大小(Byte)
-     */
     private Integer size;
 
     public VideoMsgBody() {

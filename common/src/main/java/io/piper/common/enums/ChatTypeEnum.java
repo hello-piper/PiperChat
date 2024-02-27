@@ -16,7 +16,7 @@ package io.piper.common.enums;
 import java.util.Arrays;
 
 /**
- * 会话类型枚举
+ * ChatTypeEnum
  * @author piper
  */
 public enum ChatTypeEnum {

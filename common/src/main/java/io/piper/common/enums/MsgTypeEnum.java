@@ -16,25 +16,17 @@ package io.piper.common.enums;
 import java.util.Arrays;
 
 /**
- * 消息类型枚举
+ * MsgTypeEnum
  * @author piper
  */
 public enum MsgTypeEnum {
-    // 文本消息
     TEXT(0),
-    // 图片
     IMAGE(1),
-    // 语音
     AUDIO(2),
-    // 视频
     VIDEO(3),
-    // 文件
     FILE(4),
-    // 地理位置
     LOCATION(5),
-    // 信令消息
     CMD(6),
-    // 自定义消息
     CUSTOM(7);
 
     public final Integer type;

@@ -35,7 +35,7 @@ import redis.clients.jedis.JedisPubSub;
  */
 public abstract class AbstractMsgConsumer {
     static final Logger log = LoggerFactory.getLogger(AbstractMsgConsumer.class);
-    private static final ImProperties imConfig = YamlUtil.getConfig("im", ImProperties.class);
+    private static final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
 
     public AbstractMsgConsumer() {
         new Thread(() -> RedisDS.consumer(jedis -> jedis.subscribe(new JedisPubSub() {
@@ -51,8 +51,8 @@ public abstract class AbstractMsgConsumer {
             ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
                 try {
                     Msg dto = Msg.createTextMsg("hello piper");
-                    dto.setFrom(imConfig.getSystemUser());
-                    dto.setChatId(imConfig.getSystemRoom());
+                    dto.setFrom(config.getSystemUser());
+                    dto.setChatId(config.getSystemRoom());
                     dto.setChatType(ChatTypeEnum.GROUP.type);
                     handler(dto);
                 } catch (Exception ignored) {

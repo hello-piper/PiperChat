@@ -19,7 +19,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 文件消息
+ * FileMsgBody
  *
  * @author piper
  */
@@ -27,19 +27,10 @@ import java.io.Serializable;
 public class FileMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 文件名称
-     */
     private String name;
 
-    /**
-     * 文件地址
-     */
     private String url;
 
-    /**
-     * 文件大小(kb)
-     */
     private Integer size;
 
     public FileMsgBody() {

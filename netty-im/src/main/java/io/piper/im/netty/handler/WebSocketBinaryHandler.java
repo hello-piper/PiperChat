@@ -16,7 +16,6 @@ package io.piper.im.netty.handler;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -42,7 +41,7 @@ public class WebSocketBinaryHandler extends SimpleChannelInboundHandler<BinaryWe
         Msg msg = Msg.parseFrom(frame.content().nioBuffer());
         log.info("receiveMsg bin {} {}", msg, userKey);
         // todo echo msg process
-        ByteBuf byteBuf = Unpooled.wrappedBuffer(msg.toByteArray());
+        ByteBuf byteBuf = ctx.alloc().ioBuffer().writeBytes(msg.toByteArray());
         ctx.writeAndFlush(new BinaryWebSocketFrame(byteBuf));
     }
 

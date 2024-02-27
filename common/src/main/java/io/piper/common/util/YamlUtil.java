@@ -44,9 +44,6 @@ public final class YamlUtil {
         }
     }
 
-    /**
-     * 获取配置
-     */
     public static <T> T getConfig(String key, Class<T> config) {
         try {
             Object o = LOADED_CONFIG.get(key);
@@ -62,9 +59,6 @@ public final class YamlUtil {
         return null;
     }
 
-    /**
-     * 属性填充
-     */
     public static <T> void populate(Map<String, Object> map, T bean) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());

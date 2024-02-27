@@ -16,7 +16,7 @@ package io.piper.common.enums;
 import java.util.Arrays;
 
 /**
- * 信令类型枚举
+ * CmdTypeEnum
  * @author piper
  */
 public enum CmdTypeEnum {

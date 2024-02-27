@@ -29,6 +29,10 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
+/**
+ * OkHttpWebSocketClient
+ * @author piper
+ */
 public class OkHttpWebSocketClient {
 
     public static void main(String[] args) {

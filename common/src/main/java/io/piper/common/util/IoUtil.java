@@ -30,19 +30,19 @@ import java.nio.charset.StandardCharsets;
 public final class IoUtil {
 
     /**
-     * 默认缓存大小 8192
+     * Default Buf 8192
      */
     public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
     /**
-     * 默认中等缓存大小 16384
+     * Default Mid Buf 16384
      */
     public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 2 << 13;
     /**
-     * 默认大缓存大小 32768
+     * Default Large Buf 32768
      */
     public static final int DEFAULT_LARGE_BUFFER_SIZE = 2 << 14;
     /**
-     * 数据流末尾
+     * EOF
      */
     public static final int EOF = -1;
 

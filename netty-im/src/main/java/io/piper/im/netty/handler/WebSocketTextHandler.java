@@ -63,12 +63,10 @@ public class WebSocketTextHandler extends SimpleChannelInboundHandler<TextWebSoc
                 return;
             }
             if (RequestMsg.RequestTypeEnum.ENTER_ROOM == requestTypeEnum) {
-                // 进入直播间
                 Map<String, Object> data = requestMsg.getData();
                 Long roomId = Long.valueOf(data.get("roomId").toString());
                 ImUserHolder.INSTANCE.putRoomSession(roomId, channel);
             } else if (RequestMsg.RequestTypeEnum.EXIT_ROOM == requestTypeEnum) {
-                // 退出直播间
                 Map<String, Object> data = requestMsg.getData();
                 Long roomId = Long.valueOf(data.get("roomId").toString());
                 ImUserHolder.INSTANCE.removeRoomSession(roomId, channel);

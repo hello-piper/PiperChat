@@ -20,16 +20,13 @@ import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 /**
- * 自定义消息
+ * CustomMsgBody
  * @author piper
  */
 @Data
 public class CustomMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 数据
-     */
     private String data;
 
     public CustomMsgBody() {

@@ -43,6 +43,10 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.Collections;
 
+/**
+ * WebSocketClient
+ * @author piper
+ */
 public final class WebSocketClient {
 
     static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
@@ -128,7 +132,7 @@ public final class WebSocketClient {
                     builder.setFrom(0);
                     builder.addAllTo(Collections.singletonList(0L));
                     builder.setText("Hi");
-                    ByteBuf byteBuf = Unpooled.wrappedBuffer(builder.build().toByteArray());
+                    ByteBuf byteBuf = ch.alloc().ioBuffer().writeBytes(builder.build().toByteArray());
                     ch.writeAndFlush(new BinaryWebSocketFrame(byteBuf));
                 } else {
                     ch.writeAndFlush(new TextWebSocketFrame(msg));

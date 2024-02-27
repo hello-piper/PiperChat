@@ -20,24 +20,18 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * 客户端发送消息
+ * RequestMsg
  */
 @Data
 public class RequestMsg implements Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 通知类型
-     */
     private Integer type;
 
-    /**
-     * json数据
-     */
     private Map<String, Object> data;
 
     /**
-     * 客户端发送消息类型
+     * RequestTypeEnum
      */
     public enum RequestTypeEnum {
         // 进入直播间 data:{roomId:1}

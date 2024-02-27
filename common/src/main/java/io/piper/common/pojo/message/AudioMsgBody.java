@@ -20,26 +20,17 @@ import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 /**
- * 语言消息
+ * AudioMsgBody
  * @author piper
  */
 @Data
 public class AudioMsgBody implements Msg.IMsgBody, Serializable {
     private static final long serialVersionUID = 1;
 
-    /**
-     * 语言地址
-     */
     private String url;
 
-    /**
-     * 语言时长(s)
-     */
     private Integer seconds;
 
-    /**
-     * 语言大小(kb)
-     */
     private Integer size;
 
     public AudioMsgBody() {

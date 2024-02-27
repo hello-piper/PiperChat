@@ -20,9 +20,6 @@ package io.piper.common.load_banlance;
  */
 public class WeightOnlineConfig {
 
-    /**
-     * 根据连接数获取权重
-     */
     public static int getWeightBYOnline(Integer online) {
         if (online < 30000) {
             return 5;

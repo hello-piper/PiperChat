@@ -32,10 +32,6 @@ import java.util.Enumeration;
 public final class IpUtil {
     private static final Logger log = LoggerFactory.getLogger(IpUtil.class);
 
-    /**
-     * 获取访问者的ip地址
-     * 注：要外网访问才能获取到外网地址，如果你在局域网甚至本机上访问，获得的是内网或者本机的ip
-     */
     public static String getIpAddr(HttpServletRequest request) {
         String ipAddress = null;
         try {
@@ -71,9 +67,6 @@ public final class IpUtil {
         return ipAddress;
     }
 
-    /**
-     * 获取本机ip
-     */
     public static InetAddress findFirstNonLoopbackAddress() {
         InetAddress result = null;
         try {
@@ -112,9 +105,6 @@ public final class IpUtil {
         return null;
     }
 
-    /**
-     * 调用太平洋网络IP地址查询Web接口（http://whois.pconline.com.cn/），返回ip、地理位置
-     */
     public static IpInfo getIpVo(String ip) {
         String url = "http://whois.pconline.com.cn/ipJson.jsp?json=true";
         if (StringUtil.isNotEmpty(ip)) {
@@ -124,9 +114,6 @@ public final class IpUtil {
         return JSON.parseObject(read, IpInfo.class);
     }
 
-    /**
-     * 调用IP地址查询接口（https://ip.dianduidian.com），返回ip、地理位置
-     */
     public static IpInfo getIpVo() {
         return getIpVo(null);
     }

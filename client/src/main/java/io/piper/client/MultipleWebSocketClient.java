@@ -48,6 +48,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * MultipleWebSocketClient
+ * @author piper
+ */
 public class MultipleWebSocketClient {
     private static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(4);
     private static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
