@@ -28,10 +28,10 @@ public class ImMessageDTO implements Serializable {
     private Long id;
 
     @ApiModelProperty("chatType")
-    private Byte chatType;
+    private Integer chatType;
 
     @ApiModelProperty("msgType")
-    private Byte msgType;
+    private Integer msgType;
 
     @ApiModelProperty("from")
     private Long from;

@@ -51,7 +51,7 @@ public class UploadService {
             localFile = new FileOutputStream(name);
             IoUtil.copy(file.getInputStream(), localFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             IoUtil.close(localFile);
         }
@@ -72,7 +72,7 @@ public class UploadService {
             fis = new FileInputStream(name);
             IoUtil.copy(fis, response.getOutputStream());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             IoUtil.close(fis);
         }

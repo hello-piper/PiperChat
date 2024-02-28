@@ -21,15 +21,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author piper
  */
 public class DefaultThreadFactory implements java.util.concurrent.ThreadFactory {
-    private static final AtomicInteger poolNumber = new AtomicInteger(1);
     private final AtomicInteger threadNumber = new AtomicInteger(1);
     private final ThreadGroup group;
     private final String namePrefix;
 
     DefaultThreadFactory() {
-        SecurityManager s = System.getSecurityManager();
-        group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-        namePrefix = "piper-pool-" + poolNumber.getAndIncrement() + "-thread-";
+        group = Thread.currentThread().getThreadGroup();
+        namePrefix = "piper-pool-thread-";
     }
 
     public Thread newThread(Runnable r) {

@@ -21,6 +21,7 @@ import java.util.Map;
 
 /**
  * RequestMsg
+ * @author piper
  */
 @Data
 public class RequestMsg implements Serializable {
@@ -34,9 +35,9 @@ public class RequestMsg implements Serializable {
      * RequestTypeEnum
      */
     public enum RequestTypeEnum {
-        // 进入直播间 data:{roomId:1}
+        // data:{roomId:1}
         ENTER_ROOM(1),
-        // 退出 data:{roomId:1}
+        // data:{roomId:1}
         EXIT_ROOM(2);
 
         public final Integer type;

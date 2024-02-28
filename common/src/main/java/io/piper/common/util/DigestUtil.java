@@ -36,8 +36,7 @@ public class DigestUtil {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -55,8 +54,7 @@ public class DigestUtil {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -65,10 +63,9 @@ public class DigestUtil {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return cipher.doFinal(input.getBytes());
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException |
-                 BadPaddingException e) {
-            e.printStackTrace();
-            return null;
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+                 | IllegalBlockSizeException | BadPaddingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -78,10 +75,9 @@ public class DigestUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
             return new String(decryptedBytes);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException |
-                 BadPaddingException e) {
-            e.printStackTrace();
-            return null;
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+                 | IllegalBlockSizeException | BadPaddingException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -53,7 +53,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
                 pipeline.addLast(sslCtx.newHandler(ch.alloc()));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         pipeline.addLast(new HttpServerCodec());

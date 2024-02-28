@@ -15,11 +15,14 @@ package io.piper.common.pojo.config;
 
 import java.util.Objects;
 
+import lombok.Data;
+
 /**
  * AddressInfo
  *
  * @author piper
  */
+@Data
 public class AddressInfo {
 
     private Boolean ssl = false;
@@ -31,46 +34,6 @@ public class AddressInfo {
     private String wsPath;
 
     private Integer onlineNum;
-
-    public Boolean getSsl() {
-        return ssl;
-    }
-
-    public void setSsl(Boolean ssl) {
-        this.ssl = ssl;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
-    public String getWsPath() {
-        return wsPath;
-    }
-
-    public void setWsPath(String wsPath) {
-        this.wsPath = wsPath;
-    }
-
-    public Integer getOnlineNum() {
-        return onlineNum;
-    }
-
-    public void setOnlineNum(Integer onlineNum) {
-        this.onlineNum = onlineNum;
-    }
 
     @Override
     public boolean equals(Object o) {

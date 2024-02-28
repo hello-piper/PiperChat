@@ -34,8 +34,7 @@ import redis.clients.jedis.JedisPubSub;
  * @author piper
  */
 public abstract class AbstractMsgConsumer {
-    static final Logger log = LoggerFactory.getLogger(AbstractMsgConsumer.class);
-    private static final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractMsgConsumer.class);
 
     public AbstractMsgConsumer() {
         new Thread(() -> RedisDS.consumer(jedis -> jedis.subscribe(new JedisPubSub() {
@@ -46,8 +45,8 @@ public abstract class AbstractMsgConsumer {
             }
         }, Constants.CHANNEL_IM_MESSAGE)), "AbstractMsgConsumer Thread").start();
 
-
         if ("local".equals(YamlUtil.getProfile())) {
+            ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
             ThreadUtil.SCHEDULE_POOL.scheduleWithFixedDelay(() -> {
                 try {
                     Msg dto = Msg.createTextMsg("hello piper");

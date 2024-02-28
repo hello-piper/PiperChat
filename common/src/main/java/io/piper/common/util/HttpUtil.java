@@ -35,8 +35,7 @@ public class HttpUtil {
             connection.setRequestMethod("GET");
             return getResponse(charset, connection);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -53,8 +52,7 @@ public class HttpUtil {
             }
             return getResponse(charset, connection);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 

@@ -39,7 +39,7 @@ public class ActiveContactVO implements Serializable {
     private String avatar;
 
     @ApiModelProperty("chatType")
-    private Byte chatType;
+    private Integer chatType;
 
     @ApiModelProperty("messageList")
     private List<ImMessageDTO> messageList;

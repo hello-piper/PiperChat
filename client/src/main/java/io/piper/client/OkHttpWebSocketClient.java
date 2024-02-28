@@ -89,7 +89,7 @@ public class OkHttpWebSocketClient {
                 Msg msg = Msg.parseFrom(bytes.toByteArray());
                 System.out.println("onMessage bytes " + seq + " " + bytes + "  " + msg.toString());
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 

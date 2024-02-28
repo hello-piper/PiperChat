@@ -100,11 +100,10 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }
+        log.error("WebSocket Client exceptionCaught! ", cause);
         ctx.close();
-        log.error("断开 WebSocket Client exceptionCaught!");
     }
 }

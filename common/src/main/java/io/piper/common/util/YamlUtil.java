@@ -46,17 +46,16 @@ public final class YamlUtil {
 
     public static <T> T getConfig(String key, Class<T> config) {
         try {
+            T instance = config.getDeclaredConstructor().newInstance();
             Object o = LOADED_CONFIG.get(key);
             if (o != null) {
-                T instance = config.getDeclaredConstructor().newInstance();
                 populate((Map) o, instance);
-                return instance;
             }
+            return instance;
         } catch (InstantiationException | IllegalAccessException
                  | NoSuchMethodException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     public static <T> void populate(Map<String, Object> map, T bean) {

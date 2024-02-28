@@ -77,7 +77,7 @@ public class MultipleWebSocketClient {
                         LOG.info("连接 {}", andIncrement);
                         run(andIncrement);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }).start();
                 try {
@@ -89,7 +89,7 @@ public class MultipleWebSocketClient {
                         Thread.sleep(20);
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }, 0, 60, TimeUnit.MINUTES);
