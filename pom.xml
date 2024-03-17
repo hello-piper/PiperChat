@@ -7,7 +7,7 @@
     <groupId>io.piper</groupId>
     <artifactId>PiperChat</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <name>PiperChat</name>
 
     <modules>
@@ -22,9 +22,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <undertow.version>2.2.30.Final</undertow.version>
-<!--  TODO      <undertow.version>2.3.12.Final</undertow.version>-->
-        <okhttp.version>4.11.0</okhttp.version>
+        <netty.version>4.1.107.Final</netty.version>
+        <undertow.version>2.2.31.Final</undertow.version>
+        <okhttp.version>4.12.0</okhttp.version>
         <protobuf.version>3.23.1</protobuf.version>
         <fastjson.version>2.0.39</fastjson.version>
         <snakeyaml.version>2.1</snakeyaml.version>
@@ -36,7 +36,7 @@
         <jedis.version>3.10.0</jedis.version>
         <mysql.version>8.0.28</mysql.version>
         <junit.version>4.13.2</junit.version>
-        <spring-boot.version>2.7.14</spring-boot.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-shade-plugin.version>3.5.0</maven-shade-plugin.version>
     </properties>
@@ -46,7 +46,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
-                <version>4.1.107.Final</version>
+                <version>${netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.undertow</groupId>

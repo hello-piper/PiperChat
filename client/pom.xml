@@ -6,11 +6,11 @@
     <parent>
         <groupId>io.piper</groupId>
         <artifactId>PiperChat</artifactId>
-        <version>1.0</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>client</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>client</name>
 
@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <common.version>1.0</common.version>
+        <common.version>1.0-SNAPSHOT</common.version>
     </properties>
 
     <dependencies>
@@ -53,7 +53,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>io.piper.client.MultipleWebSocketClient</mainClass>
+                            <mainClass>io.piper.client.WebSocketMultipleClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

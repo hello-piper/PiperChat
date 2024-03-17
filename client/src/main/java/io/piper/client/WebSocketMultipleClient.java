@@ -37,6 +37,7 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.piper.client.handler.WebSocketClientHandler;
 import io.piper.common.enums.ChatTypeEnum;
 import io.piper.common.enums.MsgTypeEnum;
 import io.piper.common.pojo.message.Msg;
@@ -52,9 +53,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * MultipleWebSocketClient
  * @author piper
  */
-public class MultipleWebSocketClient {
+public class WebSocketMultipleClient {
     private static final ScheduledThreadPoolExecutor SCHEDULED_POOL = new ScheduledThreadPoolExecutor(4);
-    private static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
+    private static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/chat/guest");
     private static final EventLoopGroup GROUP = new NioEventLoopGroup(4);
     private static final AtomicInteger NUM = new AtomicInteger();
     private static final InternalLogger LOG = InternalLoggerFactory.getInstance(WebSocketClientHandler.class);

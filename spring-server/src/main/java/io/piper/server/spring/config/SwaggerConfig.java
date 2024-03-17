@@ -33,7 +33,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("PiperChat-API")
                 .description("PiperChat接口文档")
-                .termsOfServiceUrl("http://localhost:8095")
+                .termsOfServiceUrl("http://localhost:8080")
                 .contact(new Contact("Piper", "https://github.com/hello-piper", ""))
                 .version("1.0")
                 .build();

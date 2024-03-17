@@ -6,12 +6,12 @@
     <parent>
         <groupId>io.piper</groupId>
         <artifactId>PiperChat</artifactId>
-        <version>1.0</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>common</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <name>common</name>
 
     <properties>

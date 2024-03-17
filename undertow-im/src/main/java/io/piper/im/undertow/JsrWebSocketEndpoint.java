@@ -13,6 +13,20 @@
  */
 package io.piper.im.undertow;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -32,21 +46,11 @@ import io.piper.im.undertow.coder.JsonEncode;
 import io.piper.im.undertow.coder.ProtobufDecode;
 import io.piper.im.undertow.coder.ProtobufEncode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
-
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * JsrWebSocketEndpoint
  * @author piper
  */
-@ServerEndpoint(value = "/websocket/{token}", encoders = {JsonEncode.class, ProtobufEncode.class}, decoders = {JsonDecode.class, ProtobufDecode.class})
+@ServerEndpoint(value = "/chat/{token}", encoders = {JsonEncode.class, ProtobufEncode.class}, decoders = {JsonDecode.class, ProtobufDecode.class})
 public class JsrWebSocketEndpoint {
     private final Logger log = LoggerFactory.getLogger(JsrWebSocketEndpoint.class);
     private final ImProperties config = YamlUtil.getConfig("im", ImProperties.class);
@@ -133,7 +137,7 @@ public class JsrWebSocketEndpoint {
 
     @OnMessage
     public void message(Msg msg, Session session) {
-        Long userKey = (Long) session.getUserProperties().get(ImUserHolder.INSTANCE.USER_KEY);
+        Long userKey = (Long) session.getUserProperties().get(ImUserHolder.USER_KEY);
         // todo echo msg process
         session.getAsyncRemote().sendObject(msg);
         log.info("receiveMsg msg {} {}", msg, userKey);
@@ -141,7 +145,7 @@ public class JsrWebSocketEndpoint {
 
     @OnClose
     public void onClose(Session session) {
-        String userKey = (String) session.getUserProperties().get(ImUserHolder.USER_KEY);
+        Long userKey = (Long) session.getUserProperties().get(ImUserHolder.USER_KEY);
         ImUserHolder.INSTANCE.removeSession(session);
         log.info("用户下线 {} {}", userKey, ImUserHolder.INSTANCE.onlineNum());
     }

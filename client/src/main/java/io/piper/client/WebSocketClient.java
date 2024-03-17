@@ -35,6 +35,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.piper.client.handler.WebSocketClientHandler;
 import io.piper.common.pojo.message.protoObj.Msg;
 import io.piper.common.pojo.message.protoObj.PBOuterClass;
 
@@ -49,7 +50,7 @@ import java.util.Collections;
  */
 public final class WebSocketClient {
 
-    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/websocket/guest");
+    static final String URL = System.getProperty("url", "ws://127.0.0.1:8080/chat/guest");
 
     public static void main(String[] args) throws Exception {
         URI uri = new URI(URL);

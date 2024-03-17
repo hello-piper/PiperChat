@@ -23,7 +23,7 @@ if (window.WebSocket) {
   var ta = document.getElementById('msg');
   ta.value = '{"type":0,"chatType":0,"to":"uid","content":"hello world!"}';
 
-  socket = new WebSocket("ws://127.0.0.1:8080/websocket?token=123");
+  socket = new WebSocket("ws://127.0.0.1:8080/chat?token=123");
   socket.onmessage = function(event) {
     var ta = document.getElementById('responseText');
     ta.value = ta.value + '\n' + event.data

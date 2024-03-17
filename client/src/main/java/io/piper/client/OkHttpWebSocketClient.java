@@ -38,7 +38,7 @@ public class OkHttpWebSocketClient {
     public static void main(String[] args) {
         int socketNum = 1;
 
-        String webSocketUrl = "ws://127.0.0.1:8080/websocket/guest";
+        String webSocketUrl = "ws://127.0.0.1:8080/chat/guest";
         OkHttpClient client = new OkHttpClient.Builder().pingInterval(30, TimeUnit.SECONDS).build();
         Request request = new Request.Builder().url(webSocketUrl).build();
 

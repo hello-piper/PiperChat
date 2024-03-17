@@ -22,6 +22,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebApplication {
     public static void main(String[] args) {
         SpringApplication.run(WebApplication.class, args);
-        System.out.println("PiperChat Server started successfully! Api: http://localhost:8095/doc.html");
+        System.out.println("PiperChat Server started successfully! Api: http://localhost:8080/doc.html");
     }
 }
